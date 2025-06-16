@@ -3,7 +3,7 @@ import TabbedForm from '../components/TabbedForm';
 import '../styles/ExposeTool.css';
 import { fetchGPTResponse } from '../api/openai';
 import Loader from '../components/Loader';
-
+import { exportExposeAsPDF } from "../utils/pdfExport";
 
 
 export default function ExposeTool() {
@@ -69,7 +69,7 @@ export default function ExposeTool() {
 📋 Stil:
 - Deutsch
 - Leicht verkäuflich, vertrauensvoll, nicht aufdringlich, einladend.
-- Keywords: „Licht“, „Wohlfühlatmosphäre“, „Raumgefühl“, „Besonderheit“, „Lebensgefühl“, „Ankommen“, „Entfaltung“.
+- Keywords: „Licht“, „Wohlfühlatmosphäre“, „Raumgefühl“, „Besonderheit“, „Lebensgefühl“, „Ankommen“, „Entfaltung“, aber nicht zu viel geschwafel .
 ${stilHinweis}
 📝 Einstieg:
 - Beginne mit einem Satz, der sofort eine einladende oder neugierige Atmosphäre schafft (z.B. "Stellen Sie sich vor..." oder "Entdecken Sie ein Zuhause...").
@@ -216,6 +216,33 @@ ${stilHinweis}
     📋 Text kopieren
   </button>
 )}
+
+
+
+
+
+
+
+<button
+  onClick={() =>
+    exportExposeAsPDF({
+      beschreibung: formData.beschreibung,
+      lage: formData.lage,
+      besonderheiten: formData.besonderheiten,
+      stil: formData.textstil,
+    })
+  }
+  className="pdf-button"
+>
+  📄 Exposé als PDF speichern
+</button>
+
+
+
+
+
+
+
 
 </div>
 
