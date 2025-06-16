@@ -1,0 +1,220 @@
+body {
+  background: linear-gradient(135deg, #1a1f2b 0%, #1c2434 40%, #0d1117 100%);
+  font-family: 'Inter', sans-serif;
+  color: #f3f4f6;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-intro {
+  max-width: 960px;
+  margin: 3rem auto 0;
+  padding: 2rem 2rem 1rem;
+  text-align: center;
+  color: #e2e8f0;
+}
+
+.hero-intro h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+  color: #4fc3f7;
+}
+
+.hero-intro p {
+  font-size: 1rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.expose-wrapper h1 {
+  display: block;
+  color: #ffffff;
+  font-size: 2.5rem;
+  padding-top: 2rem;
+}
+
+
+h1 {
+  display: none;
+}
+
+input, textarea, select {
+  background-color: #ffffff;       /* sauberes Weiß */
+  color: #0d1117;                  /* dunkle Schrift (nahe schwarz) */
+  border: 1px solid #3a4a5a;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+
+
+/* SELECT-DROPDOWN Styling */
+select {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: #f1f5f9;
+  border: 1px solid #3a4a5a;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(2px);
+  appearance: none;
+}
+
+
+select:invalid {
+  color: #94a3b8; /* Placeholder-Farbe */
+}
+select:focus {
+  border-color: #3ea0cf;
+  box-shadow: 0 0 6px rgba(62, 160, 207, 0.5);
+  outline: none;
+}
+
+select option {
+  background-color: #1c2434;
+  color: #f1f5f9;
+}
+
+select option[disabled] {
+  color: #131414; /* klare, sichtbare Schrift */
+}
+
+
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #3ea0cf;
+  box-shadow: 0 0 6px rgba(62, 160, 207, 0.5);
+  outline: none;
+  color: #0d1117; /* wichtig, sonst wird’s wieder unsichtbar */
+}
+
+
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8; /* grau für Platzhalter */
+}
+
+.button-generate {
+  background: linear-gradient(135deg, #3ea0cf, #1e88e5);
+  color: #fff;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  display: block;
+  margin: 1rem auto 0;
+  box-shadow: 0 0 8px rgba(62, 160, 207, 0.35);
+}
+
+.button-generate:hover {
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+.preview-box {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid #3b4a5a;
+  padding: 1.5rem;
+  border-radius: 12px;
+  color: #f3f4f6;
+  font-size: 1rem;
+  white-space: pre-wrap;
+  margin-top: 2rem;
+  backdrop-filter: blur(3px);
+}
+
+.tabs-header {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0 1rem;
+  border-bottom: 2px solid #4a5568;
+}
+
+.tab-button {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border: none;
+  background: none;
+  border-radius: 6px 6px 0 0;
+  color: #a0aec0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tab-button.active {
+  color: #4fc3f7;
+  background-color: rgba(255, 255, 255, 0.05);
+  font-weight: bold;
+}
+
+
+.tool-inner-wrapper {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1b202a, #10141b);
+  border-radius: 1rem;
+  box-shadow: 0 0 12px rgba(0, 123, 255, 0.08);
+}
+
+
+.progress-info {
+  text-align: center;
+  color: #4fc3f7;
+  margin: 1rem auto 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+
+
+.button-copy {
+  margin: 1rem auto 0;
+  display: block;
+  background-color: transparent;
+  color: #4fc3f7;
+  border: 1px dashed #4fc3f7;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button-copy:hover {
+  background-color: #4fc3f7;
+  color: #0d1117;
+}
+
+
+
+.style-selector {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.style-selector label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #cbd5e1;
+}
+
+.style-selector select {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f1f5f9;
+  border: 1px solid #3a4a5a;
+}
