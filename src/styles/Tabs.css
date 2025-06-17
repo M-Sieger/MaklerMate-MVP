@@ -1,65 +1,35 @@
+/* 📌 Tab-Leiste über dem Formular */
 .tabs-header {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin: 2rem 0;
-  border-bottom: 2px solid var(--color-border);
+  margin: 2rem 0 1rem;
+  border-bottom: 2px solid #2d3748;
+  flex-wrap: wrap;
 }
 
+/* 🔘 Ein Tab-Button */
 .tab-button {
-  padding: 0.6rem 1.2rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
-  background: none;
-  color: var(--color-text);
+  background-color: transparent;
   border: none;
-  border-radius: 6px 6px 0 0;
+  border-radius: 8px 8px 0 0;
+  color: #a0aec0;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.tab-button:hover {
-  background-color: var(--color-bg);
-}
-
+/* 🟦 Aktiver Tab */
 .tab-button.active {
-  font-weight: bold;
-  background-color: var(--color-primary);
-  color: #fff;
+  color: #4fc3f7;
+  background-color: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+  border-bottom: 2px solid #4fc3f7;
 }
 
+/* 📦 Tab-Inhalt */
 .tab-content {
-  background: linear-gradient(135deg, #1b202a, #10141b); /* gleich wie preview-box */
-  color: #f8f8f8;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  border: 1px solid #3f3f46;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.15);
-  margin-top: 1.5rem;
-}
-
-
-input, select, textarea {
-  background-color: #1e242e;      /* dunkler Hintergrund */
-  color: #131212;                 /* Textfarbe beim Schreiben */
-  border: 1px solid #2f3542;
-  border-radius: 8px;
-  padding: 0.8rem 1rem;
-  margin-bottom: 1rem;
-  width: 100%;
-  font-size: 1rem;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-::placeholder {
-  color: #94a3b8;                 /* dezenter Placeholder */
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border: 1px solid #3c82f6;
-  box-shadow: 0 0 6px rgba(60, 130, 246, 0.4);
-}
-
-select:invalid {
-  color: #94a3b8;                 /* für "Objektart wählen" */
+  padding: 1rem 0;
 }

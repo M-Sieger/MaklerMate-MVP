@@ -111,7 +111,7 @@ export default function ExposeTool() {
         </div>
 
         {/* 🚀 GPT-Generieren-Button */}
-        <button className="button-generate" onClick={handleGenerate}>
+        <button className="btn btn-primary" onClick={handleGenerate}>
           Expose generieren
         </button>
 
@@ -129,14 +129,14 @@ export default function ExposeTool() {
         {output && (
           <>
             <button
-              className="button-copy"
+              className="btn btn-outline"
               onClick={() => navigator.clipboard.writeText(output)}
             >
               📋 Text kopieren
             </button>
 
             <button
-              className="button-mailto"
+              className="btn btn-mail"
               onClick={() => {
                 const subject = encodeURIComponent('Ihr Immobilien-Exposé');
                 const body = encodeURIComponent(output);
