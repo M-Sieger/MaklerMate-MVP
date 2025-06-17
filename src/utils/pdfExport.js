@@ -1,32 +1,30 @@
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
-export async function exportExposeAsPDF({ beschreibung, lage, besonderheiten, stil }) {
-  const doc = new jsPDF("p", "mm", "a4");
-  const margin = 15;
-  const maxWidth = 180;
-  let y = margin;
+export async function exportExposeAsPDF(formData, gptText) {
+  const input = document.getElementById('pdf-export-section');
+  if (!input) {
+    console.error("❌ PDF-Export-Element nicht gefunden");
+    return;
+  }
 
-  const title = "📄 Immobilien-Exposé";
-  doc.setFontSize(20);
-  doc.setFont("helvetica", "bold");
-  doc.text(title, margin, y);
-  y += 10;
+  const canvas = await html2canvas(input, { scale: 2 });
+  const imgData = canvas.toDataURL('image/png');
 
-  const section = (label, content) => {
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text(`${label}:`, margin, y);
-    y += 6;
-    doc.setFont("helvetica", "normal");
-    doc.text(doc.splitTextToSize(content || "–", maxWidth), margin, y);
-    y += 12;
-  };
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
 
-  section("Beschreibung", beschreibung);
-  section("Lage", lage);
-  section("Besonderheiten", besonderheiten);
-  section("Stil", stil);
+  // Optional: Logo oben links hinzufügen
+  const logoElement = document.getElementById('pdf-logo');
+  if (logoElement) {
+    const logoCanvas = await html2canvas(logoElement, { scale: 2 });
+    const logoData = logoCanvas.toDataURL('image/png');
+    pdf.addImage(logoData, 'PNG', 15, 10, 50, 20);
+  }
 
-  doc.save("Expose.pdf");
+  pdf.addImage(imgData, 'PNG', 10, 35, 190, 0); // Bild vom Inhalt einfügen
+  pdf.save('Expose.pdf');
 }

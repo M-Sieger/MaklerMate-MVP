@@ -218,3 +218,20 @@ textarea::placeholder {
   color: #f1f5f9;
   border: 1px solid #3a4a5a;
 }
+
+
+
+.button-mailto {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.button-mailto:hover {
+  background-color: #2b6cb0;
+}

@@ -4,6 +4,9 @@ import '../styles/ExposeTool.css';
 import { fetchGPTResponse } from '../api/openai';
 import Loader from '../components/Loader';
 import { exportExposeAsPDF } from "../utils/pdfExport";
+import { generateCRMTemplate, generateCRMJson } from '../utils/crmExport';
+import CRMExportBox from '../components/CRMExportBox';
+
 
 
 export default function ExposeTool() {
@@ -165,6 +168,25 @@ ${stilHinweis}
 
   return (
     <div className="expose-wrapper">
+
+<div id="pdf-logo" style={{ width: 300, height: 100 }}>
+  {/* Dein SVG */}
+  <svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="white"/>
+    <g transform="translate(20,30)">
+      <rect x="0" y="0" width="8" height="40" fill="#2e2e2e"/>
+      <rect x="12" y="-10" width="8" height="50" fill="#2e2e2e"/>
+      <rect x="24" y="10" width="8" height="30" fill="#f6e05e"/>
+    </g>
+    <g transform="translate(70,50)">
+      <text x="0" y="0" fontFamily="Montserrat, sans-serif" fontSize="24" fill="#2e2e2e" fontWeight="bold">SIEGER</text>
+      <text x="0" y="20" fontFamily="Montserrat, sans-serif" fontSize="14" fill="#555">CONSULTING</text>
+    </g>
+  </svg>
+</div>
+
+
+
       <div className="hero-intro">
         <h1>🏡 Exposé Generator für Makler</h1>
         <p>Erstelle in wenigen Sekunden ein überzeugendes Immobilien-Exposé – dank GPT.</p>
@@ -219,17 +241,34 @@ ${stilHinweis}
 
 
 
+{output && (
+  <button
+    className="button-mailto"
+    onClick={() => {
+      const subject = encodeURIComponent("Ihr Immobilien-Exposé");
+      const body = encodeURIComponent(output);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }}
+  >
+    📧 Per E-Mail versenden
+  </button>
+)}
 
-
+{output && (
+  <div id="pdf-export-section" className="output-box">
+    {output}
+  </div>
+)}
 
 
 <button
   onClick={() =>
     exportExposeAsPDF({
       beschreibung: formData.beschreibung,
-      lage: formData.lage,
+      lage: formData.ort, // Ort entspricht "Lage"
       besonderheiten: formData.besonderheiten,
-      stil: formData.textstil,
+      stil: selectedStyle,
+      gptText: output,
     })
   }
   className="pdf-button"
@@ -238,6 +277,50 @@ ${stilHinweis}
 </button>
 
 
+
+
+{output && (
+  <>
+    <button
+      className="button-crm"
+      onClick={() => {
+        const crmText = generateCRMTemplate({ ...formData, gptText: output });
+        navigator.clipboard.writeText(crmText);
+        alert("📋 CRM-Text in Zwischenablage!");
+      }}
+    >
+      📋 Für CRM kopieren
+    </button>
+
+    <button
+      className="button-crm"
+      onClick={() => {
+        const element = document.createElement("a");
+        const file = new Blob([generateCRMTemplate({ ...formData, gptText: output })], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        element.download = "expose_crm.txt";
+        document.body.appendChild(element);
+        element.click();
+      }}
+    >
+      📝 Als .txt exportieren
+    </button>
+
+    <button
+      className="button-crm"
+      onClick={() => {
+        const element = document.createElement("a");
+        const file = new Blob([generateCRMJson({ ...formData, gptText: output })], { type: 'application/json' });
+        element.href = URL.createObjectURL(file);
+        element.download = "expose_crm.json";
+        document.body.appendChild(element);
+        element.click();
+      }}
+    >
+      🧾 Als .json exportieren
+    </button>
+  </>
+)}
 
 
 
