@@ -1,10 +1,13 @@
+// src/pages/CRM/LeadList.jsx
+
 import React from 'react';
 
-// 💡 Diese Komponente zeigt eine Liste aller Leads an.
-// Sie erhält die Leads als Array über Props und zeigt sie strukturiert an.
-// Optional: könnte später um Filter, Sortierung oder Aktionen (z. B. löschen, editieren) erweitert werden.
+import LeadItem from './LeadItem'; // ⬅️ importiere die Einzelkomponente
 
-export default function CRMList({ leads }) {
+// 💡 Diese Komponente zeigt alle Leads an, die ihr über Props übergeben wurden
+// Sie reicht die `onDelete`-Funktion weiter an jede `LeadItem`-Instanz
+
+export default function LeadList({ leads, onDelete }) {
   if (!leads || leads.length === 0) {
     return <p>📭 Noch keine Leads gespeichert.</p>;
   }
@@ -13,28 +16,9 @@ export default function CRMList({ leads }) {
     <div className="crm-list">
       <h2>📇 Gespeicherte Leads</h2>
 
-      {/* 🔁 Alle Leads durchgehen und anzeigen */}
+      {/* 🔁 Für jeden Lead wird ein LeadItem angezeigt */}
       {leads.map((lead) => (
-        <div key={lead.id} className="crm-lead-item">
-          {/* 👤 Name */}
-          <strong>{lead.name}</strong>
-
-          {/* 🏷 Statusanzeige */}
-          <span className={`lead-status status-${lead.status}`}>
-            {lead.status}
-          </span>
-
-          {/* 🗒 Notiz */}
-          <p>{lead.notiz}</p>
-
-          {/* 🧾 Vorschau: GPT-Text (wenn vorhanden) */}
-          {lead.exposéText && (
-            <details>
-              <summary>📝 GPT-Text anzeigen</summary>
-              <pre>{lead.exposéText}</pre>
-            </details>
-          )}
-        </div>
+        <LeadItem key={lead.id} lead={lead} onDelete={onDelete} />
       ))}
     </div>
   );

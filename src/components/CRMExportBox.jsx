@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { generateCRMTemplate, generateCRMJson } from '../utils/crmExport';
+
+import {
+  generateCRMJson,
+  generateCRMTemplate,
+} from '../utils/crmExportExpose';
 
 function CRMExportBox({ formData, gptText }) {
   const [selectedCRM, setSelectedCRM] = useState('json');
