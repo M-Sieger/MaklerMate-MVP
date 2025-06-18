@@ -2,27 +2,29 @@ import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+// Liste der verfügbaren Tools – individuell erweiterbar
 const tools = [
   {
-    title: '🧠 Werbetext-Generator',
-    desc: 'Erstelle in Sekunden überzeugende Marketingtexte mit GPT.',
-    route: '/ads',
-    button: 'Jetzt ausprobieren'
+    title: '📄 Exposé erstellen',
+    desc: 'Erzeuge in Sekunden ein KI-gestütztes Immobilien-Exposé.',
+    route: '/expose', // neue Route für dein Exposé-Tool
+    button: 'Jetzt starten'
   },
   {
-    title: '🏡 Immobilien-Exposé-Tool',
-    desc: 'Erzeuge automatisch professionelle Exposés für Immobilien.',
-    route: '/tools/expose',
-    button: 'Demo ansehen'
+    title: '📇 Kontakte verwalten',
+    desc: 'Verwalte Interessenten und Leads ganz einfach – CRM-Light für Makler.',
+    route: '/crm', // CRM-Bereich
+    button: 'CRM öffnen'
   },
   {
-    title: '📄 HR-Bewerbungsanalyse',
-    desc: 'Analysiere Bewerbungen strukturiert & intelligent mit GPT.',
-    route: '/tools/hr',
-    button: 'Bewerbung prüfen'
+    title: '📢 Social Posts (bald)',
+    desc: 'Erstelle Social-Media-Inhalte automatisch aus deinen Objektdaten.',
+    route: '/social', // Platzhalter für spätere Erweiterung
+    button: 'Demnächst verfügbar'
   }
 ];
 
+// Komponente: ToolCards zeigt alle Tools als klickbare Karten
 export default function ToolCards() {
   const navigate = useNavigate();
 
