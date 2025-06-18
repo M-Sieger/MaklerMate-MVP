@@ -1,0 +1,23 @@
+.crm-lead-item {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+.lead-status {
+  margin-left: 1rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.status-neu {
+  color: blue;
+}
+.status-interesse {
+  color: orange;
+}
+.status-abgeschlossen {
+  color: green;
+}
