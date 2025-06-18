@@ -1,38 +1,38 @@
-// 📦 React + useState (für Lead-Verwaltung)
-import React, { useState } from 'react';
+// src/pages/CRM/CRMTool.jsx
 
-import CRMExport from './CRMExport';   // Export-Funktion
-// 📋 Import der modularen CRM-Komponenten
-import CRMForm from './LeadForm';      // Lead-Eingabe
-import CRMList from './LeadList';      // Anzeige der Leads
+import React from 'react';
 
-const CRMTool = () => {
-  // 🧠 Zustand: gespeicherte Leads (als Array)
-  const [leads, setLeads] = useState([]);
+// ✅ Funktionen für Export & Clipboard aus utils importieren
+import {
+  copyLeadsToClipboard,
+  exportLeadsAsJSON,
+} from '../../utils/CRMExport';
+import LeadForm from './LeadForm';
+import LeadList from './LeadList';
 
-  // ➕ Callback: Lead hinzufügen (wird an CRMForm übergeben)
-  const addLead = (newLead) => {
-    setLeads((prevLeads) => [...prevLeads, newLead]); // neues Lead anhängen
+export default function CRMTool() {
+  const [leads, setLeads] = React.useState([]);
+
+  // 🧠 Neue Leads hinzufügen
+  const handleAddLead = (lead) => {
+    setLeads((prev) => [...prev, lead]);
   };
 
   return (
-    <div className="crm-tool" style={{ padding: '2rem' }}>
-      <h1>📇 CRM-Modul – Leads verwalten</h1>
+    <div className="crm-tool-container">
+      <h1>📇 MaklerMate CRM</h1>
 
-      {/* ➕ Formular zur Eingabe neuer Leads */}
-      <CRMForm onAddLead={addLead} />
+      {/* 📝 Formular zum Hinzufügen von Leads */}
+      <LeadForm onAddLead={handleAddLead} />
 
-      <hr />
+      {/* 📋 Liste der gespeicherten Leads */}
+      <LeadList leads={leads} />
 
-      {/* 📋 Liste aller gespeicherten Leads */}
-      <CRMList leads={leads} />
-
-      <hr />
-
-      {/* 📤 Export als JSON */}
-      <CRMExport leads={leads} />
+      {/* 🔁 Export- und Clipboard-Funktionen */}
+      <div style={{ marginTop: '1rem' }}>
+        <button onClick={() => exportLeadsAsJSON(leads)}>📁 Als JSON exportieren</button>
+        <button onClick={() => copyLeadsToClipboard(leads)}>📋 In Zwischenablage</button>
+      </div>
     </div>
   );
-};
-
-export default CRMTool;
+}

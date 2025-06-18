@@ -9,7 +9,7 @@ import {
 
 // Layout enthält Navbar + <Outlet /> für Seiteninhalte
 import Layout from './components/Layout';
-import CRMTool from './pages/CRMTool';
+import CRMTool from './pages/CRM/CRMTool';
 import ExposeTool from './pages/ExposeTool';
 // Die Seiten (Pages), die in deinem Projekt verwendet werden
 import Home from './pages/Home';

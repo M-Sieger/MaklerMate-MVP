@@ -3,11 +3,11 @@ import '../styles/ExposeTool.css';
 
 import React, { useState } from 'react';
 
-// 🧠 GPT-Backend / Komponenten
-import { fetchGPTResponse } from '../api/openai';
 import ExportButtons from '../components/ExportButtons';
 import ExposeForm from '../components/ExposeForm';
 import Loader from '../components/Loader';
+// 🧠 GPT-Backend / Komponenten
+import { fetchGPTResponse } from '../lib/openai';
 
 export default function ExposeTool() {
   // 📝 Zustand für alle Formularfelder

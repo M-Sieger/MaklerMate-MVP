@@ -1,16 +1,15 @@
+// Home.jsx – Startseite mit ToolCards für Navigation
 import React from 'react';
-import Hero from '../components/Hero';
+
 import ToolCards from '../components/ToolCards';
-import Footer from '../components/Footer';
 
-
-
-export default function Home() {
+const Home = () => {
   return (
-    <>
-      <Hero />
+    <div>
+      <h1>🏠 Willkommen bei MaklerMate</h1>
       <ToolCards />
-      <Footer />
-    </>
+    </div>
   );
-}
+};
+
+export default Home;
