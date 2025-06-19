@@ -1,3 +1,6 @@
+
+
+
 export async function fetchAdText(prompt, format = 'default') {
   const fullPrompt = `Erstelle einen ${format} Werbetext für folgende Beschreibung:\n${prompt}`;
   return await fetchGPTResponse(fullPrompt);
