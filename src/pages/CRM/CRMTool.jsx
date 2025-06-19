@@ -1,40 +1,30 @@
 // src/pages/CRM/CRMTool.jsx
 
-import React, { useState } from 'react';
+import React from 'react';
 
-// 🔹 Optional: Exportfunktion (z. B. als CSV, TXT)
+// � Komponenten
 import CRMExportBox from '../../components/CRMExportBox';
-// 🔹 Eingabeformular für neue Leads
+// �🔌 Hook für persistenten Lead-Speicher via LocalStorage
+import useLocalStorageLeads from '../../hooks/useLocalStorageLeads';
 import LeadForm from './LeadForm';
-// 🔹 Anzeige aller gespeicherten Leads
 import LeadList from './LeadList';
 
 export default function CRMTool() {
-  // 🧠 Zustand für alle Leads – beginnt leer
-  const [leads, setLeads] = useState([]);
-
-  // ➕ Fügt einen neuen Lead zum Zustand hinzu (mit eindeutiger ID)
-  const handleAddLead = (lead) => {
-    setLeads((prev) => [...prev, { ...lead, id: Date.now() }]);
-  };
-
-  // 🗑️ Löscht einen Lead anhand der ID
-  const handleDeleteLead = (id) => {
-    setLeads((prevLeads) => prevLeads.filter((lead) => lead.id !== id));
-  };
+  // 🧠 Hook liefert Leads + Methoden für Add/Delete/Reset
+  const { leads, addLead, deleteLead, resetLeads } = useLocalStorageLeads();
 
   return (
     <div className="crm-tool">
       <h1>📇 MaklerMate – CRM</h1>
 
       {/* 🔹 Formular zur Eingabe eines neuen Leads */}
-      <LeadForm onAddLead={handleAddLead} />
+      <LeadForm onAddLead={addLead} />
 
-      {/* 📋 Übersicht über alle Leads mit Lösch-Button */}
-      <LeadList leads={leads} onDelete={handleDeleteLead} />
+      {/* 📋 Übersicht über alle Leads mit Löschfunktion */}
+      <LeadList leads={leads} onDelete={deleteLead} />
 
-      {/* 📤 Optionaler Exportbereich für gespeicherte Leads */}
-      <CRMExportBox leads={leads} />
+      {/* 📤 Exportbox + Reset */}
+      <CRMExportBox leads={leads} onReset={resetLeads} />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   exportLeadsAsCSV,
   exportLeadsAsTXT,
@@ -14,6 +16,26 @@ export default function CRMExportBox({ leads }) {
 
       <button onClick={() => exportLeadsAsTXT(leads)}>📄 Als TXT herunterladen</button>
       <button onClick={() => exportLeadsAsCSV(leads)}>📊 Als CSV herunterladen</button>
+    </div>
+  );
+}
+
+
+export default function CRMExportLeads() {
+  const { leads, addLead, deleteLead, resetLeads } = useLocalStorageLeads();
+
+  return (
+    <div>
+      <h2>Gespeicherte Leads</h2>
+      <ul>
+        {leads.map((lead, index) => (
+          <li key={index}>
+            {lead.name} - {lead.email}
+            <button onClick={() => deleteLead(index)}>❌</button>
+          </li>
+        ))}
+      </ul>
+      <button onClick={resetLeads}>Reset</button>
     </div>
   );
 }
