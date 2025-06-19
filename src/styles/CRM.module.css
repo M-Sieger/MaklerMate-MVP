@@ -1,0 +1,81 @@
+/* 🔳 Container für das Formular */
+.crmForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #10151f;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.05);
+  margin-bottom: 1rem;
+}
+
+/* 🏷️ Label für Inputfelder */
+.crmLabel {
+  font-weight: bold;
+  color: #ddd;
+}
+
+/* 🧾 Input- und Textarea-Felder */
+.crmInput,
+.crmTextarea {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #1b2230;
+  color: #eee;
+  width: 100%;
+}
+
+/* 💾 Speichern-Button */
+.crmButton {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.crmButton:hover {
+  background-color: #2563eb;
+}
+
+/* 📋 Leadliste */
+.crmLeadList {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+/* 📦 Ein einzelner Lead-Eintrag */
+.crmLeadItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #181f2a;
+  border: 1px solid #2a2f3d;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 📝 Notiztext im Lead-Eintrag */
+.crmLeadNote {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* ❌ Delete-Button */
+.crmDeleteButton {
+  background: transparent;
+  border: none;
+  color: #f87171;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.crmDeleteButton:hover {
+  color: #ef4444;
+}

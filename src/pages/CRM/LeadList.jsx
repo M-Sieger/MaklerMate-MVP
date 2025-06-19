@@ -1,25 +1,32 @@
-// src/pages/CRM/LeadList.jsx
+// ✅ Listet gespeicherte Leads auf und ermöglicht das Löschen einzelner Einträge
 
 import React from 'react';
 
-import LeadItem from './LeadItem'; // ⬅️ importiere die Einzelkomponente
-
-// 💡 Diese Komponente zeigt alle Leads an, die ihr über Props übergeben wurden
-// Sie reicht die `onDelete`-Funktion weiter an jede `LeadItem`-Instanz
+import styles from '../../styles/CRM.module.css'; // 🎨 Style importieren
 
 export default function LeadList({ leads, onDelete }) {
-  if (!leads || leads.length === 0) {
-    return <p>📭 Noch keine Leads gespeichert.</p>;
-  }
-
   return (
-    <div className="crm-list">
-      <h2>📇 Gespeicherte Leads</h2>
-
-      {/* 🔁 Für jeden Lead wird ein LeadItem angezeigt */}
+    <ul className={styles.crmLeadList}>
+      {/* 🔁 Durch jeden Lead iterieren */}
       {leads.map((lead) => (
-        <LeadItem key={lead.id} lead={lead} onDelete={onDelete} />
+        <li key={lead.id} className={styles.crmLeadItem}>
+          <div>
+            {/* 👤 Name anzeigen */}
+            <strong>{lead.name}</strong><br />
+            {/* 📄 Notiz anzeigen */}
+            <span className={styles.crmLeadNote}>{lead.notiz}</span>
+          </div>
+
+          {/* ❌ Button zum Löschen */}
+          <button
+            onClick={() => onDelete(lead.id)}
+            className={styles.crmDeleteButton}
+            title="Lead löschen"
+          >
+            ❌
+          </button>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

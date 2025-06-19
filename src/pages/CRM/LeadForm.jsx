@@ -1,60 +1,61 @@
-// 📦 React-Hook useState importieren
+// ✅ Eingabeformular für neue Leads
+// 🔁 Übergibt den eingegebenen Lead an den Parent (z. B. CRMTool.jsx)
+
 import React, { useState } from 'react';
 
-// 🧠 CRM-Formular-Komponente
-// Diese Komponente ist zuständig für:
-// – die Eingabe eines neuen Leads
-// – das Speichern (per onAddLead Callback)
-// – das Zurücksetzen des Formulars nach dem Speichern
-export default function CRMForm({ onAddLead }) {
-  // 📝 Lokaler Zustand für das Formular
+import styles from '../../styles/CRM.module.css'; // 🎨 Custom CSS-Modul laden
+
+export default function LeadForm({ onAddLead }) {
+  // 🧠 Lokaler Zustand für Eingabefelder (Name + Notiz)
   const [name, setName] = useState('');
   const [notiz, setNotiz] = useState('');
 
-  // 🧩 Wenn der Nutzer das Formular abschickt
+  // 📤 Wird aufgerufen, wenn Formular abgeschickt wird
   const handleSubmit = (e) => {
-    e.preventDefault(); // ⛔ Standardverhalten (Seite neu laden) verhindern
+    e.preventDefault(); // ⛔ Verhindert Seitenreload
 
-    // 🔧 Neues Lead-Objekt vorbereiten
+    // 🆕 Neues Lead-Objekt erzeugen
     const newLead = {
-      id: Date.now(),           // einfache ID via Zeitstempel (später evtl. uuid)
-      name: name,               // Name aus Eingabefeld
-      notiz: notiz,             // Notiz aus Eingabefeld
-      status: 'neu'             // Standardstatus bei Erstellung
+      id: Date.now(), // 🆔 Zeitbasierte ID
+      name,
+      notiz,
+      status: 'neu'
     };
 
-    // 📤 Lead an Parent-Komponente übergeben (Callback)
+    // 📬 An übergeordnete Komponente weitergeben
     onAddLead(newLead);
 
-    // ♻️ Formular zurücksetzen
+    // ♻️ Eingabefelder zurücksetzen
     setName('');
     setNotiz('');
   };
 
   return (
-    // 🧾 Formular mit zwei Eingabefeldern
-    <form onSubmit={handleSubmit} className="crm-form">
-
-      {/* 👤 Name des Kontakts */}
+    <form onSubmit={handleSubmit} className={styles.crmForm}>
+      {/* 👤 Namensfeld */}
+      <label className={styles.crmLabel}>👤 Name des Kontakts</label>
       <input
         type="text"
-        placeholder="Name des Kontakts"
+        placeholder="z. B. Max Mustermann"
         value={name}
-        onChange={(e) => setName(e.target.value)} // live aktualisieren
-        required // verhindert leeres Absenden
+        onChange={(e) => setName(e.target.value)}
+        required
+        className={styles.crmInput}
       />
 
-      {/* 🗒️ Notizfeld */}
+      {/* 📝 Notizfeld */}
+      <label className={styles.crmLabel}>📝 Notiz</label>
       <textarea
-        placeholder="Notiz"
+        placeholder="z. B. Interessiert sich für Wohnung in Köln"
         value={notiz}
         onChange={(e) => setNotiz(e.target.value)}
+        className={styles.crmTextarea}
         rows={3}
       />
 
       {/* 💾 Speichern-Button */}
-      <button className="btn btn-primary" type="submit">
-        Lead speichern
+      <button type="submit" className={styles.crmButton}>
+        💾 Lead speichern
       </button>
     </form>
   );
