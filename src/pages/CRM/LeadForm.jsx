@@ -1,49 +1,49 @@
-// 📄 LeadForm.jsx – Formular zur Eingabe und Übergabe neuer Leads
-// ✅ Verwendet onAddLead als Prop → zentrale State-Verwaltung bleibt intakt
+// 📄 LeadForm.jsx – Formular zur Eingabe neuer Leads (UI-Only)
 
 import React, { useState } from 'react';
 
 import styles
-  from '../../styles/CRM.module.css'; // 🎨 Individuelles CRM-Form-Styling
+  from '../../styles/CRM.module.css'; // 🎨 CSS-Module für konsistentes Styling
 
-// 🔁 Diese Komponente erhält `onAddLead` vom Parent (CRMTool.jsx)
+// ⏎ Komponente erhält `onAddLead` als Prop (führt Logik aus)
 export default function LeadForm({ onAddLead }) {
-  // 🧠 Lokaler Zustand für Eingabefelder
+  // 🧠 Lokale States für Formulareingabe
   const [name, setName] = useState('');
   const [notiz, setNotiz] = useState('');
 
-  // 📤 Wird beim Absenden des Formulars ausgeführt
+  // 💾 Beim Absenden neues Lead-Objekt bauen und weitergeben
   const handleSubmit = (e) => {
-    e.preventDefault(); // ⛔ Kein Reload
+    e.preventDefault();
 
-    // 📦 Neues Lead-Objekt erzeugen
     const newLead = {
-      id: Date.now(),                     // 🆔 einfache ID
-      name,                               // 👤 Kontaktname
-      notiz,                              // 📝 Anmerkung
-      status: 'neu',                      // 🟢 Standardstatus
-      createdAt: new Date().toISOString() // 🕒 Zeitstempel
+      id: Date.now(),
+      name,
+      notiz,
+      status: 'neu',
+      createdAt: new Date().toISOString(),
     };
 
-    onAddLead(newLead); // ✅ Weitergabe an zentrale Lead-Logik
-    setName('');         // ♻️ Felder zurücksetzen
+    // 🔁 Weitergabe an die übergeordnete Komponente (CRMTool) – inkl. Validierung dort
+    onAddLead(newLead);
+
+    // ♻️ Felder zurücksetzen nach erfolgreicher Übergabe
+    setName('');
     setNotiz('');
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.crmForm}>
-      {/* 👤 Eingabe: Name */}
+      {/* 👤 Name */}
       <label className={styles.crmLabel}>👤 Name des Kontakts</label>
       <input
         type="text"
         placeholder="z. B. Max Mustermann"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        required
         className={styles.crmInput}
       />
 
-      {/* 📝 Eingabe: Notiz */}
+      {/* 📝 Notiz */}
       <label className={styles.crmLabel}>📝 Notiz</label>
       <textarea
         placeholder="z. B. Interessiert sich für Wohnung in Köln"
@@ -53,7 +53,7 @@ export default function LeadForm({ onAddLead }) {
         rows={3}
       />
 
-      {/* 💾 Absende-Button */}
+      {/* 💾 Absenden */}
       <button type="submit" className={styles.crmButton}>
         💾 Lead speichern
       </button>
