@@ -1,29 +1,34 @@
-// ✅ Eingabeformular für neue Leads
-// 🔁 Übergibt den eingegebenen Lead an den Parent (z. B. CRMTool.jsx)
+// 📄 LeadForm.jsx – Formular zur Eingabe und Speicherung eines neuen Leads
+// ✅ Direkt verbunden mit localStorage über den Hook `useLocalStorageLeads`
 
 import React, { useState } from 'react';
 
-import styles from '../../styles/CRM.module.css'; // 🎨 Custom CSS-Modul laden
+import useLocalStorageLeads
+  from '../../hooks/useLocalStorageLeads'; // 🔌 Direktverbindung zum Storage
+import styles
+  from '../../styles/CRM.module.css'; // 🎨 Custom Styling für CRM-Formular
 
-export default function LeadForm({ onAddLead }) {
-  // 🧠 Lokaler Zustand für Eingabefelder (Name + Notiz)
+export default function LeadForm() {
+  const { addLead } = useLocalStorageLeads(); // 📥 Lead hinzufügen (wird automatisch gespeichert)
+
+  // 🧠 Lokale Zustände für Formularfelder
   const [name, setName] = useState('');
   const [notiz, setNotiz] = useState('');
 
-  // 📤 Wird aufgerufen, wenn Formular abgeschickt wird
+  // 📤 Wird beim Formular-Submit aufgerufen
   const handleSubmit = (e) => {
-    e.preventDefault(); // ⛔ Verhindert Seitenreload
+    e.preventDefault(); // ⛔ Kein Reload
 
-    // 🆕 Neues Lead-Objekt erzeugen
+    // 🆕 Neues Lead-Objekt erstellen
     const newLead = {
-      id: Date.now(), // 🆔 Zeitbasierte ID
+      id: Date.now(),       // 🆔 Zeitbasierte ID
       name,
       notiz,
-      status: 'neu'
+      status: 'neu',        // 📌 Standardstatus
+      createdAt: new Date().toISOString(), // 🕒 Optional: Zeitstempel
     };
 
-    // 📬 An übergeordnete Komponente weitergeben
-    onAddLead(newLead);
+    addLead(newLead);       // 💾 In localStorage speichern via Hook
 
     // ♻️ Eingabefelder zurücksetzen
     setName('');
@@ -32,7 +37,7 @@ export default function LeadForm({ onAddLead }) {
 
   return (
     <form onSubmit={handleSubmit} className={styles.crmForm}>
-      {/* 👤 Namensfeld */}
+      {/* 👤 Name */}
       <label className={styles.crmLabel}>👤 Name des Kontakts</label>
       <input
         type="text"
@@ -43,7 +48,7 @@ export default function LeadForm({ onAddLead }) {
         className={styles.crmInput}
       />
 
-      {/* 📝 Notizfeld */}
+      {/* 📝 Notiz */}
       <label className={styles.crmLabel}>📝 Notiz</label>
       <textarea
         placeholder="z. B. Interessiert sich für Wohnung in Köln"
@@ -53,7 +58,7 @@ export default function LeadForm({ onAddLead }) {
         rows={3}
       />
 
-      {/* 💾 Speichern-Button */}
+      {/* 💾 Button */}
       <button type="submit" className={styles.crmButton}>
         💾 Lead speichern
       </button>
