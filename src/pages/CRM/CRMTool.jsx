@@ -1,8 +1,7 @@
-// 📄 CRMTool.jsx – Zentrale CRM-Seite mit LeadForm und Exportansicht
+// 📄 CRMTool.jsx – Zentrale CRM-Seite mit zentraler Validierung & Auto-Scroll
 
 import React from 'react';
 
-// ✅ react-hot-toast importieren, um ggf. auch hier Feedback zu geben
 import { toast } from 'react-hot-toast';
 
 import CRMExportLeads from '../../components/CRMExportLeads';
@@ -11,19 +10,19 @@ import useLocalStorageLeads
 import LeadForm from './LeadForm';
 
 export default function CRMTool() {
-  // ✅ Leads aus dem LocalStorage-Management laden
+  // ✅ LocalStorage-basierte Lead-Verwaltung
   const { leads, addLead, deleteLead, resetLeads } = useLocalStorageLeads();
 
-  // 🧠 Wrapper mit Validierung für LeadForm
+  // 🧠 Validierung + Hinzufügen
   const handleAddLead = (lead) => {
-    const { name, note } = lead;
+    const { name, notiz } = lead;
 
-    if (!name.trim() || !note.trim()) {
+    if (!name?.trim() || !notiz?.trim()) {
       toast.error("❌ Bitte alle Felder ausfüllen!");
       return;
     }
 
-    addLead(lead); // ✅ Wenn validiert, dann speichern
+    addLead(lead);
     toast.success("✅ Lead gespeichert!");
   };
 
@@ -31,10 +30,10 @@ export default function CRMTool() {
     <div className="crm-tool" style={{ padding: '2rem' }}>
       <h1>📇 MaklerMate – CRM</h1>
 
-      {/* 📝 Eingabe eines neuen Leads */}
+      {/* 📝 Eingabeformular */}
       <LeadForm onAddLead={handleAddLead} />
 
-      {/* 📋 Anzeige, Löschen, Reset, Export */}
+      {/* 📋 Liste, Export, Reset */}
       <CRMExportLeads
         leads={leads}
         onDelete={deleteLead}
