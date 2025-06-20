@@ -1,43 +1,38 @@
-// 📄 LeadForm.jsx – Formular zur Eingabe und Speicherung eines neuen Leads
-// ✅ Direkt verbunden mit localStorage über den Hook `useLocalStorageLeads`
+// 📄 LeadForm.jsx – Formular zur Eingabe und Übergabe neuer Leads
+// ✅ Verwendet onAddLead als Prop → zentrale State-Verwaltung bleibt intakt
 
 import React, { useState } from 'react';
 
-import useLocalStorageLeads
-  from '../../hooks/useLocalStorageLeads'; // 🔌 Direktverbindung zum Storage
 import styles
-  from '../../styles/CRM.module.css'; // 🎨 Custom Styling für CRM-Formular
+  from '../../styles/CRM.module.css'; // 🎨 Individuelles CRM-Form-Styling
 
-export default function LeadForm() {
-  const { addLead } = useLocalStorageLeads(); // 📥 Lead hinzufügen (wird automatisch gespeichert)
-
-  // 🧠 Lokale Zustände für Formularfelder
+// 🔁 Diese Komponente erhält `onAddLead` vom Parent (CRMTool.jsx)
+export default function LeadForm({ onAddLead }) {
+  // 🧠 Lokaler Zustand für Eingabefelder
   const [name, setName] = useState('');
   const [notiz, setNotiz] = useState('');
 
-  // 📤 Wird beim Formular-Submit aufgerufen
+  // 📤 Wird beim Absenden des Formulars ausgeführt
   const handleSubmit = (e) => {
     e.preventDefault(); // ⛔ Kein Reload
 
-    // 🆕 Neues Lead-Objekt erstellen
+    // 📦 Neues Lead-Objekt erzeugen
     const newLead = {
-      id: Date.now(),       // 🆔 Zeitbasierte ID
-      name,
-      notiz,
-      status: 'neu',        // 📌 Standardstatus
-      createdAt: new Date().toISOString(), // 🕒 Optional: Zeitstempel
+      id: Date.now(),                     // 🆔 einfache ID
+      name,                               // 👤 Kontaktname
+      notiz,                              // 📝 Anmerkung
+      status: 'neu',                      // 🟢 Standardstatus
+      createdAt: new Date().toISOString() // 🕒 Zeitstempel
     };
 
-    addLead(newLead);       // 💾 In localStorage speichern via Hook
-
-    // ♻️ Eingabefelder zurücksetzen
-    setName('');
+    onAddLead(newLead); // ✅ Weitergabe an zentrale Lead-Logik
+    setName('');         // ♻️ Felder zurücksetzen
     setNotiz('');
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.crmForm}>
-      {/* 👤 Name */}
+      {/* 👤 Eingabe: Name */}
       <label className={styles.crmLabel}>👤 Name des Kontakts</label>
       <input
         type="text"
@@ -48,7 +43,7 @@ export default function LeadForm() {
         className={styles.crmInput}
       />
 
-      {/* 📝 Notiz */}
+      {/* 📝 Eingabe: Notiz */}
       <label className={styles.crmLabel}>📝 Notiz</label>
       <textarea
         placeholder="z. B. Interessiert sich für Wohnung in Köln"
@@ -58,7 +53,7 @@ export default function LeadForm() {
         rows={3}
       />
 
-      {/* 💾 Button */}
+      {/* 💾 Absende-Button */}
       <button type="submit" className={styles.crmButton}>
         💾 Lead speichern
       </button>

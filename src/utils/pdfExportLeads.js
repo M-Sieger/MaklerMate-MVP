@@ -1,28 +1,28 @@
 // 📄 src/utils/pdfExportLeads.js
-// ✅ Exportiert alle gespeicherten Leads als übersichtliche Tabelle im PDF-Format
+// ✅ Exportiert gespeicherte Leads als saubere PDF-Tabelle
 
-import 'jspdf-autotable';                   // � Erweiterung für Tabellen in PDF
+import 'jspdf-autotable';                    // � Tabellen-Addon
 
 import jsPDF
-  from 'jspdf';                  // � Hauptbibliothek zur PDF-Erzeugung
+  from 'jspdf';                   // � Hauptbibliothek für PDF-Erzeugung
 
-// 🧾 Exportfunktion für Leads (Name, Notiz, Status)
+// 🧾 Exportfunktion: erzeugt PDF mit allen Leads
 export function exportLeadsAsPDF(leads) {
-  const doc = new jsPDF();                 // ➕ Neues PDF-Dokument
+  const doc = new jsPDF();                   // ➕ Neues A4-Dokument
   doc.setFontSize(16);
   doc.text('MaklerMate – Lead-Export', 14, 20); // 📌 Titel setzen
 
-  // 📊 Daten umwandeln für die Tabelle
+  // 📊 Tabelleninhalt vorbereiten (Index + Felder)
   const tableData = leads.map((lead, i) => [
-    i + 1,           // Laufende Nummer
-    lead.name,
-    lead.notiz,
-    lead.status
+    i + 1,
+    lead.name || '',
+    lead.notiz || '',
+    lead.status || ''
   ]);
 
-  // 📋 Tabelle mit Kopfzeile erzeugen
+  // 📋 Tabelle einfügen mit Kopfzeile
   doc.autoTable({
-    startY: 30, // Abstand nach oben
+    startY: 30,
     head: [['#', 'Name', 'Notiz', 'Status']],
     body: tableData,
     styles: { fontSize: 10 },

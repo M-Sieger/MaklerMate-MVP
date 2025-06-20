@@ -1,81 +1,110 @@
-/* 🔳 Container für das Formular */
+/* 📦 CRM.module.css */
+/* 🎯 Eingabeformular-Layout */
 .crmForm {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
-  background-color: #10151f;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.05);
-  margin-bottom: 1rem;
+  background-color: #1f2937;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+  margin-bottom: 2rem;
 }
 
-/* 🏷️ Label für Inputfelder */
+/* 🏷️ Labels */
 .crmLabel {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #ddd;
+  color: #e2e8f0;
 }
 
-/* 🧾 Input- und Textarea-Felder */
+/* 🧾 Eingabefelder */
 .crmInput,
 .crmTextarea {
-  padding: 0.6rem;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background-color: #1b2230;
-  color: #eee;
   width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #4a5568;
+  background-color: #2d3748;
+  color: #f7fafc;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.crmInput::placeholder,
+.crmTextarea::placeholder {
+  color: #a0aec0;
 }
 
 /* 💾 Speichern-Button */
 .crmButton {
-  background-color: #3b82f6;
+  background-color: #4299e1;
   color: white;
-  padding: 0.6rem 1rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
-
 .crmButton:hover {
-  background-color: #2563eb;
+  background-color: #2b6cb0;
 }
 
-/* 📋 Leadliste */
-.crmLeadList {
+/* 📋 Lead-Liste */
+.leadList {
   list-style: none;
   padding: 0;
+  margin: 0 0 2rem;
+}
+
+.leadItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2d3748;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  color: #edf2f7;
+}
+
+/* ❌ Löschen-Button */
+.deleteButton {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.deleteButton:hover {
+  background-color: #c53030;
+}
+
+/* 📤 Exportbereich */
+.crm-export-box {
+  background-color: #1a202c;
+  padding: 1rem;
+  border-radius: 1rem;
   margin-top: 1rem;
 }
 
-/* 📦 Ein einzelner Lead-Eintrag */
-.crmLeadItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  background-color: #181f2a;
-  border: 1px solid #2a2f3d;
-  border-radius: 8px;
-  padding: 0.8rem;
-  margin-bottom: 0.5rem;
+.crm-export-box h4 {
+  color: #63b3ed;
+  margin-bottom: 0.75rem;
 }
 
-/* 📝 Notiztext im Lead-Eintrag */
-.crmLeadNote {
-  color: #aaa;
-  font-size: 0.9rem;
-}
-
-/* ❌ Delete-Button */
-.crmDeleteButton {
-  background: transparent;
+/* 🔘 Export-Buttons */
+.crm-export-box button {
+  background-color: #4fd1c5;
+  color: #1a202c;
   border: none;
-  color: #f87171;
-  font-size: 1.2rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.crmDeleteButton:hover {
-  color: #ef4444;
+.crm-export-box button:hover {
+  background-color: #38b2ac;
 }

@@ -1,23 +1,31 @@
-// 📄 src/pages/CRM/CRMTool.jsx
-// ✅ Zentraler Einstieg für das CRM-Modul – verwendet modularisierte Komponenten
+// 📄 CRMTool.jsx – Zentrale CRM-Seite mit LeadForm und Exportansicht
 
 import React from 'react';
 
-//  Anzeige + Reset + Export (liegt in components!)
 import CRMExportLeads from '../../components/CRMExportLeads';
-// 📥 Eingabe eines neuen Leads (intern speichert es per Hook)
+import useLocalStorageLeads
+  from '../../hooks/useLocalStorageLeads'; // 💾 Hook oben zentral
 import LeadForm from './LeadForm';
 
 export default function CRMTool() {
+  // ✅ Eine Hook-Instanz – keine doppelten States
+  const { leads, addLead, deleteLead, resetLeads } = useLocalStorageLeads();
+
   return (
     <div className="crm-tool" style={{ padding: '2rem' }}>
       <h1>📇 MaklerMate – CRM</h1>
 
-      {/* 🧾 Neues Lead hinzufügen */}
-      <LeadForm />
+      {/* 📝 Eingabe eines neuen Leads */}
+      <LeadForm onAddLead={addLead} />
 
-      {/* 📋 Leads anzeigen, löschen, resetten & exportieren */}
-      <CRMExportLeads />
+      {/* 📋 Anzeige, Löschen, Reset, Export */}
+      <CRMExportLeads
+        leads={leads}
+        onDelete={deleteLead}
+        onReset={resetLeads}
+      />
+
+      
     </div>
   );
 }
