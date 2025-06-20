@@ -1,97 +1,48 @@
-import { useState } from 'react';
+// 📄 src/components/CRMExportBox.jsx
 
+import React from 'react';
+
+import styles
+  from '../styles/ExportBox.module.css'; // 🎨 Neues CSS-Modul für Buttons/Box
 import {
-  generateCRMJson,
-  generateCRMTemplate,
-} from '../utils/crmExportExpose';
+  exportLeadsAsCSV,
+  exportLeadsAsTXT,
+} from '../utils/crmExport';
 
-function CRMExportBox({ formData, gptText }) {
-  const [selectedCRM, setSelectedCRM] = useState('json');
-  const [showHelp, setShowHelp] = useState(false);
-
-  const download = () => {
-    let content = '';
-    let mime = '';
-    let filename = '';
-
-    const data = { ...formData, gptText };
-
-    if (selectedCRM === 'json') {
-      content = generateCRMJson(data);
-      mime = 'application/json';
-      filename = 'expose_crm.json';
-    } else {
-      content = generateCRMTemplate(data);
-      mime = 'text/plain';
-      filename = `expose_${selectedCRM}.txt`;
-    }
-
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.click();
-  };
+export default function CRMExportBox({ leads = [] }) {
+  if (!leads || leads.length === 0) {
+    return <p style={{ color: '#aaa', marginTop: '2rem' }}>⚠️ Keine Leads zum Exportieren vorhanden.</p>;
+  }
 
   return (
-    <div className="crm-export-box">
-      <h3>🔽 Export für CRM-System</h3>
-      <p>
-        Lade diese Datei herunter und lade sie in dein Makler-CRM hoch (z. B. onOffice, FlowFact, Propstack), um dein Exposé automatisch auszufüllen.
-      </p>
-      <p style={{ fontSize: "0.9em", color: "#777" }}>
-        ⚠️ Nur verwenden, wenn dein CRM JSON-Dateien unterstützt.{" "}
-        <button className="link-button" onClick={() => setShowHelp(!showHelp)}>
-          ❓ Was ist das?
+    <div className={styles.exportBox}>
+      <h3>📤 Leads exportieren</h3>
+      <p>{leads.length} gespeicherte Leads</p>
+
+      <div className={styles.buttonGroup}>
+        <button onClick={() => exportLeadsAsTXT(leads)} className={styles.exportButton}>
+          📄 TXT-Datei
         </button>
-      </p>
 
-      {showHelp && (
-        <div className="crm-help-box">
-          <p>
-            <strong>Was ist JSON?</strong><br />
-            JSON ist ein technisches Format, das viele CRM-Systeme verstehen.<br />
-            Du brauchst keine Programmierkenntnisse.<br />
-            Wenn dein CRM die Option „Daten importieren“ oder „Exposé hochladen“ bietet, kannst du die Datei einfach dort einfügen.<br />
-            <em>Im Zweifel: Frag deinen Software-Support.</em>
-          </p>
-        </div>
-      )}
+        <button onClick={() => exportLeadsAsCSV(leads)} className={styles.exportButton}>
+          📊 CSV-Datei
+        </button>
 
-      <div style={{ margin: "1rem 0" }}>
-        <label>
-          <input
-            type="radio"
-            value="onoffice"
-            checked={selectedCRM === 'onoffice'}
-            onChange={(e) => setSelectedCRM(e.target.value)}
-          /> onOffice (.txt)
-        </label><br />
-        <label>
-          <input
-            type="radio"
-            value="flowfact"
-            checked={selectedCRM === 'flowfact'}
-            onChange={(e) => setSelectedCRM(e.target.value)}
-          /> FlowFact (.txt)
-        </label><br />
-        <label>
-          <input
-            type="radio"
-            value="json"
-            checked={selectedCRM === 'json'}
-            onChange={(e) => setSelectedCRM(e.target.value)}
-          /> Export als JSON (.json)
-        </label>
+        <button
+          onClick={() => {
+            const blob = new Blob([JSON.stringify(leads, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'leads-export.json';
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+          className={styles.exportButton}
+        >
+          🧠 JSON-Datei
+        </button>
       </div>
-
-      <button className="button-crm" onClick={download}>
-        📥 Exportieren
-      </button>
     </div>
   );
 }
-
-export default CRMExportBox;
