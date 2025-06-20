@@ -1,0 +1,28 @@
+/* 📄 src/styles/Layout.module.css */
+
+/* 🗂️ Haupt-Content-Bereich (unter Navbar, über Footer) */
+.main {
+  padding: 2rem;
+  min-height: 85vh; /* verhindert, dass Footer zu weit oben klebt */
+}
+
+/* 📌 Footer-Container */
+.footer {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  padding: 1.5rem 0 1rem;
+  margin-top: 2rem;
+  border-top: 1px solid #1f2937;
+  background: transparent;
+}
+
+/* 🔗 Link im Footer (z. B. Impressum) */
+.footerLink {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
