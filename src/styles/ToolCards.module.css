@@ -1,19 +1,60 @@
-/* src/components/ToolCards.module.css */
+/* 📄 src/styles/ToolCards.module.css */
+
+/* 🔳 Grid-Layout für die ToolCards */
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 1rem;
 }
 
+/* 🧱 Einzelne Karte */
 .card {
-  background: white;
+  background-color: #111827;
+  border: 1px solid #1f2937;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  padding: 1rem;
-  transition: transform 0.2s;
+  padding: 1.5rem;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
+/* 🖱️ Hover-Effekt */
 .card:hover {
-  transform: scale(1.02);
+  transform: translateY(-5px);
+  box-shadow: 0 0 18px rgba(0,0,0,0.5);
+}
+
+/* 📛 Titel */
+.card h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  color: #facc15; /* Goldton */
+}
+
+/* 📃 Beschreibung */
+.card p {
+  margin: 0.5rem 0 1rem;
+  color: #d1d5db;
+  font-size: 0.95rem;
+}
+
+/* 🖱️ Button */
+.cardButton {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cardButton:hover {
+  background-color: #2563eb;
+}
+
+/* 🚫 Deaktivierte Card (Social Media Platzhalter) */
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }

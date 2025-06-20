@@ -1,44 +1,43 @@
+// 📄 src/components/ToolCards.jsx
+
 import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-// Liste der verfügbaren Tools – individuell erweiterbar
-const tools = [
-  {
-    title: '📄 Exposé erstellen',
-    desc: 'Erzeuge in Sekunden ein KI-gestütztes Immobilien-Exposé.',
-    route: '/expose', // neue Route für dein Exposé-Tool
-    button: 'Jetzt starten'
-  },
-  {
-    title: '📇 Kontakte verwalten',
-    desc: 'Verwalte Interessenten und Leads ganz einfach – CRM-Light für Makler.',
-    route: '/crm', // CRM-Bereich
-    button: 'CRM öffnen'
-  },
-  {
-    title: '📢 Social Posts (bald)',
-    desc: 'Erstelle Social-Media-Inhalte automatisch aus deinen Objektdaten.',
-    route: '/social', // Platzhalter für spätere Erweiterung
-    button: 'Demnächst verfügbar'
-  }
-];
+import styles from '../styles/ToolCards.module.css'; // 🎨 eigenes Stylesheet
 
-// Komponente: ToolCards zeigt alle Tools als klickbare Karten
 export default function ToolCards() {
   const navigate = useNavigate();
 
   return (
-    <section id="tools" className="toolcards-section">
-      {tools.map((tool, index) => (
-        <div key={index} className="toolcard">
-          <h3>{tool.title}</h3>
-          <p>{tool.desc}</p>
-          <button onClick={() => navigate(tool.route)}>
-            {tool.button}
-          </button>
-        </div>
-      ))}
-    </section>
+    <div className={styles.cardGrid}>
+      
+      {/* 🏠 Exposé Generator */}
+      <div className={styles.card}>
+        <h2>🏠 Exposé erstellen</h2>
+        <p>Erzeuge in Sekunden ein KI-gestütztes Immobilien-Exposé.</p>
+        <button onClick={() => navigate('/expose')} className={styles.cardButton}>
+          Jetzt starten
+        </button>
+      </div>
+
+      {/* 📇 CRM */}
+      <div className={styles.card}>
+        <h2>📇 Kontakte verwalten</h2>
+        <p>Verwalte Interessenten und Leads ganz einfach – CRM-Light für Makler.</p>
+        <button onClick={() => navigate('/crm')} className={styles.cardButton}>
+          CRM öffnen
+        </button>
+      </div>
+
+      {/* 📣 Social Media (Platzhalter) */}
+      <div className={`${styles.card} ${styles.disabled}`}>
+        <h2>📣 Social Posts (bald)</h2>
+        <p>Erstelle Social-Media-Inhalte automatisch aus deinen Objektdaten.</p>
+        <button disabled className={styles.cardButton}>
+          Demnächst verfügbar
+        </button>
+      </div>
+    </div>
   );
 }
