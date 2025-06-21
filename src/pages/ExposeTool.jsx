@@ -12,18 +12,21 @@ import { fetchGPTResponse } from '../lib/openai';
 export default function ExposeTool() {
   // 📝 Zustand für alle Formularfelder
   const [formData, setFormData] = useState({
-    objektart: '',
-    strasse: '',
-    ort: '',
-    wohnflaeche: '',
-    grundstueck: '',
-    zimmer: '',
-    baujahr: '',
-    zustand: '',
-    preis: '',
-    energie: '',
-    besonderheiten: '',
-  });
+  objektart: '',
+  strasse: '',
+  ort: '',
+  bezirk: '',               // ✅ Neu: Bezirk / Stadtteil
+  sicht: '',                // ✅ Neu: Sicht auf ...
+  lagebesonderheiten: '',   // ✅ Neu: Lagebeschreibung
+  wohnflaeche: '',
+  grundstueck: '',
+  zimmer: '',
+  baujahr: '',
+  zustand: '',
+  preis: '',
+  energie: '',
+  besonderheiten: '',
+});
 
   // 🔄 Ladeanzeige, GPT-Antwort & Stil
   const [isLoading, setIsLoading] = useState(false);
