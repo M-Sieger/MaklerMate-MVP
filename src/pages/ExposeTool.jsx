@@ -12,21 +12,21 @@ import { fetchGPTResponse } from '../lib/openai';
 export default function ExposeTool() {
   // 📝 Zustand für alle Formularfelder
   const [formData, setFormData] = useState({
-  objektart: '',
-  strasse: '',
-  ort: '',
-  bezirk: '',               // ✅ Neu: Bezirk / Stadtteil
-  sicht: '',                // ✅ Neu: Sicht auf ...
-  lagebesonderheiten: '',   // ✅ Neu: Lagebeschreibung
-  wohnflaeche: '',
-  grundstueck: '',
-  zimmer: '',
-  baujahr: '',
-  zustand: '',
-  preis: '',
-  energie: '',
-  besonderheiten: '',
-});
+    objektart: '',
+    strasse: '',
+    ort: '',
+    bezirk: '',
+    sicht: '',
+    lagebesonderheiten: '',
+    wohnflaeche: '',
+    grundstueck: '',
+    zimmer: '',
+    baujahr: '',
+    zustand: '',
+    preis: '',
+    energie: '',
+    besonderheiten: '',
+  });
 
   // 🔄 Ladeanzeige, GPT-Antwort & Stil
   const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +97,7 @@ export default function ExposeTool() {
         </div>
 
         {/* 🧾 Formular-Sektion (TabbedForm via ExposeForm.jsx) */}
-        <ExposeForm formData={formData} handleChange={handleChange} />
+        <ExposeForm formData={formData} handleChange={(e) => handleChange(e.target.name, e.target.value)} />
 
         {/* 🎯 Stilwahl Dropdown */}
         <div className="style-selector">
@@ -161,3 +161,4 @@ export default function ExposeTool() {
     </div>
   );
 }
+// 📦 Styles & Komponenten
