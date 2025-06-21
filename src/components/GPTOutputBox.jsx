@@ -1,16 +1,29 @@
-// GPTOutputBox.jsx – Anzeige des generierten GPT-Textes mit Designbindung
-
 import React from 'react';
 
 import styles from '../styles/GPTOutputBox.module.css';
 
 const GPTOutputBox = ({ text }) => {
-  if (!text) return null;
+  const isEmpty = !text || text.trim() === '';
 
   return (
     <div className={styles.previewBox}>
       <h3 className={styles.heading}>🧠 GPT-Ergebnis</h3>
-      <pre className={styles.outputText}>{text}</pre>
+
+      {/* 🧠 Vorschau anzeigen, wenn kein GPT-Text vorhanden ist */}
+      {isEmpty ? (
+        <pre className={styles.outputText}>
+          📝 Vorschau
+
+          Willkommen bei MaklerMate!
+          Hier erscheint dein automatisch generierter Immobilientext,
+          sobald du auf "Exposé generieren" klickst.
+
+          👉 Beispiel: "Dieses charmante Altbaujuwel in Köln besticht durch hohe Decken,
+          stilvolle Dielen und einen sonnigen Balkon mit Blick auf den Rhein."
+        </pre>
+      ) : (
+        <pre className={styles.outputText}>{text}</pre>
+      )}
     </div>
   );
 };
