@@ -1,15 +1,16 @@
-// GPTOutputBox.jsx – Anzeige des generierten GPT-Textes
-// Zeigt nur etwas an, wenn `text` gesetzt ist
+// GPTOutputBox.jsx – Anzeige des generierten GPT-Textes mit Designbindung
 
 import React from 'react';
+
+import styles from '../styles/GPTOutputBox.module.css';
 
 const GPTOutputBox = ({ text }) => {
   if (!text) return null;
 
   return (
-    <div style={{ marginTop: '2rem', background: '#f9f9f9', padding: '1rem' }}>
-      <h3>🧠 GPT-Ergebnis</h3>
-      <pre style={{ whiteSpace: 'pre-wrap' }}>{text}</pre>
+    <div className={styles.previewBox}>
+      <h3 className={styles.heading}>🧠 GPT-Ergebnis</h3>
+      <pre className={styles.outputText}>{text}</pre>
     </div>
   );
 };

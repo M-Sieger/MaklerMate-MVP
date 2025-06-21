@@ -1,143 +1,107 @@
 // 📦 Styles & Core
-import '../styles/ExposeTool.css';
+import '../styles/ExposeTool.css'; // ✅ Style-Abgleich mit Glassmorphismus & modernem UI
 
 import React, { useState } from 'react';
 
 import ExportButtons from '../components/ExportButtons';
 import ExposeForm from '../components/ExposeForm';
+import GPTOutputBox
+  from '../components/GPTOutputBox'; // 🧠 Ausgelagerte Vorschau-Komponente mit Designbindung
 import Loader from '../components/Loader';
-// 🧠 GPT-Backend / Komponenten
+// 🧠 GPT-Backend
 import { fetchGPTResponse } from '../lib/openai';
 
 export default function ExposeTool() {
-  // 📝 Zustand für alle Formularfelder
+  // 🧾 Formular-Zustände
   const [formData, setFormData] = useState({
-    objektart: '',
-    strasse: '',
-    ort: '',
-    bezirk: '',
-    sicht: '',
-    lagebesonderheiten: '',
-    wohnflaeche: '',
-    grundstueck: '',
-    zimmer: '',
-    baujahr: '',
-    zustand: '',
-    preis: '',
-    energie: '',
-    besonderheiten: '',
+    objektart: '', strasse: '', ort: '', bezirk: '', sicht: '', lagebesonderheiten: '',
+    wohnflaeche: '', grundstueck: '', zimmer: '', baujahr: '', zustand: '',
+    preis: '', energie: '', besonderheiten: ''
   });
 
-  // 🔄 Ladeanzeige, GPT-Antwort & Stil
   const [isLoading, setIsLoading] = useState(false);
   const [output, setOutput] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('emotional');
 
-  // 🔧 Formularänderungen live speichern
+  // 🔧 Feldänderungen speichern
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // 🧠 GPT-Request basierend auf Formulardaten + Stil
+  // 🚀 GPT-Text generieren
   const handleGenerate = async () => {
-    const {
-      objektart, ort, wohnflaeche, zimmer, besonderheiten
-    } = formData;
+    const { objektart, ort, wohnflaeche, zimmer, besonderheiten } = formData;
 
     let stilHinweis = '';
-    if (selectedStyle === 'emotional') {
-      stilHinweis = '- Zielgruppe: Familien, emotionale Sprache, lebendig.';
-    } else if (selectedStyle === 'sachlich') {
-      stilHinweis = '- Zielgruppe: Investoren, sachlich, faktenorientiert.';
-    } else if (selectedStyle === 'luxus') {
-      stilHinweis = '- Zielgruppe: Luxussegment, stilvoll, edel, exklusiv.';
-    }
+    if (selectedStyle === 'emotional') stilHinweis = '- Zielgruppe: Familien, emotional, lebendig.';
+    if (selectedStyle === 'sachlich') stilHinweis = '- Zielgruppe: Investoren, sachlich, faktenorientiert.';
+    if (selectedStyle === 'luxus') stilHinweis = '- Zielgruppe: Luxussegment, stilvoll, edel.';
 
-    // 📝 GPT-Prompt vorbereiten
     const prompt = `Du bist ein professioneller Immobilienmakler...
     ${stilHinweis}
     🔚 Gib nur den reinen Text zurück – ohne Einleitung, Formatierung oder Kommentare.`;
 
     setIsLoading(true);
-
     try {
       const gptText = await fetchGPTResponse(prompt);
       setOutput(gptText);
     } catch (err) {
-      console.error('Fehler bei der GPT-Antwort:', err);
-      setOutput('⚠️ Fehler beim Abrufen der GPT-Antwort.');
+      console.error('Fehler bei GPT:', err);
+      setOutput('⚠️ Fehler beim Abruf.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 📊 Fortschrittsanzeige (ausgefüllte Felder)
-  const countFilledFields = Object.values(formData).filter((v) => v.trim() !== '').length;
+  const countFilled = Object.values(formData).filter((v) => v.trim() !== '').length;
   const totalFields = Object.keys(formData).length;
 
   return (
     <div className="expose-wrapper">
+      {/* 📌 Logo für PDF */}
+      <div id="pdf-logo" style={{ width: 300, height: 100 }}></div>
 
-      {/* 📌 Logo für PDF-Export */}
-      <div id="pdf-logo" style={{ width: 300, height: 100 }}>
-        {/* SVG-Logo hier */}
-      </div>
-
-      {/* 🏠 Header / Tool-Beschreibung */}
+      {/* 🏠 Intro */}
       <div className="hero-intro">
         <h1>🏡 Exposé Generator für Makler</h1>
-        <p>Erstelle in wenigen Sekunden ein überzeugendes Immobilien-Exposé – dank GPT.</p>
+        <p>Erstelle in Sekunden ein hochwertiges Immobilien-Exposé – GPT hilft dir dabei.</p>
       </div>
 
-      <div className="tool-inner-wrapper">
-
-        {/* 📊 Fortschrittsbalken */}
+      <div className="tool-inner-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {/* 🔢 Fortschritt */}
         <div className="progress-info">
-          🧩 Fortschritt: {countFilledFields} / {totalFields} Felder ausgefüllt
+          🧩 Fortschritt: {countFilled} / {totalFields} Felder ausgefüllt
         </div>
 
-        {/* 🧾 Formular-Sektion (TabbedForm via ExposeForm.jsx) */}
-        <ExposeForm formData={formData} handleChange={(e) => handleChange(e.target.name, e.target.value)} />
+        {/* 📋 Formular */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1rem' }}>
+          <ExposeForm formData={formData} handleChange={(e) => handleChange(e.target.name, e.target.value)} />
+        </div>
 
-        {/* 🎯 Stilwahl Dropdown */}
-        <div className="style-selector">
-          <label htmlFor="stilwahl">🎯 Zielgruppe / Stil wählen:</label>
-          <select
-            id="stilwahl"
-            value={selectedStyle}
-            onChange={(e) => setSelectedStyle(e.target.value)}
-          >
+        {/* 🎯 Stilwahl */}
+        <div className="style-selector" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1rem' }}>
+          <label htmlFor="stilwahl" style={{ marginBottom: '0.5rem', display: 'block' }}>🎯 Zielgruppe / Stil wählen:</label>
+          <select id="stilwahl" value={selectedStyle} onChange={(e) => setSelectedStyle(e.target.value)} style={{ marginBottom: '1rem' }}>
             <option value="emotional">📢 Emotional (Familien)</option>
             <option value="sachlich">📈 Sachlich (Investoren)</option>
-            <option value="luxus">✨ Hochwertig (Luxusimmobilien)</option>
+            <option value="luxus">✨ Hochwertig (Luxus)</option>
           </select>
         </div>
 
-        {/* 🚀 GPT-Generieren-Button */}
-        <button className="btn btn-primary" onClick={handleGenerate}>
-          Expose generieren
-        </button>
+        {/* 🚀 Generieren */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <button className="btn btn-primary" onClick={handleGenerate} disabled={isLoading}>
+            {isLoading ? '⏳ Generiere...' : 'Exposé generieren'}
+          </button>
+        </div>
 
-        {/* 🔄 Ladeanzeige oder Vorschautext */}
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <div className="preview-box">
-            <h3>GPT-Textvorschau:</h3>
-            <p>{output || 'Noch kein Text generiert.'}</p>
-          </div>
-        )}
+        {/* 📄 Vorschau oder Ladeanzeige */}
+        {isLoading ? <Loader /> : <GPTOutputBox text={output} />}
 
-        {/* 📋 Copy & 📧 Mail Buttons bei Output */}
+        {/* 📋 Copy & 📧 E-Mail */}
         {output && (
-          <>
-            <button
-              className="btn btn-outline"
-              onClick={() => navigator.clipboard.writeText(output)}
-            >
-              📋 Text kopieren
-            </button>
-
+          <div className="button-group">
+            <button className="btn btn-outline" onClick={() => navigator.clipboard.writeText(output)}>📋 Text kopieren</button>
             <button
               className="btn btn-mail"
               onClick={() => {
@@ -145,20 +109,13 @@ export default function ExposeTool() {
                 const body = encodeURIComponent(output);
                 window.location.href = `mailto:?subject=${subject}&body=${body}`;
               }}
-            >
-              📧 Per E-Mail versenden
-            </button>
-          </>
+            >📧 Per E-Mail versenden</button>
+          </div>
         )}
 
-        {/* 📤 Export-Buttons (PDF, TXT, JSON etc.) */}
-        <ExportButtons
-          formData={formData}
-          output={output}
-          selectedStyle={selectedStyle}
-        />
+        {/* 📤 Export */}
+        <ExportButtons formData={formData} output={output} selectedStyle={selectedStyle} />
       </div>
     </div>
   );
 }
-// 📦 Styles & Komponenten

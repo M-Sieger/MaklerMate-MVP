@@ -60,6 +60,7 @@ input, textarea, select {
   width: 100%;
   box-sizing: border-box;
   transition: all 0.3s ease;
+  margin-bottom: 1rem;
 }
 
 input:focus,
@@ -137,7 +138,7 @@ textarea::placeholder {
 }
 
 /* 🗂 Tabs */
-.tabs-header {
+.tab-header {
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -145,7 +146,7 @@ textarea::placeholder {
   border-bottom: 2px solid #4a5568;
 }
 
-.tab-button {
+.tab-header button {
   padding: 0.5rem 1rem;
   font-weight: 500;
   border: none;
@@ -156,7 +157,7 @@ textarea::placeholder {
   transition: color 0.2s ease;
 }
 
-.tab-button.active {
+.tab-header button.active {
   color: #4fc3f7;
   background-color: rgba(255, 255, 255, 0.05);
   font-weight: bold;
@@ -183,4 +184,4 @@ textarea::placeholder {
   border: 1px solid #3a4a5a;
 }
 
-/* 🧼 Entfernt: .preview-box → ausgelagert in GPTOutputBox.module.css */
+/* 🧼 Hinweis: .preview-box entfernt – Design ist nun in GPTOutputBox.module.css ausgelagert */

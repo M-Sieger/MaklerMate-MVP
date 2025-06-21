@@ -1,123 +1,146 @@
+// 📦 Styles & Core
 import '../styles/ExposeTool.css';
 
-// 🧠 UX-optimiertes ExposeForm.jsx (mit Tabs wie im Screenshot)
 import React, { useState } from 'react';
 
+// 🔖 Tabs für die Formularstruktur
 const TABS = [
-  { id: "objekt", label: "🏠 Objektdaten" },
-  { id: "flaeche", label: "📐 Flächen & Räume" },
-  { id: "baujahr", label: "🧱 Baujahr & Zustand" },
-  { id: "kosten", label: "💸 Preis & Energie" },
-  { id: "ausstattung", label: "🛠 Ausstattung" },
-  { id: "verkehr", label: "🚆 Anbindung" },
-  { id: "verfuegbarkeit", label: "📆 Verfügbarkeit" },
-  { id: "besonderheiten", label: "✨ Besonderheiten" },
+  { id: 'objekt', label: '🏠 Objektdaten' },
+  { id: 'flaeche', label: '📐 Flächen & Räume' },
+  { id: 'baujahr', label: '🧱 Baujahr & Zustand' },
+  { id: 'kosten', label: '💸 Preis & Energie' },
+  { id: 'ausstattung', label: '🛠 Ausstattung' },
+  { id: 'verkehr', label: '🚆 Anbindung' },
+  { id: 'verfuegbarkeit', label: '📆 Verfügbarkeit' },
+  { id: 'besonderheiten', label: '✨ Besonderheiten' }
 ];
 
 const ExposeForm = ({ formData, setFormData }) => {
-  const [activeTab, setActiveTab] = useState("objekt");
+  const [activeTab, setActiveTab] = useState('objekt');
 
+  // 🛠 Aktualisiert das formData bei Eingabe
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // 🧱 Erzeugt einzelne Eingabefelder oder Auswahlfelder
+  const renderInput = (name, placeholder, type = 'input') => (
+    <div>
+      <label>{placeholder}</label>
+      {type === 'textarea' ? (
+        <textarea name={name} onChange={handleChange} placeholder={placeholder} />
+      ) : type === 'select' ? (
+        <select name={name} onChange={handleChange}>
+          <option value=''>{placeholder}</option>
+          {/* Optionen individuell im renderTab setzen */}
+        </select>
+      ) : (
+        <input name={name} placeholder={placeholder} onChange={handleChange} />
+      )}
+    </div>
+  );
+
+  // 🧩 Wechselt die Eingabefelder je nach gewähltem Tab
   const renderTab = () => {
     switch (activeTab) {
-      case "objekt":
+      case 'objekt':
         return (
           <>
-            <select name="objektart" onChange={handleChange}>
-              <option value="">🏠 Objektart wählen</option>
+            <label>🏠 Objektart</label>
+            <select name='objektart' onChange={handleChange}>
+              <option value=''>Bitte wählen</option>
               <option>Wohnung</option>
               <option>Haus</option>
               <option>Gewerbe</option>
             </select>
-            <input name="strasse" placeholder="Straße" onChange={handleChange} />
-            <input name="plz_ort" placeholder="PLZ, Ort" onChange={handleChange} />
-            <input name="bezirk" placeholder="📍 Bezirk / Stadtteil" onChange={handleChange} />
-            <input name="sicht" placeholder="🌅 Sicht auf ..." onChange={handleChange} />
-            <input name="lage_besonderheiten" placeholder="🌳 Besonderheiten der Lage (Altstadt, Rheinblick...)" onChange={handleChange} />
+            {renderInput('strasse', 'Straße')}
+            {renderInput('plz_ort', 'PLZ, Ort')}
+            {renderInput('bezirk', '📍 Bezirk / Stadtteil')}
+            {renderInput('sicht', '🌅 Sicht auf ...')}
+            {renderInput('lage_besonderheiten', '🌳 Besonderheiten der Lage (Altstadt, Rheinblick...)')}
           </>
         );
-      case "flaeche":
+      case 'flaeche':
         return (
           <>
-            <input name="wohnflaeche" placeholder="Wohnfläche (m²)" onChange={handleChange} />
-            <input name="grundstueck" placeholder="Grundstücksfläche (m²)" onChange={handleChange} />
-            <input name="zimmer" placeholder="Zimmeranzahl" onChange={handleChange} />
-            <input name="schlafzimmer" placeholder="Schlafzimmer" onChange={handleChange} />
-            <input name="badezimmer" placeholder="Badezimmer" onChange={handleChange} />
-            <input name="keller" placeholder="Keller vorhanden?" onChange={handleChange} />
-            <input name="balkon" placeholder="Anzahl Balkone" onChange={handleChange} />
+            {renderInput('wohnflaeche', 'Wohnfläche (m²)')}
+            {renderInput('grundstueck', 'Grundstücksfläche (m²)')}
+            {renderInput('zimmer', 'Zimmeranzahl')}
+            {renderInput('schlafzimmer', 'Schlafzimmer')}
+            {renderInput('badezimmer', 'Badezimmer')}
+            {renderInput('keller', 'Keller vorhanden?')}
+            {renderInput('balkon', 'Anzahl Balkone')}
           </>
         );
-      case "baujahr":
+      case 'baujahr':
         return (
           <>
-            <input name="baujahr" placeholder="Baujahr" onChange={handleChange} />
-            <input name="zustand" placeholder="Zustand (z.B. saniert)" onChange={handleChange} />
-            <input name="modernisierung" placeholder="Sanierungsjahr(e)" onChange={handleChange} />
-            <input name="bauphase" placeholder="Bauphase (z.B. Neubau)" onChange={handleChange} />
-            <input name="etagenanzahl" placeholder="Etagenanzahl" onChange={handleChange} />
+            {renderInput('baujahr', 'Baujahr')}
+            {renderInput('zustand', 'Zustand (z.B. saniert)')}
+            {renderInput('modernisierung', 'Sanierungsjahr(e)')}
+            {renderInput('bauphase', 'Bauphase (z.B. Neubau)')}
+            {renderInput('etagenanzahl', 'Etagenanzahl')}
           </>
         );
-      case "kosten":
+      case 'kosten':
         return (
           <>
-            <input name="kaufpreis" placeholder="Kaufpreis (€)" onChange={handleChange} />
-            <input name="kaltmiete" placeholder="Kaltmiete (€)" onChange={handleChange} />
-            <input name="warmmiete" placeholder="Warmmiete (€)" onChange={handleChange} />
-            <input name="nebenkosten" placeholder="Nebenkosten (€)" onChange={handleChange} />
-            <input name="energieklasse" placeholder="Energieklasse" onChange={handleChange} />
-            <input name="energieausweis" placeholder="Energieausweis vorhanden?" onChange={handleChange} />
+            {renderInput('kaufpreis', 'Kaufpreis (€)')}
+            {renderInput('kaltmiete', 'Kaltmiete (€)')}
+            {renderInput('warmmiete', 'Warmmiete (€)')}
+            {renderInput('nebenkosten', 'Nebenkosten (€)')}
+            {renderInput('energieklasse', 'Energieklasse')}
+            {renderInput('energieausweis', 'Energieausweis vorhanden?')}
           </>
         );
-      case "ausstattung":
+      case 'ausstattung':
         return (
           <>
-            <input name="heizung" placeholder="Heizungsart" onChange={handleChange} />
-            <input name="boden" placeholder="Bodenbelag (z.B. Parkett)" onChange={handleChange} />
-            <input name="stellplatz" placeholder="Stellplatztyp" onChange={handleChange} />
-            <input name="aufzug" placeholder="Aufzug vorhanden?" onChange={handleChange} />
-            <input name="internet" placeholder="Internet (Glasfaser?)" onChange={handleChange} />
-            <input name="smarthome" placeholder="Smart Home integriert?" onChange={handleChange} />
+            {renderInput('heizung', 'Heizungsart')}
+            {renderInput('boden', 'Bodenbelag (z.B. Parkett)')}
+            {renderInput('stellplatz', 'Stellplatztyp')}
+            {renderInput('aufzug', 'Aufzug vorhanden?')}
+            {renderInput('internet', 'Internet (Glasfaser?)')}
+            {renderInput('smarthome', 'Smart Home integriert?')}
           </>
         );
-      case "verkehr":
+      case 'verkehr':
         return (
           <>
-            <input name="oeffentliche" placeholder="ÖPNV (Minuten zu Fuß)" onChange={handleChange} />
-            <input name="autobahn" placeholder="Entfernung zur Autobahn (Minuten)" onChange={handleChange} />
-            <input name="bahnhof" placeholder="Bahnhof (Minuten)" onChange={handleChange} />
-            <input name="flughafen" placeholder="Flughafen (Minuten)" onChange={handleChange} />
+            {renderInput('oeffentliche', 'ÖPNV (Minuten zu Fuß)')}
+            {renderInput('autobahn', 'Entfernung zur Autobahn (Minuten)')}
+            {renderInput('bahnhof', 'Bahnhof (Minuten)')}
+            {renderInput('flughafen', 'Flughafen (Minuten)')}
           </>
         );
-      case "verfuegbarkeit":
+      case 'verfuegbarkeit':
         return (
           <>
-            <input name="verfuegbar_ab" placeholder="Verfügbar ab (Datum)" onChange={handleChange} />
-            <input name="bezug" placeholder="Bezugstermin / Fertigstellung" onChange={handleChange} />
-            <input name="kurzfristig" placeholder="Kurzfristig beziehbar?" onChange={handleChange} />
+            {renderInput('verfuegbar_ab', 'Verfügbar ab (Datum)')}
+            {renderInput('bezug', 'Bezugstermin / Fertigstellung')}
+            {renderInput('kurzfristig', 'Kurzfristig beziehbar?')}
           </>
         );
-      case "besonderheiten":
+      case 'besonderheiten':
         return (
           <>
-            <textarea name="highlights" placeholder="✨ Highlights der Immobilie" onChange={handleChange} />
-            <textarea name="beschreibung" placeholder="Beschreibungstext" onChange={handleChange} />
-            <select name="stil" onChange={handleChange}>
-              <option value="">🖋 Stil wählen ...</option>
-              <option value="modern">Modern</option>
-              <option value="klassisch">Klassisch</option>
-              <option value="emotional">Emotional</option>
+            {renderInput('highlights', '✨ Highlights der Immobilie', 'textarea')}
+            {renderInput('beschreibung', 'Beschreibungstext', 'textarea')}
+            <label>🖋 Stil</label>
+            <select name='stil' onChange={handleChange}>
+              <option value=''>Bitte wählen</option>
+              <option value='modern'>Modern</option>
+              <option value='klassisch'>Klassisch</option>
+              <option value='emotional'>Emotional</option>
             </select>
-            <select name="zielgruppe" onChange={handleChange}>
-              <option value="">🎯 Zielgruppe wählen ...</option>
-              <option value="familien">Familien</option>
-              <option value="investoren">Investoren</option>
-              <option value="senioren">Senioren</option>
-              <option value="studenten">Studenten</option>
+            <label>🎯 Zielgruppe</label>
+            <select name='zielgruppe' onChange={handleChange}>
+              <option value=''>Bitte wählen</option>
+              <option value='familien'>Familien</option>
+              <option value='investoren'>Investoren</option>
+              <option value='senioren'>Senioren</option>
+              <option value='studenten'>Studenten</option>
             </select>
           </>
         );
@@ -127,13 +150,13 @@ const ExposeForm = ({ formData, setFormData }) => {
   };
 
   return (
-    <div className="form-wrapper">
-      {/* Tab-Leiste */}
-      <div className="tab-header">
+    <div className='form-wrapper'>
+      {/* 🔄 Tab-Wechsler */}
+      <div className='tab-header'>
         {TABS.map((tab) => (
           <button
             key={tab.id}
-            className={activeTab === tab.id ? "active" : ""}
+            className={activeTab === tab.id ? 'active' : ''}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
@@ -141,8 +164,8 @@ const ExposeForm = ({ formData, setFormData }) => {
         ))}
       </div>
 
-      {/* Aktiver Tab-Inhalt */}
-      <div className="tab-content">{renderTab()}</div>
+      {/* 📥 Inhalt der Tabs */}
+      <div className='tab-content'>{renderTab()}</div>
     </div>
   );
 };
