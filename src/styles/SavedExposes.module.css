@@ -1,0 +1,82 @@
+
+/* 📁 SavedExposes.module.css */
+
+.exportBox {
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.heading {
+  color: #facc15;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #374151;
+}
+
+.meta {
+  color: #e5e7eb;
+}
+
+.timestamp {
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.exportButton {
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.exportButton:hover {
+  background-color: #2563eb;
+}
+
+.deleteButton {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: #f87171;
+  color: white;
+}
+
+.emptyText {
+  color: #9ca3af;
+  text-align: center;
+  padding: 1rem;
+}

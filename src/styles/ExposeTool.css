@@ -38,7 +38,8 @@ body {
 }
 
 /* 🧩 Wrapper für das Tool mit Glass-Effekt & Tiefe */
-.tool-inner-wrapper {
+.tool-inner-wrapper,
+.expose-tool-container {
   max-width: 960px;
   margin: 2rem auto;
   padding: 2rem;
@@ -183,4 +184,24 @@ textarea::placeholder {
   border: 1px solid #3a4a5a;
 }
 
-/* 🧼 Entfernt: .preview-box → ausgelagert in GPTOutputBox.module.css */
+/* ➕ Ergänzt für CSS Cleanup */
+.generate-button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #3b82f6;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.generate-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pdf-logo {
+  margin-bottom: 1rem;
+}
