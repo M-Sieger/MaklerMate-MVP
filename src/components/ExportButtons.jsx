@@ -2,6 +2,12 @@
 
 import React from 'react';
 
+import styles
+  from '../styles/ExportBox.module.css'; // 🎨 Für Styling des Buttons
+import {
+  exportExposeAsPDF,
+} from '../utils/pdfExportExpose'; // 🧠 PDF-Export-Logik importieren
+
 export default function ExportButtons({ formData, output, selectedStyle }) {
   const handleExportJSON = () => {
     const fullData = {
@@ -27,10 +33,21 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
     alert('📋 Text kopiert!');
   };
 
+  const handleExportPDF = async () => {
+    try {
+      await exportExposeAsPDF(formData, output); // 📤 GPT-Output + Formulardaten an PDF-Funktion übergeben
+    } catch (error) {
+      console.error('❌ Fehler beim PDF-Export:', error);
+    }
+  };
+
   return (
     <div style={{ marginTop: '1rem' }}>
       <button onClick={handleExportJSON}>📁 JSON exportieren</button>
       <button onClick={handleCopy}>📋 Text kopieren</button>
+      <button className={styles.exportButton} onClick={handleExportPDF}>
+        📄 PDF exportieren
+      </button>
     </div>
   );
 }

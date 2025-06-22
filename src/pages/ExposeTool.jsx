@@ -53,69 +53,23 @@ export default function ExposeTool() {
     }
   };
 
-  const countFilled = Object.values(formData).filter((v) => v.trim() !== '').length;
-  const totalFields = Object.keys(formData).length;
-
   return (
-    <div className="expose-wrapper">
-      {/* 📌 Logo für PDF */}
-      <div id="pdf-logo" style={{ width: 300, height: 100 }}></div>
+    <div className="expose-tool-container">
+      <ExposeForm formData={formData} onChange={handleChange} />
+      <button onClick={handleGenerate} disabled={isLoading}>
+        {isLoading ? <Loader /> : '🔮 Exposé generieren'}
+      </button>
 
-      {/* 🏠 Intro */}
-      <div className="hero-intro">
-        <h1>🏡 Exposé Generator für Makler</h1>
-        <p>Erstelle in Sekunden ein hochwertiges Immobilien-Exposé – GPT hilft dir dabei.</p>
+      {/* 🖨️ Export-Zielbereich mit GPT-Vorschau + Logo */}
+      <div id="pdf-export-section">
+        <div id="pdf-logo" style={{ marginBottom: '1rem' }}>
+          <img src="/logo192.png" alt="MaklerMate Logo" height={40} />
+        </div>
+        <GPTOutputBox output={output} selectedStyle={selectedStyle} />
       </div>
 
-      <div className="tool-inner-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        {/* 🔢 Fortschritt */}
-        <div className="progress-info">
-          🧩 Fortschritt: {countFilled} / {totalFields} Felder ausgefüllt
-        </div>
-
-        {/* 📋 Formular */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1rem' }}>
-          <ExposeForm formData={formData} handleChange={(e) => handleChange(e.target.name, e.target.value)} />
-        </div>
-
-        {/* 🎯 Stilwahl */}
-        <div className="style-selector" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1rem' }}>
-          <label htmlFor="stilwahl" style={{ marginBottom: '0.5rem', display: 'block' }}>🎯 Zielgruppe / Stil wählen:</label>
-          <select id="stilwahl" value={selectedStyle} onChange={(e) => setSelectedStyle(e.target.value)} style={{ marginBottom: '1rem' }}>
-            <option value="emotional">📢 Emotional (Familien)</option>
-            <option value="sachlich">📈 Sachlich (Investoren)</option>
-            <option value="luxus">✨ Hochwertig (Luxus)</option>
-          </select>
-        </div>
-
-        {/* 🚀 Generieren */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button className="btn btn-primary" onClick={handleGenerate} disabled={isLoading}>
-            {isLoading ? '⏳ Generiere...' : 'Exposé generieren'}
-          </button>
-        </div>
-
-        {/* 📄 Vorschau oder Ladeanzeige */}
-        {isLoading ? <Loader /> : <GPTOutputBox text={output} />}
-
-        {/* 📋 Copy & 📧 E-Mail */}
-        {output && (
-          <div className="button-group">
-            <button className="btn btn-outline" onClick={() => navigator.clipboard.writeText(output)}>📋 Text kopieren</button>
-            <button
-              className="btn btn-mail"
-              onClick={() => {
-                const subject = encodeURIComponent('Ihr Immobilien-Exposé');
-                const body = encodeURIComponent(output);
-                window.location.href = `mailto:?subject=${subject}&body=${body}`;
-              }}
-            >📧 Per E-Mail versenden</button>
-          </div>
-        )}
-
-        {/* 📤 Export */}
-        <ExportButtons formData={formData} output={output} selectedStyle={selectedStyle} />
-      </div>
+      {/* 📦 Export-Buttons */}
+      <ExportButtons formData={formData} output={output} selectedStyle={selectedStyle} />
     </div>
   );
 }
