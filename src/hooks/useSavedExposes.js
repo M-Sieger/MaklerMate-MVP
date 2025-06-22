@@ -23,27 +23,32 @@ export default function useSavedExposes() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(exposes));
   }, [exposes]);
 
-  const addExpose = ({ formData, output }) => {
-    const newExpose = {
-      id: Date.now(),
-      formData,
-      output,
-      createdAt: new Date().toISOString(),
-    };
-    setExposes((prev) => [...prev, newExpose]);
+const addExpose = ({ formData, output, selectedStyle }) => {
+  const newExpose = {
+    id: Date.now(),
+    formData,
+    output,
+    selectedStyle, // ✅ hinzugefügt
+    createdAt: new Date().toISOString(),
   };
+  setExposes((prev) => [...prev, newExpose]);
+};
+
+const loadExpose = (expose, setFormData, setOutput, setSelectedStyle) => {
+  if (typeof setFormData === 'function') {
+    setFormData(expose.formData);
+  }
+  if (typeof setOutput === 'function') {
+    setOutput(expose.output);
+  }
+  if (typeof setSelectedStyle === 'function') {
+    setSelectedStyle(expose.selectedStyle || 'emotional'); // fallback
+  }
+};
+
 
   const deleteExpose = (id) => {
     setExposes((prev) => prev.filter((e) => e.id !== id));
-  };
-
-  const loadExpose = (expose, setFormData, setOutput) => {
-    if (typeof setFormData === 'function' && typeof setOutput === 'function') {
-      setFormData(expose.formData);
-      setOutput(expose.output);
-    } else {
-      console.warn("setFormData oder setOutput fehlen oder sind keine Funktionen in useSavedExposes");
-    }
   };
 
   return {
@@ -53,3 +58,4 @@ export default function useSavedExposes() {
     loadExpose,
   };
 }
+// 📁 src/hooks/useSavedExposes.js – Custom Hook zur lokalen Verwaltung gespeicherter Exposés

@@ -55,7 +55,7 @@ export default function ExposeTool() {
   };
 
   const handleSaveExpose = () => {
-    addExpose({ formData, output });
+    addExpose({ formData, output, selectedStyle });
   };
 
   return (
@@ -81,7 +81,7 @@ export default function ExposeTool() {
       {/* 🗂️ Gespeicherte Exposés */}
       <SavedExposes
         exposes={exposes}
-        onLoad={(expose) => loadExpose(expose, setFormData, setOutput)}
+        onLoad={(expose) => loadExpose(expose, setFormData, setOutput, setSelectedStyle)} // ✅ Hier angepasst!
         onDelete={deleteExpose}
       />
     </div>
