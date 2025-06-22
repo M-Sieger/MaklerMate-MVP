@@ -5,8 +5,6 @@ import {
   useState,
 } from 'react';
 
-import useSavedExposes from '../hooks/useSavedExposes'; // ✅
-
 const STORAGE_KEY = "maklermate_exposes";
 
 export default function useSavedExposes() {

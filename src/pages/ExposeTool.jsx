@@ -3,12 +3,12 @@ import '../styles/ExposeTool.css'; // ✅ Style-Abgleich mit Glassmorphismus & m
 
 import React, { useState } from 'react';
 
-import useSavedExposes from '../../hooks/useSavedExposes';
 import ExportButtons from '../components/ExportButtons';
 import ExposeForm from '../components/ExposeForm';
 import GPTOutputBox from '../components/GPTOutputBox';
 import Loader from '../components/Loader';
 import SavedExposes from '../components/SavedExposes';
+import useSavedExposes from '../hooks/useSavedExposes';
 import { fetchGPTResponse } from '../lib/openai';
 
 export default function ExposeTool() {
