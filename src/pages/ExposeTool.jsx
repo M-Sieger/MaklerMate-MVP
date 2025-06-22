@@ -28,8 +28,10 @@ export default function ExposeTool() {
     loadExpose
   } = useSavedExposes();
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  // 💡 WICHTIG: handleChange ist für einzelne Felder, setFormData für vollständigen Restore
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleGenerate = async () => {
@@ -58,7 +60,7 @@ export default function ExposeTool() {
 
   return (
     <div className="expose-tool-container">
-      <ExposeForm formData={formData} onChange={handleChange} />
+      <ExposeForm formData={formData} setFormData={setFormData} onChange={handleChange} />
       <button className="generate-button" onClick={handleGenerate} disabled={isLoading}>
         {isLoading ? <Loader /> : '🔮 Exposé generieren'}
       </button>

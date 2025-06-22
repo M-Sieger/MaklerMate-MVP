@@ -38,11 +38,11 @@ export default function useSavedExposes() {
   };
 
   const loadExpose = (expose, setFormData, setOutput) => {
-    if (setFormData && setOutput) {
+    if (typeof setFormData === 'function' && typeof setOutput === 'function') {
       setFormData(expose.formData);
       setOutput(expose.output);
     } else {
-      console.warn("setFormData oder setOutput fehlen in loadExpose()");
+      console.warn("setFormData oder setOutput fehlen oder sind keine Funktionen in useSavedExposes");
     }
   };
 
