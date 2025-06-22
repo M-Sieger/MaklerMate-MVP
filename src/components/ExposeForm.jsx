@@ -1,9 +1,5 @@
-// 📦 Styles & Core
-import '../styles/ExposeTool.css';
-
 import React, { useState } from 'react';
 
-// 🔖 Tabs für die Formularstruktur
 const TABS = [
   { id: 'objekt', label: '🏠 Objektdaten' },
   { id: 'flaeche', label: '📐 Flächen & Räume' },
@@ -15,50 +11,47 @@ const TABS = [
   { id: 'besonderheiten', label: '✨ Besonderheiten' }
 ];
 
-const ExposeForm = ({ formData, setFormData }) => {
+const ExposeForm = ({ formData, setFormData, onChange }) => {
   const [activeTab, setActiveTab] = useState('objekt');
 
-  // 🛠 Aktualisiert das formData bei Eingabe
-  const handleChange = (e) => {
+  const handleLocalChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (onChange) onChange(e);
   };
 
-  // 🧱 Erzeugt einzelne Eingabefelder oder Auswahlfelder
   const renderInput = (name, placeholder, type = 'input') => (
     <div>
       <label>{placeholder}</label>
       {type === 'textarea' ? (
-        <textarea name={name} onChange={handleChange} placeholder={placeholder} />
+        <textarea name={name} value={formData[name] || ''} onChange={handleLocalChange} placeholder={placeholder} />
       ) : type === 'select' ? (
-        <select name={name} onChange={handleChange}>
+        <select name={name} value={formData[name] || ''} onChange={handleLocalChange}>
           <option value=''>{placeholder}</option>
-          {/* Optionen individuell im renderTab setzen */}
         </select>
       ) : (
-        <input name={name} placeholder={placeholder} onChange={handleChange} />
+        <input name={name} value={formData[name] || ''} placeholder={placeholder} onChange={handleLocalChange} />
       )}
     </div>
   );
 
-  // 🧩 Wechselt die Eingabefelder je nach gewähltem Tab
   const renderTab = () => {
     switch (activeTab) {
       case 'objekt':
         return (
           <>
             <label>🏠 Objektart</label>
-            <select name='objektart' onChange={handleChange}>
+            <select name='objektart' value={formData.objektart} onChange={handleLocalChange}>
               <option value=''>Bitte wählen</option>
               <option>Wohnung</option>
               <option>Haus</option>
               <option>Gewerbe</option>
             </select>
             {renderInput('strasse', 'Straße')}
-            {renderInput('plz_ort', 'PLZ, Ort')}
+            {renderInput('ort', 'PLZ, Ort')}
             {renderInput('bezirk', '📍 Bezirk / Stadtteil')}
             {renderInput('sicht', '🌅 Sicht auf ...')}
-            {renderInput('lage_besonderheiten', '🌳 Besonderheiten der Lage (Altstadt, Rheinblick...)')}
+            {renderInput('lagebesonderheiten', '🌳 Besonderheiten der Lage')}
           </>
         );
       case 'flaeche':
@@ -77,9 +70,9 @@ const ExposeForm = ({ formData, setFormData }) => {
         return (
           <>
             {renderInput('baujahr', 'Baujahr')}
-            {renderInput('zustand', 'Zustand (z.B. saniert)')}
+            {renderInput('zustand', 'Zustand')}
             {renderInput('modernisierung', 'Sanierungsjahr(e)')}
-            {renderInput('bauphase', 'Bauphase (z.B. Neubau)')}
+            {renderInput('bauphase', 'Bauphase')}
             {renderInput('etagenanzahl', 'Etagenanzahl')}
           </>
         );
@@ -98,44 +91,44 @@ const ExposeForm = ({ formData, setFormData }) => {
         return (
           <>
             {renderInput('heizung', 'Heizungsart')}
-            {renderInput('boden', 'Bodenbelag (z.B. Parkett)')}
+            {renderInput('boden', 'Bodenbelag')}
             {renderInput('stellplatz', 'Stellplatztyp')}
             {renderInput('aufzug', 'Aufzug vorhanden?')}
-            {renderInput('internet', 'Internet (Glasfaser?)')}
-            {renderInput('smarthome', 'Smart Home integriert?')}
+            {renderInput('internet', 'Internet')}
+            {renderInput('smarthome', 'Smart Home?')}
           </>
         );
       case 'verkehr':
         return (
           <>
-            {renderInput('oeffentliche', 'ÖPNV (Minuten zu Fuß)')}
-            {renderInput('autobahn', 'Entfernung zur Autobahn (Minuten)')}
-            {renderInput('bahnhof', 'Bahnhof (Minuten)')}
-            {renderInput('flughafen', 'Flughafen (Minuten)')}
+            {renderInput('oeffentliche', 'ÖPNV')}
+            {renderInput('autobahn', 'Autobahn')}
+            {renderInput('bahnhof', 'Bahnhof')}
+            {renderInput('flughafen', 'Flughafen')}
           </>
         );
       case 'verfuegbarkeit':
         return (
           <>
-            {renderInput('verfuegbar_ab', 'Verfügbar ab (Datum)')}
-            {renderInput('bezug', 'Bezugstermin / Fertigstellung')}
-            {renderInput('kurzfristig', 'Kurzfristig beziehbar?')}
+            {renderInput('verfuegbar_ab', 'Verfügbar ab')}
+            {renderInput('bezug', 'Bezugstermin')}
+            {renderInput('kurzfristig', 'Kurzfristig?')}
           </>
         );
       case 'besonderheiten':
         return (
           <>
-            {renderInput('highlights', '✨ Highlights der Immobilie', 'textarea')}
-            {renderInput('beschreibung', 'Beschreibungstext', 'textarea')}
+            {renderInput('highlights', '✨ Highlights', 'textarea')}
+            {renderInput('beschreibung', 'Beschreibung', 'textarea')}
             <label>🖋 Stil</label>
-            <select name='stil' onChange={handleChange}>
+            <select name='stil' value={formData.stil || ''} onChange={handleLocalChange}>
               <option value=''>Bitte wählen</option>
               <option value='modern'>Modern</option>
               <option value='klassisch'>Klassisch</option>
               <option value='emotional'>Emotional</option>
             </select>
             <label>🎯 Zielgruppe</label>
-            <select name='zielgruppe' onChange={handleChange}>
+            <select name='zielgruppe' value={formData.zielgruppe || ''} onChange={handleLocalChange}>
               <option value=''>Bitte wählen</option>
               <option value='familien'>Familien</option>
               <option value='investoren'>Investoren</option>
@@ -150,9 +143,8 @@ const ExposeForm = ({ formData, setFormData }) => {
   };
 
   return (
-    <div className='form-wrapper'>
-      {/* 🔄 Tab-Wechsler */}
-      <div className='tab-header'>
+    <div className="form-wrapper">
+      <div className="tab-header">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -163,9 +155,7 @@ const ExposeForm = ({ formData, setFormData }) => {
           </button>
         ))}
       </div>
-
-      {/* 📥 Inhalt der Tabs */}
-      <div className='tab-content'>{renderTab()}</div>
+      <div className="tab-content">{renderTab()}</div>
     </div>
   );
 };
