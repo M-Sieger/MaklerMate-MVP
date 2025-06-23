@@ -1,6 +1,5 @@
 // Datei: lib/openai.js
 
-// 🔄 GPT-Proxy-Version für lokale Nutzung (MaklerMate)
 export const fetchGPTResponse = async (prompt) => {
   try {
     const response = await fetch("http://localhost:5001/api/gpt", {
@@ -25,13 +24,6 @@ export const fetchGPTResponse = async (prompt) => {
   }
 };
 
-// 🪄 Optional: Werbetext-Funktion (für spätere Module oder Marketing-Assistenz)
-export async function fetchAdText(prompt, format = 'default') {
-  const fullPrompt = `Erstelle einen ${format} Werbetext für folgende Beschreibung:\n${prompt}`;
-  return await fetchGPTResponse(fullPrompt);
-}
-
-// 📦 Hilfsfunktion: Exposé-Prompt auf Basis von Formulardaten generieren
 export function generatePrompt(formData, selectedStyle) {
   let stilHinweis = '';
   if (selectedStyle === 'emotional') stilHinweis = '- Zielgruppe: Familien, emotional, lebendig.';
