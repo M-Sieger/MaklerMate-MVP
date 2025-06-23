@@ -1,32 +1,27 @@
 // server/gpt-proxy.js
 
-// 📦 Standard-Module im CommonJS-Stil laden
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const fetch = require('node-fetch');
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import fetch from 'node-fetch';
 
-// 🔑 .env-Datei einlesen (z. B. für OPENAI_API_KEY)
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// 🔧 Middleware aktivieren
 app.use(cors());
 app.use(express.json());
 
-// 🧠 Haupt-Endpunkt: GPT-Text generieren
+// 🧠 GPT-Proxy-Endpunkt
 app.post('/api/gpt', async (req, res) => {
   const { prompt } = req.body;
 
-  // ❌ Prompt fehlt
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt fehlt' });
   }
 
   try {
-    // 📡 Anfrage an OpenAI senden
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -46,7 +41,6 @@ app.post('/api/gpt', async (req, res) => {
 
     if (!text) throw new Error("Antwort leer");
 
-    // ✅ GPT-Antwort an Frontend zurückgeben
     res.json({ result: text.trim() });
   } catch (err) {
     console.error("❌ GPT-Proxy-Fehler:", err);
@@ -54,7 +48,6 @@ app.post('/api/gpt', async (req, res) => {
   }
 });
 
-// 🚀 Starte Server
 app.listen(PORT, () => {
   console.log(`✅ GPT-Proxy läuft auf http://localhost:${PORT}`);
 });

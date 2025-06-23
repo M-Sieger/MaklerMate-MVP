@@ -1,3 +1,5 @@
+// Datei: ExposeTool.jsx
+
 // 📦 Styles & Core
 import '../styles/ExposeTool.css'; // ✅ Style-Abgleich mit Glassmorphismus & modernem UI
 
@@ -9,7 +11,10 @@ import GPTOutputBox from '../components/GPTOutputBox';
 import Loader from '../components/Loader';
 import SavedExposes from '../components/SavedExposes';
 import useSavedExposes from '../hooks/useSavedExposes';
-import { fetchGPTResponse } from '../lib/openai';
+import {
+  fetchGPTResponse,
+  generatePrompt,
+} from '../lib/openai';
 
 export default function ExposeTool() {
   const [formData, setFormData] = useState({
@@ -34,13 +39,16 @@ export default function ExposeTool() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // 🧠 GPT-Exposé generieren mit validiertem Prompt
   const handleGenerate = async () => {
-    let stilHinweis = '';
-    if (selectedStyle === 'emotional') stilHinweis = '- Zielgruppe: Familien, emotional, lebendig.';
-    if (selectedStyle === 'sachlich') stilHinweis = '- Zielgruppe: Investoren, sachlich, faktenorientiert.';
-    if (selectedStyle === 'luxus') stilHinweis = '- Zielgruppe: Luxussegment, stilvoll, edel.';
+    // Check ob Formular ausgefüllt ist (mind. 1 relevantes Feld)
+    if (!formData || Object.values(formData).every((val) => val === '')) {
+      alert("Bitte zuerst das Formular ausfüllen.");
+      return;
+    }
 
-    const prompt = `Du bist ein professioneller Immobilienmakler...\n${stilHinweis}\n🔚 Gib nur den reinen Text zurück – ohne Einleitung, Formatierung oder Kommentare.`;
+    const prompt = generatePrompt(formData, selectedStyle);
+    console.log("[DEBUG] Generierter Prompt:", prompt);
 
     setIsLoading(true);
     try {
@@ -81,7 +89,7 @@ export default function ExposeTool() {
       {/* 🗂️ Gespeicherte Exposés */}
       <SavedExposes
         exposes={exposes}
-        onLoad={(expose) => loadExpose(expose, setFormData, setOutput, setSelectedStyle)} // ✅ Hier angepasst!
+        onLoad={(expose) => loadExpose(expose, setFormData, setOutput, setSelectedStyle)}
         onDelete={deleteExpose}
       />
     </div>

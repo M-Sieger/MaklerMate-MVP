@@ -1,30 +1,54 @@
+// Datei: lib/openai.js
 
+// 🔄 GPT-Proxy-Version für lokale Nutzung (MaklerMate)
+export const fetchGPTResponse = async (prompt) => {
+  try {
+    const response = await fetch("http://localhost:5001/api/gpt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt })
+    });
 
+    const data = await response.json();
 
+    if (!data.result) {
+      console.error("❌ Ungültige GPT-Antwort:", data);
+      throw new Error("GPT-Antwort leer oder fehlerhaft");
+    }
+
+    return data.result.trim();
+  } catch (err) {
+    console.error("❌ Fehler beim GPT-Fetch:", err);
+    throw err;
+  }
+};
+
+// 🪄 Optional: Werbetext-Funktion (für spätere Module oder Marketing-Assistenz)
 export async function fetchAdText(prompt, format = 'default') {
   const fullPrompt = `Erstelle einen ${format} Werbetext für folgende Beschreibung:\n${prompt}`;
   return await fetchGPTResponse(fullPrompt);
 }
 
-export async function fetchGPTResponse(prompt) {
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      max_tokens: 300
-    })
-  });
+// 📦 Hilfsfunktion: Exposé-Prompt auf Basis von Formulardaten generieren
+export function generatePrompt(formData, selectedStyle) {
+  let stilHinweis = '';
+  if (selectedStyle === 'emotional') stilHinweis = '- Zielgruppe: Familien, emotional, lebendig.';
+  if (selectedStyle === 'sachlich') stilHinweis = '- Zielgruppe: Investoren, sachlich, faktenorientiert.';
+  if (selectedStyle === 'luxus') stilHinweis = '- Zielgruppe: Luxussegment, stilvoll, edel.';
 
-  if (!response.ok) {
-    throw new Error("OpenAI API Fehler");
-  }
+  return `Du bist ein professioneller Immobilienmakler.
+${stilHinweis}
 
-  const data = await response.json();
-  return data.choices[0].message.content.trim();
+🔎 Objektart: ${formData.objektart}
+📍 Adresse: ${formData.strasse}, ${formData.ort}, ${formData.bezirk}
+👁️ Sicht: ${formData.sicht}
+🌳 Lage: ${formData.lagebesonderheiten}
+📐 Fläche: ${formData.wohnflaeche}m² Wohnfläche, ${formData.grundstueck}m² Grundstück
+🛏️ Zimmer: ${formData.zimmer} | 🏗️ Baujahr: ${formData.baujahr} | Zustand: ${formData.zustand}
+💰 Preis: ${formData.preis} | Energieklasse: ${formData.energie}
+✨ Besonderheiten: ${formData.besonderheiten}
+
+🔚 Gib nur den reinen Text zurück – ohne Einleitung, Formatierung oder Kommentare.`;
 }
