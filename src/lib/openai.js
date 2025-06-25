@@ -11,6 +11,8 @@ export const fetchGPTResponse = async (prompt) => {
     });
 
     const data = await response.json();
+    console.log("[DEBUG] GPT API-Antwort:", data); // 🧪 DEBUG OUT
+
 
     if (!data.result) {
       console.error("❌ Ungültige GPT-Antwort:", data);

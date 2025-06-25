@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.10.0",
     "dotenv": "^16.5.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
@@ -25,7 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "proxy": "npx dotenv node gpt-proxy.js"
   },
   "eslintConfig": {
     "extends": [

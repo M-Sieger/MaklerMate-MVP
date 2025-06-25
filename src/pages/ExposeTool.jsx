@@ -33,15 +33,12 @@ export default function ExposeTool() {
     loadExpose
   } = useSavedExposes();
 
-  // 💡 WICHTIG: handleChange ist für einzelne Felder, setFormData für vollständigen Restore
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 🧠 GPT-Exposé generieren mit validiertem Prompt
   const handleGenerate = async () => {
-    // Check ob Formular ausgefüllt ist (mind. 1 relevantes Feld)
     if (!formData || Object.values(formData).every((val) => val === '')) {
       alert("Bitte zuerst das Formular ausfüllen.");
       return;
@@ -53,7 +50,16 @@ export default function ExposeTool() {
     setIsLoading(true);
     try {
       const gptText = await fetchGPTResponse(prompt);
-      setOutput(gptText);
+      console.log("[DEBUG] Rohwert von fetchGPTResponse:", gptText);
+
+      const extracted = typeof gptText === 'object' && gptText.result
+        ? gptText.result.trim?.()
+        : typeof gptText === 'string'
+          ? gptText.trim?.()
+          : '';
+
+      console.log("[DEBUG] Übergabe an GPTOutputBox → output:", extracted);
+      setOutput(extracted || '⚠️ Kein GPT-Ergebnis erhalten.');
     } catch (err) {
       console.error('Fehler bei GPT:', err);
       setOutput('⚠️ Fehler beim Abruf.');
@@ -80,13 +86,12 @@ export default function ExposeTool() {
         <div id="pdf-logo" className="pdf-logo">
           <img src="/logo192.png" alt="MaklerMate Logo" height={40} />
         </div>
-        <GPTOutputBox output={output} selectedStyle={selectedStyle} />
+
+        <GPTOutputBox output={output} />
       </div>
 
-      {/* 📦 Export-Buttons */}
       <ExportButtons formData={formData} output={output} selectedStyle={selectedStyle} />
 
-      {/* 🗂️ Gespeicherte Exposés */}
       <SavedExposes
         exposes={exposes}
         onLoad={(expose) => loadExpose(expose, setFormData, setOutput, setSelectedStyle)}

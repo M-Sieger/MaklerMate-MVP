@@ -1,9 +1,11 @@
+// Datei: GPTOutputBox.jsx
+
 import React from 'react';
 
 import styles from '../styles/GPTOutputBox.module.css';
 
-const GPTOutputBox = ({ text }) => {
-  const isEmpty = !text || text.trim() === '';
+const GPTOutputBox = ({ output }) => {
+  const isEmpty = !output || output.trim() === '';
 
   return (
     <div className={styles.previewBox}>
@@ -22,7 +24,7 @@ const GPTOutputBox = ({ text }) => {
           stilvolle Dielen und einen sonnigen Balkon mit Blick auf den Rhein."
         </pre>
       ) : (
-        <pre className={styles.outputText}>{text}</pre>
+        <pre className={styles.outputText}>{output}</pre>
       )}
     </div>
   );
