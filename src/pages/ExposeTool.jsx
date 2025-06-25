@@ -75,9 +75,15 @@ export default function ExposeTool() {
   return (
     <div className="expose-tool-container">
       <ExposeForm formData={formData} setFormData={setFormData} onChange={handleChange} />
-      <button className="generate-button" onClick={handleGenerate} disabled={isLoading}>
-        {isLoading ? <Loader /> : '🔮 Exposé generieren'}
-      </button>
+      <button
+  onClick={handleGenerate}
+  className={`generate-button ${isLoading ? 'loading' : ''}`}
+  disabled={isLoading}
+>
+  {isLoading && <span className="spinner"></span>}
+  {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
+</button>
+
 
       <button className="save-button" onClick={handleSaveExpose}>💾 Exposé speichern</button>
 
