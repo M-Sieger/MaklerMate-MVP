@@ -1,5 +1,12 @@
 /* 🎨 Bild-Upload Styling */
 
+
+.previewImageWrapper {
+  position: relative;
+  display: inline-block;
+  margin: 0.5rem;
+}
+
 .uploadWrapper {
   margin-top: 1.5rem;
   padding: 1rem;
@@ -32,4 +39,25 @@
   border-radius: 8px;
   object-fit: cover;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+
+
+.deleteButton {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: background 0.2s;
+}
+
+.deleteButton:hover {
+  background: rgba(255, 0, 0, 0.8);
 }

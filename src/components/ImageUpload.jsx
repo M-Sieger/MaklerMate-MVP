@@ -1,42 +1,34 @@
-// src/components/ImageUpload.jsx
-
 import React, { useRef } from 'react';
 
-import styles from './ImageUpload.module.css'; // 🎨 Modul-CSS für Styling
+import styles from './ImageUpload.module.css';
 
-/**
- * Komponente zum Upload und Vorschau von bis zu 5 Bildern.
- * Props:
- * - images: Array der aktuellen Base64-Bilder
- * - setImages: Funktion zum Aktualisieren des Bild-Arrays
- */
 const ImageUpload = ({ images, setImages }) => {
-  const fileInputRef = useRef(); // 📎 Referenz auf das Datei-Input-Element
+  const fileInputRef = useRef();
 
-  /**
-   * Wandelt FileList in Base64-Daten um und limitiert auf max. 5 Bilder.
-   */
+  // ✅ Konvertiert FileList zu max. 5 base64-Bildern
   const handleFiles = (files) => {
-    const fileArray = Array.from(files).slice(0, 5); // max. 5 Bilder
+    const fileArray = Array.from(files).slice(0, 5 - images.length); // begrenzen
     const readers = fileArray.map(file => {
       return new Promise((resolve) => {
         const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result); // Base64 extrahieren
+        reader.onload = (e) => resolve(e.target.result);
         reader.readAsDataURL(file);
       });
     });
 
-    // ⏳ Sobald alle Files geladen → als Array setzen
     Promise.all(readers).then((base64Array) => {
-      setImages(base64Array);
+      setImages([...images, ...base64Array]); // ⬆️ an bestehende Bilder anhängen
     });
+  };
+
+  // 🧽 Entfernt ein Bild anhand seines Index
+  const removeImage = (indexToRemove) => {
+    setImages(images.filter((_, index) => index !== indexToRemove));
   };
 
   return (
     <div className={styles.uploadWrapper}>
       <label className={styles.label}>📸 Objektfotos (max. 5):</label>
-
-      {/* 🔼 Dateiupload */}
       <input
         type="file"
         multiple
@@ -44,16 +36,19 @@ const ImageUpload = ({ images, setImages }) => {
         ref={fileInputRef}
         onChange={(e) => handleFiles(e.target.files)}
       />
-
-      {/* 🖼️ Bildvorschau */}
       <div className={styles.previewContainer}>
         {images.map((img, index) => (
-          <img
-            key={index}
-            src={img}
-            alt={`Bild ${index + 1}`}
-            className={styles.previewImage}
-          />
+          <div key={index} className={styles.previewImageWrapper}>
+            <img src={img} alt={`Bild ${index + 1}`} className={styles.previewImage} />
+            <button
+              type="button"
+              onClick={() => removeImage(index)}
+              className={styles.deleteButton}
+              title="Bild entfernen"
+            >
+              ❌
+            </button>
+          </div>
         ))}
       </div>
     </div>
