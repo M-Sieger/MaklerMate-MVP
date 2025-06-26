@@ -1,0 +1,83 @@
+/* 🎨 TabbedForm.module.css – moderne Tabs & Input-Styling (konfliktfreie Benennung) */
+
+/* 📦 Wrapper für das ganze Tab-Formular */
+.tabbed-form {
+  margin-top: 2rem;
+}
+
+/* 🧭 Tabs-Header mit Glas-Effekt */
+.tabs-header {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+/* 🎨 Fancy Tab-Styling für Button */
+.fancyTab {
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.fancyTab:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+.fancyTab.active {
+  color: #4fc3f7;
+  background-color: rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  border-bottom: 2px solid #4fc3f7;
+}
+
+/* 🎯 Tab-Inhalt Fancy Style */
+.fancyTabContent {
+  padding: 1rem 0;
+}
+
+/* ✅ Fancy Input-Styling für alle Formularfelder */
+.fancyInput {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f3f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 1rem;
+}
+
+.fancyInput:focus {
+  border-color: #4fc3f7;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.5);
+  outline: none;
+}
+
+.fancyInput::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}

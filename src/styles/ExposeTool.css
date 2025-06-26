@@ -50,19 +50,16 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ✅ Allgemeine Inputs */
-input, textarea, select {
-  background-color: #ffffff;
-  color: #0d1117;
-  border: 1px solid #3a4a5a;
-  border-radius: 12px;
-  padding: 14px 16px;
-  font-size: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
+/* 🧼 ❌ Entfernt: Globale Styles, die fancyTab überschrieben haben
+.tab-button {
+  ... 👈 war überschreibend, jetzt raus!
 }
+.tab-button.active {
+  ... 👈 war überschreibend, jetzt raus!
+}
+*/
 
+/* ✨ Fokus-Styling für Inputs */
 input:focus,
 textarea:focus,
 select:focus {
@@ -85,7 +82,7 @@ textarea::placeholder {
   margin-top: 1rem;
 }
 
-/* 🔘 Grundstil für alle Buttons */
+/* 🔘 Buttons */
 .btn {
   padding: 12px 20px;
   border-radius: 10px;
@@ -137,32 +134,6 @@ textarea::placeholder {
   font-size: 0.875rem;
 }
 
-/* 🗂 Tabs */
-.tabs-header {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 2rem 0 1rem;
-  border-bottom: 2px solid #4a5568;
-}
-
-.tab-button {
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  border: none;
-  background: none;
-  border-radius: 6px 6px 0 0;
-  color: #a0aec0;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.tab-button.active {
-  color: #4fc3f7;
-  background-color: rgba(255, 255, 255, 0.05);
-  font-weight: bold;
-}
-
 /* 🎯 Stil-Auswahl */
 .style-selector {
   margin: 1.5rem 0;
@@ -184,7 +155,7 @@ textarea::placeholder {
   border: 1px solid #3a4a5a;
 }
 
-/* ➕ Ergänzt für CSS Cleanup */
+/* ➕ Generator-Button */
 .generate-button {
   margin-top: 1rem;
   padding: 0.6rem 1.2rem;
@@ -202,13 +173,12 @@ textarea::placeholder {
   cursor: not-allowed;
 }
 
+/* Logo-Position */
 .pdf-logo {
   margin-bottom: 1rem;
 }
 
-
-
-/* 🔄 Spinner für Ladeanimation */
+/* 🔄 Spinner */
 .spinner {
   border: 4px solid rgba(255, 255, 255, 0.2);
   border-top: 4px solid #4fc3f7;

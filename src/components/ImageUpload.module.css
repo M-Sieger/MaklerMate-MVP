@@ -1,0 +1,35 @@
+/* 🎨 Bild-Upload Styling */
+
+.uploadWrapper {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 2px dashed #4fc3f7;
+  backdrop-filter: blur(8px);
+  text-align: center;
+  color: #e2e8f0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.previewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.previewImage {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}

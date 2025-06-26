@@ -1,4 +1,10 @@
+// src/components/ExposeForm.jsx
+
 import React, { useState } from 'react';
+
+import styles from '../styles/ExposeForm.module.css';
+
+// 💅 Modularisiertes Styling für Inputs
 
 const TABS = [
   { id: 'objekt', label: '🏠 Objektdaten' },
@@ -21,32 +27,48 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
   };
 
   const renderInput = (name, placeholder, type = 'input') => (
-    <div>
+    <div className={styles.formGroup}>
       <label>{placeholder}</label>
       {type === 'textarea' ? (
-        <textarea name={name} value={formData[name] || ''} onChange={handleLocalChange} placeholder={placeholder} />
-      ) : type === 'select' ? (
-        <select name={name} value={formData[name] || ''} onChange={handleLocalChange}>
-          <option value=''>{placeholder}</option>
-        </select>
+        <textarea
+          name={name}
+          value={formData[name] || ''}
+          onChange={handleLocalChange}
+          placeholder={placeholder}
+          className={styles.fancyInput}
+        />
       ) : (
-        <input name={name} value={formData[name] || ''} placeholder={placeholder} onChange={handleLocalChange} />
+        <input
+          name={name}
+          value={formData[name] || ''}
+          placeholder={placeholder}
+          onChange={handleLocalChange}
+          className={styles.fancyInput}
+        />
       )}
     </div>
   );
 
-  const renderTab = () => {
+
+    const renderTab = () => {
     switch (activeTab) {
       case 'objekt':
         return (
           <>
-            <label>🏠 Objektart</label>
-            <select name='objektart' value={formData.objektart} onChange={handleLocalChange}>
-              <option value=''>Bitte wählen</option>
-              <option>Wohnung</option>
-              <option>Haus</option>
-              <option>Gewerbe</option>
-            </select>
+            <div className={styles.formGroup}>
+              <label>🏠 Objektart</label>
+              <select
+                name='objektart'
+                value={formData.objektart || ''}
+                onChange={handleLocalChange}
+                className={styles.fancyInput}
+              >
+                <option value=''>Bitte wählen</option>
+                <option>Wohnung</option>
+                <option>Haus</option>
+                <option>Gewerbe</option>
+              </select>
+            </div>
             {renderInput('strasse', 'Straße')}
             {renderInput('ort', 'PLZ, Ort')}
             {renderInput('bezirk', '📍 Bezirk / Stadtteil')}
@@ -142,6 +164,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
     }
   };
 
+  
   return (
     <div className="form-wrapper">
       <div className="tab-header">
