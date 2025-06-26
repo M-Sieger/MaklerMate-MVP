@@ -61,3 +61,32 @@
 .deleteButton:hover {
   background: rgba(255, 0, 0, 0.8);
 }
+
+
+.checkboxRow {
+  margin: 8px 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Bild-Preview innerhalb des Exposés */
+.image-preview-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.pdf-preview-image {
+  width: 160px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
