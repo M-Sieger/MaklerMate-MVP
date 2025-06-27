@@ -30,7 +30,16 @@ export default function ExposeTool() {
   const [isLoading, setIsLoading] = useState(false);
   const [output, setOutput] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('emotional');
-  const [images, setImages] = useState([]); // 🖼️ Fotos für das Exposé
+  // ExposeTool.jsx (Ausschnitt)
+const [images, setImages] = useState(() => {
+  const saved = localStorage.getItem('maklermate_images');
+  try {
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+});
+
 
   // 💾 Lokaler Speicher
   const {
