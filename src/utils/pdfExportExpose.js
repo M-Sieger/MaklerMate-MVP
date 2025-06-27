@@ -1,38 +1,52 @@
 // 📄 src/utils/pdfExportExpose.js
-// ✅ Exportiert den sichtbaren Bereich eines Exposés (HTML-Inhalt) als PDF via Screenshot
 
-import html2canvas from 'html2canvas';        // � HTML-zu-Bild-Konverter
-import jsPDF from 'jspdf';                    // � PDF-Generator
+import jsPDF from 'jspdf';
 
-// 📤 Funktion: HTML-Block mit GPT-Text + Form in PDF umwandeln
-export async function exportExposeAsPDF(formData, gptText) {
-  const input = document.getElementById('pdf-export-section'); // 🔍 Zielbereich
-  if (!input) {
-    console.error("❌ PDF-Export-Element nicht gefunden");
-    return;
+// 📥 Exportfunktion mit Bildern + Captions
+export const exportExposeWithImages = async (gptText, images = [], captions = []) => {
+  const pdf = new jsPDF();
+
+  // ✍️ GPT-Text auf PDF einfügen
+  pdf.setFont('courier');
+  pdf.setFontSize(10);
+  const lines = pdf.splitTextToSize(gptText, 180); // Text auf max. Breite umbrechen
+  pdf.text(lines, 15, 20);
+
+  let currentY = 30 + lines.length * 5; // ⬇️ Startpunkt unter GPT-Text
+
+  // 📸 Bilder + Unterschriften durchgehen
+  for (let i = 0; i < images.length; i++) {
+    const img = images[i];
+    const caption = captions[i] || '';
+
+    try {
+      const imgProps = pdf.getImageProperties(img);
+      const aspectRatio = imgProps.width / imgProps.height;
+
+      const imgWidth = 120;
+      const imgHeight = imgWidth / aspectRatio;
+
+      // 📌 Seitenumbruch falls nötig
+      if (currentY + imgHeight + 20 > 280) {
+        pdf.addPage();
+        currentY = 20;
+      }
+
+      // 🖼️ Bild
+      pdf.addImage(img, 'JPEG', 45, currentY, imgWidth, imgHeight);
+      currentY += imgHeight + 5;
+
+      // 🏷️ Unterschrift
+      if (caption.trim() !== '') {
+        pdf.setFontSize(10);
+        pdf.text(caption, 15, currentY);
+        currentY += 10;
+      }
+    } catch (err) {
+      console.error(`Fehler beim Einfügen von Bild ${i + 1}:`, err);
+    }
   }
-
-  // 🖼️ Screenshot vom HTML erzeugen
-  const canvas = await html2canvas(input, { scale: 2 }); // gute Qualität
-  const imgData = canvas.toDataURL('image/png');
-
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4'
-  });
-
-  // 🖼️ Optional: Logo oben einfügen
-  const logoElement = document.getElementById('pdf-logo');
-  if (logoElement) {
-    const logoCanvas = await html2canvas(logoElement, { scale: 2 });
-    const logoData = logoCanvas.toDataURL('image/png');
-    pdf.addImage(logoData, 'PNG', 15, 10, 50, 20); // 🔝 Logo-Position
-  }
-
-  // 📄 Exposé-Inhalt einfügen
-  pdf.addImage(imgData, 'PNG', 10, 35, 190, 0);
 
   // 💾 Speichern
-  pdf.save('Expose.pdf');
-}
+  pdf.save('expose.pdf');
+};
