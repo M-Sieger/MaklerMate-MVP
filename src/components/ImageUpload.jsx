@@ -1,49 +1,66 @@
+// src/components/ImageUpload.jsx
+
 import React, {
   useEffect,
   useRef,
   useState,
 } from 'react';
 
-import { enhanceImage } from '../utils/imageEnhancer'; // 📦 Bildoptimierung
-import styles from './ImageUpload.module.css'; // 🎨 CSS
+import { moveItem } from '../utils/arrayHelpers'; // 🔁 Bilder verschieben
+import { enhanceImage } from '../utils/imageEnhancer'; // 🧽 Bildoptimierung
+import styles from './ImageUpload.module.css'; // 🎨 Styling
 
 const ImageUpload = ({ images, setImages }) => {
   const fileInputRef = useRef();
   const [autoEnhance, setAutoEnhance] = useState(false);
+  const [captions, setCaptions] = useState([]); // 📝 Neue Bildunterschriften
 
-  // 🔁 Lokale Speicherung: Bilder aus localStorage laden beim Start
+  // 🔁 Bilder & Captions aus localStorage laden
   useEffect(() => {
-    const saved = localStorage.getItem('maklermate_images');
-    if (saved) {
+    const savedImages = localStorage.getItem('maklermate_images');
+    const savedCaptions = localStorage.getItem('maklermate_captions');
+    if (savedImages) {
       try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          setImages(parsed);
-        }
+        const parsedImages = JSON.parse(savedImages);
+        if (Array.isArray(parsedImages)) setImages(parsedImages);
       } catch (err) {
-        console.error('❌ Fehler beim Laden aus localStorage:', err);
+        console.error('❌ Fehler beim Laden von Bildern:', err);
+      }
+    }
+    if (savedCaptions) {
+      try {
+        const parsedCaptions = JSON.parse(savedCaptions);
+        if (Array.isArray(parsedCaptions)) setCaptions(parsedCaptions);
+      } catch (err) {
+        console.error('❌ Fehler beim Laden der Captions:', err);
       }
     }
   }, []);
 
-  // 💾 Bilder in localStorage speichern bei jeder Änderung
+  // 💾 Änderungen speichern
   useEffect(() => {
     localStorage.setItem('maklermate_images', JSON.stringify(images));
-  }, [images]);
+    localStorage.setItem('maklermate_captions', JSON.stringify(captions));
+  }, [images, captions]);
 
-  // 📁 Datei-Auswahl verarbeiten
+  // 📁 Dateien verarbeiten
   const handleFiles = async (files) => {
     const fileArray = Array.from(files).slice(0, 5 - images.length);
 
     const base64Array = await Promise.all(
-      fileArray.map(file => {
+      fileArray.map((file) => {
         return new Promise((resolve) => {
           const reader = new FileReader();
           reader.onload = async (e) => {
-            const base64 = e.target.result;
+            let base64 = e.target.result;
+
             if (autoEnhance) {
-              const enhanced = await enhanceImage(base64);
-              resolve(enhanced);
+              try {
+                const enhanced = await enhanceImage(base64);
+                resolve(enhanced);
+              } catch {
+                resolve(base64);
+              }
             } else {
               resolve(base64);
             }
@@ -53,20 +70,37 @@ const ImageUpload = ({ images, setImages }) => {
       })
     );
 
+    // ➕ Anhängen + leere Captions generieren
     setImages([...images, ...base64Array]);
+    setCaptions([...captions, ...new Array(base64Array.length).fill('')]);
   };
 
-  // ❌ Einzelnes Bild löschen
+  // 🗑️ Bild löschen
   const removeImage = (indexToRemove) => {
-    const updated = images.filter((_, index) => index !== indexToRemove);
-    setImages(updated);
+    const updatedImages = images.filter((_, i) => i !== indexToRemove);
+    const updatedCaptions = captions.filter((_, i) => i !== indexToRemove);
+    setImages(updatedImages);
+    setCaptions(updatedCaptions);
+  };
+
+  // 🔀 Reihenfolge anpassen
+  const moveImage = (from, to) => {
+    setImages(moveItem(images, from, to));
+    setCaptions(moveItem(captions, from, to));
+  };
+
+  // ✏️ Bildunterschrift ändern
+  const updateCaption = (index, newCaption) => {
+    const updated = [...captions];
+    updated[index] = newCaption;
+    setCaptions(updated);
   };
 
   return (
     <div className={styles.uploadWrapper}>
       <label className={styles.label}>📸 Objektfotos (max. 5):</label>
 
-      {/* ☑️ Checkbox für automatische Optimierung */}
+      {/* 🟩 Auto-Enhance Checkbox */}
       <div className={styles.checkboxRow}>
         <label className={styles.checkboxLabel}>
           <input
@@ -78,7 +112,7 @@ const ImageUpload = ({ images, setImages }) => {
         </label>
       </div>
 
-      {/* 📂 Datei-Upload */}
+      {/* 📂 Datei-Auswahl */}
       <input
         type="file"
         multiple
@@ -87,19 +121,46 @@ const ImageUpload = ({ images, setImages }) => {
         onChange={(e) => handleFiles(e.target.files)}
       />
 
-      {/* 🖼️ Vorschau + ❌-Button */}
+      {/* 🖼️ Vorschau mit Buttons + Captions */}
       <div className={styles.previewContainer}>
         {images.map((img, index) => (
           <div key={index} className={styles.previewImageWrapper}>
             <img src={img} alt={`Bild ${index + 1}`} className={styles.previewImage} />
-            <button
-              type="button"
-              onClick={() => removeImage(index)}
-              className={styles.deleteButton}
-              title="Bild entfernen"
-            >
-              ❌
-            </button>
+
+            <input
+              type="text"
+              value={captions[index] || ''}
+              onChange={(e) => updateCaption(index, e.target.value)}
+              className={styles.captionInput}
+              placeholder="Bildunterschrift (optional)"
+            />
+
+            <div className={styles.buttonRow}>
+              <button
+                onClick={() => moveImage(index, index - 1)}
+                disabled={index === 0}
+                className={styles.sortButton}
+                title="Bild nach oben"
+              >
+                ▲
+              </button>
+              <button
+                onClick={() => moveImage(index, index + 1)}
+                disabled={index === images.length - 1}
+                className={styles.sortButton}
+                title="Bild nach unten"
+              >
+                ▼
+              </button>
+              <button
+                type="button"
+                onClick={() => removeImage(index)}
+                className={styles.deleteButton}
+                title="Bild entfernen"
+              >
+                ❌
+              </button>
+            </div>
           </div>
         ))}
       </div>

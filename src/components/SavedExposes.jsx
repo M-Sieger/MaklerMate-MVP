@@ -30,3 +30,4 @@ export default function SavedExposes({ exposes, onLoad, onDelete }) {
     </div>
   );
 }
+// 📄 SavedExposes.jsx – Liste gespeicherter Exposés mit Lade-/Löschfunktion

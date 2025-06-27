@@ -45,7 +45,7 @@ const loadExpose = (expose, setFormData, setOutput, setSelectedStyle) => {
     setSelectedStyle(expose.selectedStyle || 'emotional'); // fallback
   }
 };
-
+  // ✅ Funktion zum Löschen eines Exposés
 
   const deleteExpose = (id) => {
     setExposes((prev) => prev.filter((e) => e.id !== id));
