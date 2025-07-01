@@ -2,18 +2,21 @@
 
 import React from 'react';
 
-import styles
-  from '../styles/ExportBox.module.css'; // 🎨 Für Styling des Buttons
+// 🎨 Styling für den PDF-Export-Button (Glassmorphismus etc.)
+import styles from '../styles/ExportBox.module.css';
+// 🧠 Korrigierter Import der PDF-Exportfunktion aus utils
+// Wichtig: Groß-/Kleinschreibung exakt wie Dateiname (Linux/WSL!)
 import {
-  exportExposeAsPDF,
-} from '../utils/pdfExportExpose'; // 🧠 PDF-Export-Logik importieren
+  exportExposeWithImages as exportExposeAsPDF,
+} from '../utils/pdfExportExpose';
 
 export default function ExportButtons({ formData, output, selectedStyle }) {
+  // 📁 JSON-Export: speichert das komplette Exposé als .json-Datei
   const handleExportJSON = () => {
     const fullData = {
-      ...formData,
-      output,
-      selectedStyle,
+      ...formData,        // alle Formulardaten
+      output,             // GPT-Text
+      selectedStyle,      // Stilwahl (emotional, sachlich etc.)
     };
 
     const blob = new Blob([JSON.stringify(fullData, null, 2)], {
@@ -25,22 +28,26 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
     a.href = url;
     a.download = 'expose-export.json';
     a.click();
-    URL.revokeObjectURL(url);
+
+    URL.revokeObjectURL(url); // Speicher aufräumen
   };
 
+  // 📋 Copy-Button: kopiert den generierten Text (GPT-Output) in die Zwischenablage
   const handleCopy = () => {
     navigator.clipboard.writeText(output);
     alert('📋 Text kopiert!');
   };
 
+  // 📄 PDF-Export: ruft die zentrale PDF-Logik auf (Bilder, Text, Captions etc.)
   const handleExportPDF = async () => {
     try {
-      await exportExposeAsPDF(formData, output); // 📤 GPT-Output + Formulardaten an PDF-Funktion übergeben
+      await exportExposeAsPDF(formData, output);
     } catch (error) {
       console.error('❌ Fehler beim PDF-Export:', error);
     }
   };
 
+  // 🧱 UI mit drei Buttons: JSON, Text kopieren, PDF exportieren
   return (
     <div style={{ marginTop: '1rem' }}>
       <button onClick={handleExportJSON}>📁 JSON exportieren</button>
