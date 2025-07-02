@@ -1,6 +1,4 @@
-// src/pages/ExposeTool.jsx
-
-// 🌈 Style: Hauptlayout mit Glassmorphismus
+// 🌈 Hauptlayout mit Glassmorphismus-Styling
 import '../styles/ExposeTool.css';
 
 import React, {
@@ -8,89 +6,83 @@ import React, {
   useState,
 } from 'react';
 
-// 🔁 Komponenten
+// 🔁 Komponentenstruktur
 import ExportButtons from '../components/ExportButtons';
 import ExposeForm from '../components/ExposeForm';
 import GPTOutputBox from '../components/GPTOutputBox';
-import ImageUpload
-  from '../components/ImageUpload'; // 📸 ImageUpload integriert
+import ImageUpload from '../components/ImageUpload';
 import SavedExposes from '../components/SavedExposes';
 import useSavedExposes from '../hooks/useSavedExposes';
-// 🤖 GPT-Funktionen
+// 🤖 GPT-Integration
 import {
   fetchGPTResponse,
   generatePrompt,
 } from '../lib/openai';
 
 export default function ExposeTool() {
-  // 📦 Formular-Daten
+  // 📦 Zustand für das Hauptformular
   const [formData, setFormData] = useState({
     objektart: '', strasse: '', ort: '', bezirk: '', sicht: '', lagebesonderheiten: '',
     wohnflaeche: '', grundstueck: '', zimmer: '', baujahr: '', zustand: '',
     preis: '', energie: '', besonderheiten: ''
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [output, setOutput] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState('emotional');
-  // ExposeTool.jsx (Ausschnitt)
-const [images, setImages] = useState(() => {
-  const saved = localStorage.getItem('maklermate_images');
-  try {
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-});
+  const [isLoading, setIsLoading] = useState(false);         // 🔄 Ladezustand für GPT
+  const [output, setOutput] = useState('');                  // 📄 GPT-Ergebnis
+  const [selectedStyle, setSelectedStyle] = useState('emotional'); // 🎨 Stilwahl für GPT
 
+  // 🖼️ Lokaler Bildspeicher mit persistenter Initialisierung aus LocalStorage
+  const [images, setImages] = useState(() => {
+    const saved = localStorage.getItem('maklermate_images');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
+  // 🔁 Bilddaten mit formData synchronisieren, damit Export & Speicherfunktion sie erhalten
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      images,
+    }));
+  }, [images]);
 
+  // 💾 Zugriff auf gespeicherte Exposés
+  const { exposes, addExpose, deleteExpose, loadExpose } = useSavedExposes();
 
-useEffect(() => {
-  setFormData((prev) => ({
-    ...prev,
-    images,
-  }));
-}, [images]);
-
-
-
-
-
-
-
-  // 💾 Lokaler Speicher
-  const {
-    exposes,
-    addExpose,
-    deleteExpose,
-    loadExpose
-  } = useSavedExposes();
-
-  // ✏️ Inputfelder ändern
+  // ✏️ Änderungen im Formular live übernehmen
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✨ GPT-Text erzeugen
+  // 🔮 GPT-Antwort generieren und anzeigen
   const handleGenerate = async () => {
+    // 🚫 Validierung: keine leere Anfrage generieren
     if (!formData || Object.values(formData).every((val) => val === '')) {
       alert("Bitte zuerst das Formular ausfüllen.");
       return;
     }
 
+    // 🧠 Prompt zusammenstellen
     const prompt = generatePrompt(formData, selectedStyle);
     setIsLoading(true);
 
     try {
-      const gptText = await fetchGPTResponse(prompt);
+      // 📤 GPT-Request ausführen
+      const gptResponse = await fetchGPTResponse(prompt);
+
+      // 🧠 Response-Handling: akzeptiert entweder direkt String oder Objekt mit .result / .content
       const extracted =
-        typeof gptText === 'object' && gptText.result
-          ? gptText.result.trim?.()
-          : typeof gptText === 'string'
-            ? gptText.trim?.()
-            : '';
+        typeof gptResponse === 'object' && gptResponse.content
+          ? gptResponse.content.trim?.()
+          : typeof gptResponse === 'object' && gptResponse.result
+            ? gptResponse.result.trim?.()
+            : typeof gptResponse === 'string'
+              ? gptResponse.trim?.()
+              : '';
 
       setOutput(extracted || '⚠️ Kein GPT-Ergebnis erhalten.');
     } catch (err) {
@@ -101,25 +93,25 @@ useEffect(() => {
     }
   };
 
-  // 💾 Speichern inkl. Bilder
+  // 💾 Exposé in lokaler Liste speichern
   const handleSaveExpose = () => {
     addExpose({ formData, output, selectedStyle, images });
   };
 
+  // ✅ UI-Returnblock – bestehend aus: Formular, Upload, Ausgabe, Export, Speicher
   return (
     <div className="expose-tool-container">
-
-      {/* 🧾 Hauptformular */}
+      {/* 📋 Exposé-Eingabemaske */}
       <ExposeForm
         formData={formData}
         setFormData={setFormData}
         onChange={handleChange}
       />
 
-      {/* 📸 Bilder hochladen & verwalten */}
+      {/* 📸 Bilder-Upload */}
       <ImageUpload images={images} setImages={setImages} />
 
-      {/* 🔮 Generieren-Button */}
+      {/* 🧠 GPT-Auslösung */}
       <button
         onClick={handleGenerate}
         className={`generate-button ${isLoading ? 'loading' : ''}`}
@@ -129,21 +121,21 @@ useEffect(() => {
         {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
       </button>
 
-      {/* 💾 Speichern */}
+      {/* 💾 Exposé speichern */}
       <button className="save-button" onClick={handleSaveExpose}>
         💾 Exposé speichern
       </button>
 
-      {/* 📄 Ergebnis-Preview & PDF-Sektion */}
+      {/* 📄 PDF-Vorschau-Sektion */}
       <div id="pdf-export-section">
         <div id="pdf-logo" className="pdf-logo">
           <img src="/logo192.png" alt="MaklerMate Logo" height={40} />
         </div>
 
-        {/* ✨ GPT-Ausgabe */}
+        {/* 💬 GPT-Textanzeige */}
         <GPTOutputBox output={output} />
 
-        {/* 🔻 Bildanzeige im PDF-Bereich */}
+        {/* 🖼️ Bildvorschau */}
         {images.length > 0 && (
           <div className="image-preview-section">
             {images.map((img, index) => (
@@ -158,12 +150,12 @@ useEffect(() => {
         )}
       </div>
 
-      {/* 🔁 Export-Formate */}
+      {/* 📤 Export-Funktionen: PDF, JSON, Copy */}
       <ExportButtons
         formData={formData}
         output={output}
         selectedStyle={selectedStyle}
-        images={images} // ✅ Übergabe an PDF-Export
+        images={images}
       />
 
       {/* 📦 Gespeicherte Exposés */}

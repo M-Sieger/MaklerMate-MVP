@@ -28,21 +28,29 @@ export const fetchGPTResponse = async (prompt) => {
 
 export function generatePrompt(formData, selectedStyle) {
   let stilHinweis = '';
-  if (selectedStyle === 'emotional') stilHinweis = '- Zielgruppe: Familien, emotional, lebendig.';
-  if (selectedStyle === 'sachlich') stilHinweis = '- Zielgruppe: Investoren, sachlich, faktenorientiert.';
-  if (selectedStyle === 'luxus') stilHinweis = '- Zielgruppe: Luxussegment, stilvoll, edel.';
+  if (selectedStyle === 'emotional') stilHinweis = 'Sprich emotional, menschlich, lebendig.';
+  if (selectedStyle === 'sachlich') stilHinweis = 'Sprich sachlich, strukturiert, objektiv.';
+  if (selectedStyle === 'luxus') stilHinweis = 'Sprich exklusiv, hochwertig, elegant.';
+return `
+Du bist ein erfahrener Immobilienmakler und Textprofi.
 
-  return `Du bist ein professioneller Immobilienmakler.
 ${stilHinweis}
 
-🔎 Objektart: ${formData.objektart}
-📍 Adresse: ${formData.strasse}, ${formData.ort}, ${formData.bezirk}
-👁️ Sicht: ${formData.sicht}
-🌳 Lage: ${formData.lagebesonderheiten}
-📐 Fläche: ${formData.wohnflaeche}m² Wohnfläche, ${formData.grundstueck}m² Grundstück
-🛏️ Zimmer: ${formData.zimmer} | 🏗️ Baujahr: ${formData.baujahr} | Zustand: ${formData.zustand}
-💰 Preis: ${formData.preis} | Energieklasse: ${formData.energie}
-✨ Besonderheiten: ${formData.besonderheiten}
+Formuliere einen hochwertigen, zusammenhängenden Exposétext (1–2 Absätze), der folgende Daten elegant und realitätsnah beschreibt:
 
-🔚 Gib nur den reinen Text zurück – ohne Einleitung, Formatierung oder Kommentare.`;
+- Objektart: ${formData.objektart}
+- Adresse: ${formData.strasse}, ${formData.ort}, ${formData.bezirk}
+- Aussicht/Sicht: ${formData.sicht}
+- Lagebesonderheiten: ${formData.lagebesonderheiten}
+- Wohnfläche: ${formData.wohnflaeche} m²
+- Grundstücksgröße: ${formData.grundstueck} m²
+- Zimmeranzahl: ${formData.zimmer}
+- Baujahr: ${formData.baujahr}
+- Zustand: ${formData.zustand}
+- Kaufpreis: ${formData.preis}
+- Energieeffizienzklasse: ${formData.energie}
+- Besondere Merkmale: ${formData.besonderheiten}
+
+Vermeide Bulletpoints. Schreibe stattdessen einen professionellen, ansprechenden Beschreibungstext – wie für ein echtes Immobilienexposé.
+`;
 }
