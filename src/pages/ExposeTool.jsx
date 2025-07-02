@@ -3,7 +3,10 @@
 // 🌈 Style: Hauptlayout mit Glassmorphismus
 import '../styles/ExposeTool.css';
 
-import React, { useState } from 'react';
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 
 // 🔁 Komponenten
 import ExportButtons from '../components/ExportButtons';
@@ -39,6 +42,21 @@ const [images, setImages] = useState(() => {
     return [];
   }
 });
+
+
+
+
+useEffect(() => {
+  setFormData((prev) => ({
+    ...prev,
+    images,
+  }));
+}, [images]);
+
+
+
+
+
 
 
   // 💾 Lokaler Speicher
