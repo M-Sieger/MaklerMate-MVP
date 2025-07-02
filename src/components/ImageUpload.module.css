@@ -85,11 +85,14 @@
 }
 
 .pdf-preview-image {
-  width: 160px;
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 300px !important;
+  height: auto !important;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 
 
 .buttonRow {
