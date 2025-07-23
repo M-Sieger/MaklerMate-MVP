@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* Prevent reset from killing modules */
+.fancyTab, .fancyTabActive {
+  all: unset; /* Nur wenn andere Regeln alles löschen! */
+  display: inline-block;
+  font-family: inherit;
+}

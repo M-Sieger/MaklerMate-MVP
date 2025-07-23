@@ -2,36 +2,37 @@
 
 import React, { useState } from 'react';
 
-// 🎨 Modul-CSS für moderne Tabs & Inputs
-import styles from './TabbedForm.module.css';
+// 🎨 Importiere das zugehörige CSS-Modul
+import styles from '../styles/TabbedForm.module.css';
 
 const TabbedForm = ({ tabs }) => {
-  // 📌 Aktiver Tab-State (aktuelles Tab merken)
+  // 🧠 Local State für aktives Tab (Index)
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   return (
-    <div className={styles['tabbed-form']}> {/* 📦 Haupt-Wrapper */}
+    <div className={styles.tabbedForm}> {/* 📦 Haupt-Wrapper für das Tab-System */}
 
-      {/* 🔘 Tab-Auswahl oben mit Glas-Stil */}
-      <div className={styles['tabs-header']}>
+      {/* 🔘 Tab-Kopfzeile – alle auswählbaren Tabs */}
+      <div className={styles.tabsHeader}>
         {tabs.map((tab, index) => (
-         <button
-  key={index}
-  onClick={() => setActiveTabIndex(index)}
-  className={`${styles.fancyTab} ${activeTabIndex === index ? styles.fancyTabActive : ''}`}
->
-  {tab.icon && <span style={{ marginRight: '0.5rem' }}>{tab.icon}</span>}
-  {tab.label}
-</button>
+          <button
+            key={index}
+            onClick={() => setActiveTabIndex(index)} // 🎯 Tab wechseln
+            className={`${styles.fancyTab} ${activeTabIndex === index ? styles.fancyTabActive : ''}`.trim()} // 🎨 Aktiver Tab optisch hervorheben
+          >
+            {/* Optionales Icon neben dem Label */}
+            {tab.icon && <span className={styles.icon}>{tab.icon}</span>}
+            {tab.label}
+          </button>
         ))}
       </div>
 
-      {/* 📄 Inhalt des aktuell gewählten Tabs */}
+      {/* 📄 Inhalt des aktuell aktiven Tabs */}
       <div className={styles.fancyTabContent}>
         {React.isValidElement(tabs[activeTabIndex].content) ? (
-          tabs[activeTabIndex].content // ✅ Nur wenn gültige Komponente übergeben
+          tabs[activeTabIndex].content // ✅ Inhalt anzeigen, wenn valides React-Element
         ) : (
-          <p>⚠️ Tab-Inhalt nicht verfügbar oder nicht als React-Komponente formatiert.</p>
+          <p>⚠️ Kein valider Tab-Inhalt vorhanden.</p>
         )}
       </div>
     </div>

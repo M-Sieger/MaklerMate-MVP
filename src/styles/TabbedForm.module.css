@@ -1,12 +1,12 @@
-/* 🎨 TabbedForm.module.css – moderne Tabs & Input-Styling (konfliktfreie Benennung) */
+/* 🎨 TabbedForm.module.css – moderne Tabs & Input-Styling */
 
 /* 📦 Wrapper für das ganze Tab-Formular */
-.tabbed-form {
+.tabbedForm {
   margin-top: 2rem;
 }
 
 /* 🧭 Tabs-Header mit Glas-Effekt */
-.tabs-header {
+.tabsHeader {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -41,13 +41,16 @@
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
 }
 
-.fancyTab.active {
-  color: #4fc3f7;
-  background-color: rgba(255, 255, 255, 0.12);
+/* ✅ Aktiver Tab erhält diesen Modifier */
+.fancyTabActive {
+  background: rgba(255, 255, 255, 0.15);     /* ❗ sichtbar machen */
+  border: 1px solid #4fc3f7;
+  box-shadow: 0 4px 12px rgba(79, 195, 247, 0.4); /* ❗ Kontrast erzeugen */
+  transform: scale(1.02);
   font-weight: 600;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-  border-bottom: 2px solid #4fc3f7;
+  color: white;
 }
+
 
 /* 🎯 Tab-Inhalt Fancy Style */
 .fancyTabContent {

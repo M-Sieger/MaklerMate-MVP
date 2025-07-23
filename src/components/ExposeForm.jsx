@@ -167,11 +167,11 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
   
   return (
     <div className="form-wrapper">
-      <div className="tab-header">
+      <div className={styles.tabHeader}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
-            className={activeTab === tab.id ? 'active' : ''}
+            className={`${styles.fancyTab} ${activeTab === tab.id ? styles.fancyTabActive : ''}`.trim()}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
@@ -181,6 +181,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
       <div className="tab-content">{renderTab()}</div>
     </div>
   );
+
 };
 
 export default ExposeForm;
