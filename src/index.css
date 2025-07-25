@@ -1,19 +1,66 @@
-body {
+/* 🌍 Global Reset + Theme Integration */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* 📱 Responsive Textskalierung */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
 }
-/* Prevent reset from killing modules */
-.fancyTab, .fancyTabActive {
-  all: unset; /* Nur wenn andere Regeln alles löschen! */
-  display: inline-block;
+
+/* 🎨 Theme-Body */
+body {
+  font-family: var(--font-base);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 🔗 Standard-Linkverhalten */
+a {
+  color: var(--color-blue);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* 🟦 Buttons – Theme Button Basis */
+button {
   font-family: inherit;
+  font-size: 1rem;
+  border: none;
+  background-color: var(--color-blue-dark);
+  color: white;
+  border-radius: var(--radius);
+  padding: 0.6rem 1.2rem;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+button:hover {
+  background-color: var(--color-blue);
+}
+
+/* 🧾 Inputs */
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  background-color: #1a1f27;
+  color: var(--color-text);
+  border: 1px solid var(--color-disabled);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+}
+* {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
 }

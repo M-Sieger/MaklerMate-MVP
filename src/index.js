@@ -1,6 +1,8 @@
 // index.js – Einstiegspunkt der App
 
 import './index.css'; // globales Styling
+import './fonts.css';              // ✅ Schrift aktivieren
+import './styles/theme.css';       // ✅ Farbvariablen global
 
 import React from 'react';
 

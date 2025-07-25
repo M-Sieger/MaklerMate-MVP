@@ -1,6 +1,4 @@
 // 📄 src/components/Layout.jsx
-// ✅ Globales Layout: enthält Navbar + Seiteninhalt + Footer für alle Seiten
-
 import React from 'react';
 
 import {
@@ -9,13 +7,13 @@ import {
 
 import styles from '../styles/Layout.module.css';
 // 🎨 CSS-Modul für Layout/Footer
-import Navbar from './Navbar';
+import Header from './Header'; // ✅ Neuer Header
 
 export default function Layout() {
   return (
     <>
-      {/* 🧭 Navigationsleiste oben */}
-      <Navbar />
+      {/* 🧭 Oben: Header mit Branding + Navigation */}
+      <Header />
 
       {/* 📄 Hauptbereich für Seiteninhalte */}
       <main className={styles.main}>

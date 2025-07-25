@@ -1,0 +1,40 @@
+/* 🎨 theme.css – Globale Farb- und Designvariablen */
+
+:root {
+  /* 🌑 Hintergrundfarben */
+  --color-bg: #0d1117;                /* Haupt-Hintergrund (Dark Mode) */
+  --color-bg-soft: #161b22;           /* Panels, Cards, Sektionen */
+
+  /* 🖋️ Textfarben */
+  --color-text: #f3f4f6;              /* Standard-Textfarbe */
+  --color-muted: #8b949e;             /* Subtext, Placeholders */
+  --color-disabled: #444c56;          /* deaktivierte Elemente */
+
+  /* 🔵 Primärfarbe – Apple-Style Blau */
+  --color-accent: #3b82f6;            /* Buttons, Interaktionen */
+  --color-accent-hover: #2563eb;
+  --color-accent-soft: rgba(59, 130, 246, 0.1);
+
+  /* 🟨 Sekundärfarbe – Branding Akzent */
+  --color-highlight: #f6e05e;         /* GPT Output, Attention Areas */
+  --color-highlight-soft: rgba(246, 224, 94, 0.15);
+
+  /* 🔲 Rahmen & Schatten */
+  --color-border: #2a2a2d;
+  --radius: 12px;
+  --shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+
+  /* 🔤 Schrift */
+  --font-base: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

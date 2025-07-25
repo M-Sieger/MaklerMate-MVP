@@ -1,213 +1,39 @@
-/* 🌌 Hintergrund und Basislayout */
-body {
-  background: linear-gradient(135deg, #1a1f2b 0%, #1c2434 40%, #0d1117 100%);
-  font-family: 'Inter', sans-serif;
-  color: #f3f4f6;
-  margin: 0;
-  padding: 0;
-}
-
-/* 📌 Überschriften-Intro */
-.hero-intro {
-  max-width: 960px;
-  margin: 3rem auto 0;
-  padding: 2rem 2rem 1rem;
-  text-align: center;
-  color: #e2e8f0;
-}
-
-.hero-intro h1 {
-  font-size: 1.8rem;
-  margin-bottom: 0.75rem;
-  color: #4fc3f7;
-}
-
-.hero-intro p {
-  font-size: 1rem;
-  color: #cbd5e1;
-  line-height: 1.6;
-}
-
-/* 🎯 Fortschrittsanzeige */
-.progress-info {
-  text-align: center;
-  color: #4fc3f7;
-  margin: 1rem auto 1rem;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* 🧩 Wrapper für das Tool mit Glass-Effekt & Tiefe */
-.tool-inner-wrapper,
+/* 📦 Hauptcontainer mit Apple-Style UI */
 .expose-tool-container {
   max-width: 960px;
   margin: 2rem auto;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 1.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-bg-soft); /* neues Theme-Panel */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
 }
 
-/* 🧼 ❌ Entfernt: Globale Styles, die fancyTab überschrieben haben
-.tab-button {
-  ... 👈 war überschreibend, jetzt raus!
-}
-.tab-button.active {
-  ... 👈 war überschreibend, jetzt raus!
-}
-*/
-
-/* ✨ Fokus-Styling für Inputs */
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #3ea0cf;
-  box-shadow: 0 0 6px rgba(62, 160, 207, 0.5);
-  outline: none;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #94a3b8;
-}
-
-/* 📦 Button-Gruppe */
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-/* 🔘 Buttons */
-.btn {
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  text-align: center;
-}
-
-/* 🔘 Primärer Button – Gradient, Glow */
-.btn-primary {
-  padding: 0.6rem 1.2rem;
-  background: linear-gradient(135deg, #3ea0cf, #1e88e5);
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 0 8px rgba(62, 160, 207, 0.35);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.btn-primary:hover {
-  background: linear-gradient(135deg, #1e88e5, #1565c0);
-}
-
-/* 🔘 Sekundärer Button – Transparent, Punkt-Rahmen */
-.btn-secondary {
-  padding: 0.6rem 1.2rem;
-  background-color: transparent;
-  border: 2px dashed #4fc3f7;
-  color: #4fc3f7;
-  border-radius: 10px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.btn-secondary:hover {
-  background-color: #4fc3f7;
-  color: #0d1117;
-}
-
-.btn-outline {
-  background-color: transparent;
-  border: 2px dashed #4fc3f7;
-  color: #4fc3f7;
-}
-.btn-outline:hover {
-  background-color: #4fc3f7;
-  color: #0d1117;
-}
-
-.btn-mail {
-  background-color: #4299e1;
-  color: white;
-}
-.btn-mail:hover {
-  background-color: #2b6cb0;
-}
-
-.btn-danger {
-  background-color: #e53935;
-  color: white;
-}
-.btn-danger:hover {
-  background-color: #c62828;
-}
-
-.btn-small {
-  padding: 6px 14px;
-  font-size: 0.875rem;
-}
-
-/* 🎯 Stil-Auswahl */
-.style-selector {
-  margin: 1.5rem 0;
-  text-align: center;
-}
-
-.style-selector label {
+/* 🖼 Bildvorschau für generierte PDFs */
+.pdf-preview-image {
+  max-width: 320px;
+  height: auto;
   display: block;
-  margin-bottom: 0.4rem;
-  color: #cbd5e1;
+  margin: 1rem auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
-.style-selector select {
-  padding: 0.6rem 1rem;
-  border-radius: 10px;
-  font-size: 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #f1f5f9;
-  border: 1px solid #3a4a5a;
-}
-
-/* ➕ Generator-Button */
-.generate-button {
-  margin-top: 1rem;
-  padding: 0.6rem 1.2rem;
-  background-color: #3b82f6;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.generate-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Logo-Position */
+/* 📄 Logo (über Vorschau) */
 .pdf-logo {
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
-/* 🔄 Spinner */
+/* 🔄 Ladeanimation (Spinner) */
 .spinner {
   border: 4px solid rgba(255, 255, 255, 0.2);
-  border-top: 4px solid #4fc3f7;
+  border-top: 4px solid var(--color-accent);
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   animation: spin 0.8s linear infinite;
   display: inline-block;
   vertical-align: middle;
@@ -219,34 +45,80 @@ textarea::placeholder {
   100% { transform: rotate(360deg); }
 }
 
-.generate-button.loading {
-  background-color: #2563eb;
-  position: relative;
-  padding-left: 2.4rem;
+/* 🧩 Button-Gruppe */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
-
-.pdf-preview-image {
-  max-width: 300px !important;
-  height: auto !important;
-  display: block;
-  margin: 1rem auto;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-
-
-select {
-  padding: 0.6rem 1rem;
-  border-radius: 10px;
+/* 🔘 Standardbutton */
+.btn {
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--radius);
   font-size: 1rem;
-  background-color: #1e293b; /* dunkler für besseren Kontrast */
-  color: #f1f5f9;             /* heller Text sichtbar */
-  border: 1px solid #3a4a5a;
+  font-weight: 500;
+  text-align: center;
+  transition: background 0.2s ease;
+  cursor: pointer;
+  border: none;
 }
 
+/* 🟦 Primär-Button: Blau */
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 0 6px var(--color-accent-soft);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+}
+
+/* 🟨 Sekundär-Button (gelb-outline) */
+.btn-secondary {
+  background: transparent;
+  color: var(--color-highlight);
+  border: 2px dashed var(--color-highlight);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--color-highlight);
+  color: var(--color-bg);
+}
+
+/* 🧠 Stil-Auswahl Dropdown */
+.style-selector {
+  margin: 2rem 0 1rem;
+  text-align: center;
+}
+
+.style-selector label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--color-muted);
+}
+
+.style-selector select {
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  transition: background 0.2s ease;
+}
+
+.style-selector select:focus {
+  outline: none;
+  background: var(--color-bg-soft);
+}
+
+/* 🎨 Dropdown-Optionen */
 select option {
-  background-color: #1e293b; /* Dropdown-Hintergrund */
-  color: #f1f5f9;             /* Option-Textfarbe */
+  background-color: var(--color-bg-soft);
+  color: var(--color-text);
 }

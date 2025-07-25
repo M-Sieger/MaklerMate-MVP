@@ -1,60 +1,60 @@
-/* 📄 src/styles/ToolCards.module.css */
-
-/* 🔳 Grid-Layout für die ToolCards */
-.cardGrid {
+/* 🧱 Grid-Layout für Tool-Karten */
+.toolGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem 1rem;
+  gap: 2rem;
+  padding: 2rem 0;
 }
 
-/* 🧱 Einzelne Karte */
+/* 🪟 Einzelne Karte */
 .card {
-  background-color: #111827;
-  border: 1px solid #1f2937;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius);
   padding: 1.5rem;
-  box-shadow: 0 0 12px rgba(0,0,0,0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
 }
 
-/* 🖱️ Hover-Effekt */
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 18px rgba(0,0,0,0.5);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hard);
 }
 
-/* 📛 Titel */
-.card h2 {
-  margin-top: 0;
-  font-size: 1.4rem;
-  color: #facc15; /* Goldton */
+/* 🧭 Titel */
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-accent);
 }
 
-/* 📃 Beschreibung */
-.card p {
-  margin: 0.5rem 0 1rem;
-  color: #d1d5db;
-  font-size: 0.95rem;
+/* 🧾 Beschreibung */
+.description {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
-/* 🖱️ Button */
-.cardButton {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
+/* 🔘 Button-Styling (Sekundär) */
+.button {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  background-color: transparent;
+  border-radius: var(--radius);
+  font-weight: 500;
   cursor: pointer;
-  font-weight: bold;
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
-.cardButton:hover {
-  background-color: #2563eb;
-}
-
-/* 🚫 Deaktivierte Card (Social Media Platzhalter) */
-.disabled {
-  opacity: 0.5;
-  pointer-events: none;
+.button:hover {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
 }

@@ -1,0 +1,7 @@
+/* 🔤 Google Font: Manrope – clean, modern, leserlich */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+/* 🧩 Font-Fallbacks für Systemintegration */
+:root {
+  --font-base: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

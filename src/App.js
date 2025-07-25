@@ -1,4 +1,8 @@
-// 📄 App.js – Zentrale Routing-Konfiguration + globaler Toast-Container (mit react-hot-toast)
+// 📄 App.js – Zentrale Routing-Konfiguration + globales Theme-Styling
+
+// ✅ Globales Styling & Fonts laden
+import './fonts.css';       // 🔤 Schriftarten (Manrope)
+import './styles/theme.css'; // 🎨 Farbvariablen & UI-Standards
 
 import React from 'react';
 
@@ -22,8 +26,8 @@ const App = () => {
       {/* 🔀 Router mit Layout als Wrapper */}
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />            {/* 🏠 Startseite */}
-          <Route path="crm" element={<CRMTool />} />    {/* 📇 CRM */}
+          <Route index element={<Home />} />               {/* 🏠 Startseite */}
+          <Route path="crm" element={<CRMTool />} />       {/* 📇 CRM */}
           <Route path="expose" element={<ExposeTool />} /> {/* 🧾 Exposé */}
         </Route>
       </Routes>
@@ -34,8 +38,10 @@ const App = () => {
         toastOptions={{
           duration: 2000,
           style: {
-            background: '#333',
-            color: '#fff',
+            background: '#222', // 🍏 edler, dezenter
+            color: '#f1f1f1',
+            borderRadius: '12px',
+            fontFamily: 'Manrope, sans-serif',
           },
         }}
       />
@@ -44,4 +50,3 @@ const App = () => {
 };
 
 export default App;
-// 📄 App.js – Zentrale Routing-Konfiguration + globaler Toast-Container (mit react-hot-toast)
