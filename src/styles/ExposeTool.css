@@ -94,13 +94,36 @@ textarea::placeholder {
   text-align: center;
 }
 
+/* 🔘 Primärer Button – Gradient, Glow */
 .btn-primary {
+  padding: 0.6rem 1.2rem;
   background: linear-gradient(135deg, #3ea0cf, #1e88e5);
+  border: none;
+  border-radius: 10px;
   color: white;
+  font-weight: 600;
   box-shadow: 0 0 8px rgba(62, 160, 207, 0.35);
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 .btn-primary:hover {
   background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+/* 🔘 Sekundärer Button – Transparent, Punkt-Rahmen */
+.btn-secondary {
+  padding: 0.6rem 1.2rem;
+  background-color: transparent;
+  border: 2px dashed #4fc3f7;
+  color: #4fc3f7;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-secondary:hover {
+  background-color: #4fc3f7;
+  color: #0d1117;
 }
 
 .btn-outline {
@@ -210,4 +233,20 @@ textarea::placeholder {
   margin: 1rem auto;
   border-radius: 0.5rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+select {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #1e293b; /* dunkler für besseren Kontrast */
+  color: #f1f5f9;             /* heller Text sichtbar */
+  border: 1px solid #3a4a5a;
+}
+
+select option {
+  background-color: #1e293b; /* Dropdown-Hintergrund */
+  color: #f1f5f9;             /* Option-Textfarbe */
 }

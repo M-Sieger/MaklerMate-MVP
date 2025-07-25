@@ -29,3 +29,36 @@
   word-break: break-word;
   max-width: 100%;
 }
+
+/* 🔘 Primärer Export-Button (blau) */
+.exportButton {
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, #3ea0cf, #1e88e5);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s ease;
+  box-shadow: 0 0 6px rgba(62, 160, 207, 0.4);
+}
+.exportButton:hover {
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+  transform: scale(1.02);
+}
+
+/* 🔘 Sekundär-Buttons (grau-transparent) */
+.exportButtonSecondary {
+  padding: 0.6rem 1.2rem;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #d1d5db;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s ease;
+}
+.exportButtonSecondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+}
