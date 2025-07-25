@@ -4,6 +4,8 @@
   /* 🌑 Hintergrundfarben */
   --color-bg: #0d1117;                /* Haupt-Hintergrund (Dark Mode) */
   --color-bg-soft: #161b22;           /* Panels, Cards, Sektionen */
+  --font-ui: 'Inter', sans-serif;
+  --font-claim: 'Playfair Display', serif;
 
   /* 🖋️ Textfarben */
   --color-text: #f3f4f6;              /* Standard-Textfarbe */

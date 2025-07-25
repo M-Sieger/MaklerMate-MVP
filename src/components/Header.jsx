@@ -1,31 +1,27 @@
 // 📁 src/components/Header.jsx
 
-import './Header.css'; // falls du das globale CSS nutzt
+import './Header.css'; // 🎨 Stil bleibt bestehen
 
 import React from 'react';
 
-import {
-  Link,
-  NavLink,
-} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-function Header() {
+export default function Header() {
   return (
     <header className="header">
-      <div className="header-left">
-        <Link to="/" className="logo-link">
-          <img src="/logo192.png" alt="MaklerMate Logo" className="logo-img" />
-          <span className="logo-text">MaklerMate</span>
-        </Link>
+      {/* 🔄 Branding-Logo ersetzt */}
+      <div className="logoContainer">
+        <img src="/Logo.png" alt="MaklerMate Logo" />
+        <span className="brandName">MaklerMate</span>
       </div>
-      <nav className="header-nav">
-        <NavLink to="/" end>Home</NavLink>
-        <NavLink to="/expose">Exposés</NavLink>
-        <NavLink to="/crm">CRM</NavLink>
-        <NavLink to="/impressum">Impressum</NavLink>
+
+      {/* 🔗 Navigation */}
+      <nav className="navLinks">
+        <NavLink to="/" className="navLink" end>Home</NavLink>
+        <NavLink to="/expose" className="navLink">Exposés</NavLink>
+        <NavLink to="/crm" className="navLink">CRM</NavLink>
+        <NavLink to="/impressum" className="navLink">Impressum</NavLink>
       </nav>
     </header>
   );
 }
-
-export default Header;

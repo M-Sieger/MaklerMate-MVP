@@ -25,9 +25,15 @@
   box-shadow: var(--shadow-hard);
 }
 
+/* 🚫 Disabled Card (Social Media Placeholder) */
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* 🧭 Titel */
 .title {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: var(--color-accent);
@@ -36,12 +42,24 @@
 /* 🧾 Beschreibung */
 .description {
   color: var(--color-muted);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  line-height: 1.4;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
 }
 
-/* 🔘 Button-Styling (Sekundär) */
+/* 🏷️ Badge für "bald" */
+.badge {
+  background: var(--color-warning);
+  color: var(--color-bg);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  margin-left: 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+/* 🔘 Button-Styling */
 .button {
   padding: 0.6rem 1.2rem;
   border: 1px solid var(--color-primary);
