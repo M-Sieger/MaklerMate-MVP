@@ -122,3 +122,61 @@
   background: rgba(255, 255, 255, 0.05);
   color: #f3f4f6;
 }
+
+
+/* 🔲 Dropzone Hover-Effekt */
+.uploadWrapper:hover {
+  border-color: #60a5fa;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+/* 🧊 Bildvorschau Wrapper softer */
+.previewImageWrapper {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* 🖼️ Bild selbst leicht hoverbar */
+.previewImage:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* ✏️ Caption Feld eleganter */
+.captionInput {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+}
+
+.captionInput:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 6px rgba(79, 195, 247, 0.3);
+}
+
+/* 🎛 Sortier- und Löschbuttons optisch angleichen */
+.sortButton,
+.deleteButton {
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.sortButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: scale(1.05);
+}
+
+.deleteButton:hover {
+  background: rgba(255, 0, 0, 0.6);
+  transform: scale(1.1);
+}

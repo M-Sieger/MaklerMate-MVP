@@ -26,7 +26,7 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
     alert('📋 Text kopiert!');
   };
 
-  // 📄 PDF mit Bildern + Captions exportieren
+  // 📄 PDF-Export mit GPT-Text + Bildern
   const handleExportPDF = async () => {
     try {
       const gptText =
@@ -47,19 +47,22 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
     }
   };
 
-  // ✅ JSX-Renderblock (MUSS enthalten sein!)
   return (
-<div className="button-group">
-  <button className="btn btn-secondary" onClick={handleExportJSON}>
-    📁 JSON exportieren
-  </button>
-  <button className="btn btn-secondary" onClick={handleCopy}>
-    📋 Text kopieren
-  </button>
-  <button className="btn btn-primary" onClick={handleExportPDF}>
-    📄 PDF exportieren
-  </button>
-</div>
+    <div className="button-group">
+      {/* 🟨 Sekundär: JSON */}
+      <button className="btn btn-secondary" onClick={handleExportJSON}>
+        📁 JSON exportieren
+      </button>
 
+      {/* 🟨 Sekundär: Copy */}
+      <button className="btn btn-secondary" onClick={handleCopy}>
+        📋 Text kopieren
+      </button>
+
+      {/* 🔵 Primär: PDF */}
+      <button className="btn btn-primary" onClick={handleExportPDF}>
+        📄 PDF exportieren
+      </button>
+    </div>
   );
 }
