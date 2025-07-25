@@ -2,10 +2,9 @@
 
 import React, { useState } from 'react';
 
-import styles from '../styles/ExposeForm.module.css';
+import styles from './ExposeForm.module.css'; // 🔄 Direkt im Component-Ordner
 
-// 💅 Modularisiertes Styling für Inputs
-
+// 🗂️ Tabdefinitionen mit Icons
 const TABS = [
   { id: 'objekt', label: '🏠 Objektdaten' },
   { id: 'flaeche', label: '📐 Flächen & Räume' },
@@ -20,12 +19,14 @@ const TABS = [
 const ExposeForm = ({ formData, setFormData, onChange }) => {
   const [activeTab, setActiveTab] = useState('objekt');
 
+  // 🔁 Eingabelogik (lokal & extern)
   const handleLocalChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     if (onChange) onChange(e);
   };
 
+  // 🧩 Dynamisches Input-Rendering
   const renderInput = (name, placeholder, type = 'input') => (
     <div className={styles.formGroup}>
       <label>{placeholder}</label>
@@ -49,11 +50,15 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
     </div>
   );
 
+  // 🧠 Panelstruktur für jede Tab-Sektion
+  const renderTab = () => {
+    const panel = (children) => (
+      <div className={styles.panelSection}>{children}</div>
+    );
 
-    const renderTab = () => {
     switch (activeTab) {
       case 'objekt':
-        return (
+        return panel(
           <>
             <div className={styles.formGroup}>
               <label>🏠 Objektart</label>
@@ -77,7 +82,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
           </>
         );
       case 'flaeche':
-        return (
+        return panel(
           <>
             {renderInput('wohnflaeche', 'Wohnfläche (m²)')}
             {renderInput('grundstueck', 'Grundstücksfläche (m²)')}
@@ -89,7 +94,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
           </>
         );
       case 'baujahr':
-        return (
+        return panel(
           <>
             {renderInput('baujahr', 'Baujahr')}
             {renderInput('zustand', 'Zustand')}
@@ -99,7 +104,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
           </>
         );
       case 'kosten':
-        return (
+        return panel(
           <>
             {renderInput('kaufpreis', 'Kaufpreis (€)')}
             {renderInput('kaltmiete', 'Kaltmiete (€)')}
@@ -110,7 +115,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
           </>
         );
       case 'ausstattung':
-        return (
+        return panel(
           <>
             {renderInput('heizung', 'Heizungsart')}
             {renderInput('boden', 'Bodenbelag')}
@@ -121,7 +126,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
           </>
         );
       case 'verkehr':
-        return (
+        return panel(
           <>
             {renderInput('oeffentliche', 'ÖPNV')}
             {renderInput('autobahn', 'Autobahn')}
@@ -130,7 +135,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
           </>
         );
       case 'verfuegbarkeit':
-        return (
+        return panel(
           <>
             {renderInput('verfuegbar_ab', 'Verfügbar ab')}
             {renderInput('bezug', 'Bezugstermin')}
@@ -138,19 +143,19 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
           </>
         );
       case 'besonderheiten':
-        return (
+        return panel(
           <>
             {renderInput('highlights', '✨ Highlights', 'textarea')}
             {renderInput('beschreibung', 'Beschreibung', 'textarea')}
             <label>🖋 Stil</label>
-            <select name='stil' value={formData.stil || ''} onChange={handleLocalChange}>
+            <select name='stil' value={formData.stil || ''} onChange={handleLocalChange} className={styles.fancyInput}>
               <option value=''>Bitte wählen</option>
               <option value='modern'>Modern</option>
               <option value='klassisch'>Klassisch</option>
               <option value='emotional'>Emotional</option>
             </select>
             <label>🎯 Zielgruppe</label>
-            <select name='zielgruppe' value={formData.zielgruppe || ''} onChange={handleLocalChange}>
+            <select name='zielgruppe' value={formData.zielgruppe || ''} onChange={handleLocalChange} className={styles.fancyInput}>
               <option value=''>Bitte wählen</option>
               <option value='familien'>Familien</option>
               <option value='investoren'>Investoren</option>
@@ -164,24 +169,23 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
     }
   };
 
-  
+  // 🧭 Gesamtlayout: Tabs oben, Panels unten
   return (
-    <div className="form-wrapper">
+    <div className={styles.formWrapper}>
       <div className={styles.tabHeader}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
-            className={`${styles.fancyTab} ${activeTab === tab.id ? styles.fancyTabActive : ''}`.trim()}
+            className={`${styles.fancyTab} ${activeTab === tab.id ? styles.fancyTabActive : ''}`}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
           </button>
         ))}
       </div>
-      <div className="tab-content">{renderTab()}</div>
+      <div className={styles.tabContent}>{renderTab()}</div>
     </div>
   );
-
 };
 
 export default ExposeForm;
