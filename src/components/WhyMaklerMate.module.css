@@ -1,0 +1,67 @@
+.why {
+  margin: 4rem auto;
+  max-width: 900px;
+  padding: 2rem;
+}
+
+.text {
+  text-align: left;
+}
+
+.bullets {
+  margin: 1.2rem 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.bullets li {
+  margin-bottom: 0.6rem;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.4rem 0;
+  transition: color 0.3s ease;
+}
+
+.toggleButton:hover {
+  color: var(--color-primary);
+}
+
+.slidePanel {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1.2rem;
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateY(40px);
+  animation: slideFadeIn 0.6s ease forwards;
+  flex-wrap: wrap;
+}
+
+@keyframes slideFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panelText {
+  flex: 1;
+  min-width: 280px;
+}
+
+.panelImage {
+  flex: 1;
+  max-width: 400px;
+  border-radius: 0.6rem;
+  object-fit: cover;
+}
