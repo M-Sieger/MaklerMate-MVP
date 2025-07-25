@@ -112,19 +112,22 @@ export default function ExposeTool() {
       <ImageUpload images={images} setImages={setImages} />
 
       {/* 🧠 GPT-Auslösung */}
-      <button
-        onClick={handleGenerate}
-        className={`generate-button ${isLoading ? 'loading' : ''}`}
-        disabled={isLoading}
-      >
-        {isLoading && <span className="spinner"></span>}
-        {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
-      </button>
+      {/* 🧠 GPT-Auslösung */}
+<div className="button-group center-buttons">
+  <button
+    onClick={handleGenerate}
+    className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
+    disabled={isLoading}
+  >
+    {isLoading && <span className="spinner"></span>}
+    {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
+  </button>
 
-      {/* 💾 Exposé speichern */}
-      <button className="save-button" onClick={handleSaveExpose}>
-        💾 Exposé speichern
-      </button>
+  <button className="btn btn-secondary" onClick={handleSaveExpose}>
+    💾 Exposé speichern
+  </button>
+</div>
+
 
       {/* 📄 PDF-Vorschau-Sektion */}
       <div id="pdf-export-section">
