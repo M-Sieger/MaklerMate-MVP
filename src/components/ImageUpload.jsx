@@ -121,49 +121,50 @@ const ImageUpload = ({ images, setImages }) => {
         onChange={(e) => handleFiles(e.target.files)}
       />
 
-      {/* 🖼️ Vorschau mit Buttons + Captions */}
-      <div className={styles.previewContainer}>
-        {images.map((img, index) => (
-          <div key={index} className={styles.previewImageWrapper}>
-            <img src={img} alt={`Bild ${index + 1}`} className={styles.previewImage} />
+     {/* 🖼️ Vorschau mit Buttons + Captions */}
+<div className={styles.previewContainer}>
+  {images.map((img, index) => (
+    <div key={index} className={styles.previewImageWrapper}>
+      <img src={img} alt={`Bild ${index + 1}`} className={styles.previewImage} />
 
-            <input
-              type="text"
-              value={captions[index] || ''}
-              onChange={(e) => updateCaption(index, e.target.value)}
-              className={styles.captionInput}
-              placeholder="Bildunterschrift (optional)"
-            />
+      <input
+        type="text"
+        value={captions[index] || ''}
+        onChange={(e) => updateCaption(index, e.target.value)}
+        className={styles.captionInput}
+        placeholder="Bildunterschrift (optional)"
+      />
 
-            <div className={styles.buttonRow}>
-              <button
-                onClick={() => moveImage(index, index - 1)}
-                disabled={index === 0}
-                className={styles.sortButton}
-                title="Bild nach oben"
-              >
-                ▲
-              </button>
-              <button
-                onClick={() => moveImage(index, index + 1)}
-                disabled={index === images.length - 1}
-                className={styles.sortButton}
-                title="Bild nach unten"
-              >
-                ▼
-              </button>
-              <button
-                type="button"
-                onClick={() => removeImage(index)}
-                className={styles.deleteButton}
-                title="Bild entfernen"
-              >
-                ❌
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className={styles.buttonRow}>
+        <button
+          onClick={() => moveImage(index, index - 1)}
+          disabled={index === 0}
+          className="btn-icon"
+          title="Bild nach oben"
+        >
+          ▲
+        </button>
+        <button
+          onClick={() => moveImage(index, index + 1)}
+          disabled={index === images.length - 1}
+          className="btn-icon"
+          title="Bild nach unten"
+        >
+          ▼
+        </button>
+        <button
+          type="button"
+          onClick={() => removeImage(index)}
+          className="btn-icon"
+          title="Bild entfernen"
+        >
+          ❌
+        </button>
       </div>
+    </div>
+  ))}
+</div>
+
     </div>
   );
 };

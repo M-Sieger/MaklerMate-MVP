@@ -23,41 +23,6 @@
   margin-top: 3rem;
 }
 
-/* ✨ Buttons – modern & responsiv */
-.btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 14px;
-  font-size: 1.05rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-}
-
-/* 🔵 Primary = auffällige Aktion (Exposé generieren) */
-.btn-primary {
-  background: linear-gradient(135deg, #4fc3f7, #007aff);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(79, 195, 247, 0.5);
-}
-
-.btn-primary:hover {
-  background: #0073e6;
-}
-
-/* 🟡 Secondary = z. B. speichern */
-.btn-secondary {
-  background: transparent;
-  color: #facc15;
-  border: 2px dashed #facc15;
-  transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background: #facc15;
-  color: #111;
-}
-
 /* 🌀 Ladeindikator */
 .spinner {
   border: 4px solid rgba(255, 255, 255, 0.2);
@@ -127,4 +92,21 @@
 select option {
   background-color: #1e293b;
   color: #f8fafc;
+}
+
+
+/* 🔵 Ivy Primary Button – elegant & fokussiert */
+.btn-primary {
+  background: rgba(59, 130, 246, 0.08);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.15);
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
 }

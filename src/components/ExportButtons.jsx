@@ -4,7 +4,7 @@ import React from 'react';
 
 import {
   exportExposeWithImages as exportExposeAsPDF,
-} from '../utils/pdfExportExpose';
+} from '../utils/pdfExportExpose'; // 📄 PDF-Export mit GPT-Text + Bildern
 
 export default function ExportButtons({ formData, output, selectedStyle }) {
   // 📁 JSON als Datei speichern
@@ -26,7 +26,7 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
     alert('📋 Text kopiert!');
   };
 
-  // 📄 PDF-Export mit GPT-Text + Bildern
+  // 📄 PDF exportieren
   const handleExportPDF = async () => {
     try {
       const gptText =
@@ -49,20 +49,20 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
 
   return (
     <div className="button-group">
-      {/* 🟨 Sekundär: JSON */}
+      {/* 🟨 Sekundärbutton: JSON exportieren */}
       <button className="btn btn-secondary" onClick={handleExportJSON}>
         📁 JSON exportieren
       </button>
 
-      {/* 🟨 Sekundär: Copy */}
+      {/* 🟨 Sekundärbutton: Text kopieren */}
       <button className="btn btn-secondary" onClick={handleCopy}>
         📋 Text kopieren
       </button>
 
-      {/* 🔵 Primär: PDF */}
-      <button className="btn btn-primary" onClick={handleExportPDF}>
-        📄 PDF exportieren
-      </button>
+      {/* 🔵 Primärbutton: PDF exportieren */}
+      <button className="btn btn-secondary" onClick={handleExportPDF}>
+  📄 PDF exportieren
+</button>
     </div>
   );
 }

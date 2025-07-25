@@ -41,7 +41,7 @@ export default function ExposeTool() {
     }
   });
 
-  // 🔁 Bilddaten mit formData synchronisieren, damit Export & Speicherfunktion sie erhalten
+  // 🔁 Bilddaten mit formData synchronisieren
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
@@ -60,21 +60,17 @@ export default function ExposeTool() {
 
   // 🔮 GPT-Antwort generieren und anzeigen
   const handleGenerate = async () => {
-    // 🚫 Validierung: keine leere Anfrage generieren
     if (!formData || Object.values(formData).every((val) => val === '')) {
       alert("Bitte zuerst das Formular ausfüllen.");
       return;
     }
 
-    // 🧠 Prompt zusammenstellen
     const prompt = generatePrompt(formData, selectedStyle);
     setIsLoading(true);
 
     try {
-      // 📤 GPT-Request ausführen
       const gptResponse = await fetchGPTResponse(prompt);
 
-      // 🧠 Response-Handling: akzeptiert entweder direkt String oder Objekt mit .result / .content
       const extracted =
         typeof gptResponse === 'object' && gptResponse.content
           ? gptResponse.content.trim?.()
@@ -93,15 +89,15 @@ export default function ExposeTool() {
     }
   };
 
-  // 💾 Exposé in lokaler Liste speichern
+  // 💾 Exposé lokal speichern
   const handleSaveExpose = () => {
     addExpose({ formData, output, selectedStyle, images });
   };
 
-  // ✅ UI-Returnblock – bestehend aus: Formular, Upload, Ausgabe, Export, Speicher
+  // ✅ UI-Returnblock – Formular, Upload, GPT, Export, Vorschau, Speicher
   return (
     <div className="expose-tool-container">
-      {/* 📋 Exposé-Eingabemaske */}
+      {/* 📋 Formular */}
       <ExposeForm
         formData={formData}
         setFormData={setFormData}
@@ -111,34 +107,28 @@ export default function ExposeTool() {
       {/* 📸 Bilder-Upload */}
       <ImageUpload images={images} setImages={setImages} />
 
-      {/* 🧠 GPT-Auslösung */}
-      {/* 🧠 GPT-Auslösung */}
-<div className="button-group center-buttons">
-  <button
-    onClick={handleGenerate}
-    className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-    disabled={isLoading}
-  >
-    {isLoading && <span className="spinner"></span>}
-    {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
-  </button>
+      {/* 🔮 Exposé generieren & speichern */}
+      <div className="button-group center-buttons">
+        <button
+          onClick={handleGenerate}
+          className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
+          disabled={isLoading}
+        >
+          {isLoading && <span className="spinner"></span>}
+          {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
+        </button>
 
-  <button className="btn btn-secondary" onClick={handleSaveExpose}>
-    💾 Exposé speichern
-  </button>
-</div>
+        <button className="btn btn-secondary" onClick={handleSaveExpose}>
+          💾 Exposé speichern
+        </button>
+      </div>
 
-
-      {/* 📄 PDF-Vorschau-Sektion */}
+      {/* 📄 Vorschau-Bereich */}
       <div id="pdf-export-section">
-        <div id="pdf-logo" className="pdf-logo">
-          <img src="/logo192.png" alt="MaklerMate Logo" height={40} />
-        </div>
-
-        {/* 💬 GPT-Textanzeige */}
+        {/* 💬 GPT-Ausgabe */}
         <GPTOutputBox output={output} />
 
-        {/* 🖼️ Bildvorschau */}
+        {/* 🖼️ Bildervorschau */}
         {images.length > 0 && (
           <div className="image-preview-section">
             {images.map((img, index) => (
@@ -153,7 +143,7 @@ export default function ExposeTool() {
         )}
       </div>
 
-      {/* 📤 Export-Funktionen: PDF, JSON, Copy */}
+      {/* 📤 Export-Buttons */}
       <ExportButtons
         formData={formData}
         output={output}
@@ -161,7 +151,7 @@ export default function ExposeTool() {
         images={images}
       />
 
-      {/* 📦 Gespeicherte Exposés */}
+      {/* 💾 Gespeicherte Exposés */}
       <SavedExposes
         exposes={exposes}
         onLoad={(expose) => loadExpose(expose, setFormData, setOutput, setSelectedStyle)}

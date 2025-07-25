@@ -1,5 +1,5 @@
 // index.js – Einstiegspunkt der App
-
+import './styles/button.css';
 import './index.css'; // globales Styling
 import './fonts.css';              // ✅ Schrift aktivieren
 import './styles/theme.css';       // ✅ Farbvariablen global

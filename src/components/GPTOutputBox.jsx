@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import styles from './GPTOutputBox.module.css';
+import styles
+  from './GPTOutputBox.module.css'; // 🔁 Für Box, Headings, OutputText
 
 // 📋 Copy-to-Clipboard-Logik
 const copyToClipboard = (text) => {
@@ -20,10 +21,10 @@ const GPTOutputBox = ({ output }) => {
       <div className={styles.headingRow}>
         <h3 className={styles.heading}>🧠 KI-Textvorschau</h3>
 
-        {/* ✂️ Copy-Button nur anzeigen, wenn Text vorhanden */}
+        {/* ✂️ Copy-Button im Ivy-Stil */}
         {!isEmpty && (
           <button
-            className={styles.copyButton}
+            className="btn btn-secondary btn-small"
             onClick={() => copyToClipboard(output)}
             title="In Zwischenablage kopieren"
           >

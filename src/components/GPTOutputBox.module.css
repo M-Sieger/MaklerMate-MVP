@@ -80,22 +80,3 @@
   margin-bottom: 1rem;
 }
 
-/* 📋 Copy-Button mit Glow-Effekt */
-.copyButton {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--color-muted);
-  font-size: 0.9rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 8px;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
-  transition: all 0.2s ease;
-  font-family: var(--font-ui);
-}
-
-.copyButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-accent);
-  box-shadow: 0 0 8px rgba(79, 195, 247, 0.4);
-}
