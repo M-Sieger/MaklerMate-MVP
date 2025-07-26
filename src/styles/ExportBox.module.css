@@ -1,0 +1,58 @@
+.exportBox {
+  padding: 2rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+}
+
+.exportTitle {
+  color: #e2e8f0;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.exportInfo {
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+}
+
+.exportGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.2rem;
+}
+
+.exportCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.2rem;
+  border-radius: 12px;
+  text-align: center;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 transparent;
+}
+
+.exportCard:hover {
+  background: rgba(79, 195, 247, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.3);
+}
+
+.icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0.2rem 0;
+}
+
+.cardDesc {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}

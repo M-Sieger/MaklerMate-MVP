@@ -38,9 +38,11 @@ export default function useLocalStorageLeads() {
   };
 
   // ❌ Einen Lead löschen (via Index)
-  const deleteLead = (index) => {
-    setLeads((prev) => prev.filter((_, i) => i !== index));
-  };
+  const deleteLead = (id) => {
+  const updated = leads.filter((lead) => lead.id !== id);
+  setLeads(updated);
+};
+
 
   // 🔁 Alle Leads löschen
   const resetLeads = () => {

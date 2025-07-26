@@ -1,53 +1,66 @@
-/* 📦 CRM.module.css */
-/* 🎯 Eingabeformular-Layout */
+/* 📦 Eingabeformular mit Apple-Blur */
 .crmForm {
-  background-color: #1f2937;
-  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
 /* 🏷️ Labels */
 .crmLabel {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 0.95rem;
   color: #e2e8f0;
 }
 
-/* 🧾 Eingabefelder */
+/* 🧾 Inputs & Textarea (wie Exposé-Stil) */
 .crmInput,
 .crmTextarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #4a5568;
-  background-color: #2d3748;
-  color: #f7fafc;
-  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 12px;
   font-size: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+  font-family: 'Inter', sans-serif;
+  width: 100%;
 }
 
-.crmInput::placeholder,
-.crmTextarea::placeholder {
-  color: #a0aec0;
+.crmInput:focus,
+.crmTextarea:focus {
+  border-color: #4fc3f7;
+  background: rgba(255, 255, 255, 0.07);
+  outline: none;
 }
 
-/* 💾 Speichern-Button */
 .crmButton {
-  background-color: #4299e1;
-  color: white;
+  background-color: #3b82f6;
+  color: #f8fafc;
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
+  font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .crmButton:hover {
-  background-color: #2b6cb0;
+  background-color: #2563eb;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
 }
+
 
 /* 📋 Lead-Liste */
 .leadList {
@@ -60,11 +73,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2d3748;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
   color: #edf2f7;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.leadItem:hover {
+  box-shadow: 0 0 10px rgba(79, 195, 247, 0.25);
+  transform: translateY(-2px);
 }
 
 /* ❌ Löschen-Button */
@@ -73,25 +93,29 @@
   color: white;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
+
 .deleteButton:hover {
   background-color: #c53030;
 }
 
 /* 📤 Exportbereich */
 .crm-export-box {
-  background-color: #1a202c;
+  background-color: rgba(255, 255, 255, 0.02);
   padding: 1rem;
-  border-radius: 1rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
   margin-top: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
 }
 
 .crm-export-box h4 {
   color: #63b3ed;
   margin-bottom: 0.75rem;
+  font-weight: 500;
 }
 
 /* 🔘 Export-Buttons */
@@ -99,12 +123,88 @@
   background-color: #4fd1c5;
   color: #1a202c;
   border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .crm-export-box button:hover {
   background-color: #38b2ac;
+}
+
+
+/* 🧊 Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 🧱 Modal Box */
+.modalContent {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2rem;
+  border-radius: 16px;
+  color: #e2e8f0;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* 🧲 Buttons */
+.modalButtons {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.modalConfirm {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modalConfirm:hover {
+  background-color: #dc2626;
+}
+
+.modalCancel {
+  background-color: #334155;
+  color: #e2e8f0;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modalCancel:hover {
+  background-color: #475569;
+}
+
+.crmSection {
+  padding: 2rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
 }

@@ -1,42 +1,47 @@
-// 📄 src/components/CRMExportBox.jsx
-// ✅ Exportbereich für gespeicherte Leads – in mehreren Formaten: TXT, CSV, JSON, PDF, Copy
+// 📦 CRMExportBox.jsx – Apple-inspirierter Exportbereich mit Hover-Cards
 
 import React from 'react';
 
-import styles from '../styles/ExportBox.module.css'; // 🎨 Modularer CSS-Style
-// 🔄 Technische Exportfunktionen (Rohformate)
+import styles from '../styles/ExportBox.module.css';
 import {
   exportLeadsAsCSV,
   exportLeadsAsTXT,
 } from '../utils/crmExport';
-// 📄 PDF-Exportfunktion (Leads als Tabelle)
 import { exportLeadsAsPDF } from '../utils/pdfExportLeads';
 
 export default function CRMExportBox({ leads = [] }) {
-  // ⛔ Wenn keine Leads vorhanden sind → Hinweis anzeigen
   if (!leads || leads.length === 0) {
-    return <p style={{ color: '#aaa', marginTop: '2rem' }}>⚠️ Keine Leads zum Exportieren vorhanden.</p>;
+    return <p className={styles.exportEmpty}>⚠️ Keine Leads zum Exportieren vorhanden.</p>;
   }
 
   return (
     <div className={styles.exportBox}>
-      <h3>📤 Leads exportieren</h3>
-      <p>{leads.length} gespeicherte Leads</p>
+      <h3 className={styles.exportTitle}>📤 Leads exportieren</h3>
+      <p className={styles.exportInfo}>{leads.length} gespeicherte Leads</p>
 
-      <div className={styles.buttonGroup}>
-        
-        {/* 📄 TXT-Export */}
-        <button onClick={() => exportLeadsAsTXT(leads)} className={styles.exportButton}>
-          📄 TXT-Datei
-        </button>
-
-        {/* 📊 CSV-Export */}
-        <button onClick={() => exportLeadsAsCSV(leads)} className={styles.exportButton}>
-          📊 CSV-Datei
-        </button>
-
-        {/* 🧠 JSON-Download (manuell) */}
-        <button
+      <div className={styles.exportGrid}>
+        <ExportCard
+          icon="📄"
+          title="TXT-Datei"
+          description="Einfaches Textformat"
+          onClick={() => exportLeadsAsTXT(leads)}
+        />
+        <ExportCard
+          icon="📊"
+          title="CSV-Datei"
+          description="Tabellenformat für Excel & Co."
+          onClick={() => exportLeadsAsCSV(leads)}
+        />
+        <ExportCard
+          icon="📄"
+          title="PDF-Datei"
+          description="Schön formatiertes PDF"
+          onClick={() => exportLeadsAsPDF(leads)}
+        />
+        <ExportCard
+          icon="🧠"
+          title="JSON-Datei"
+          description="Für Entwickler & Import"
           onClick={() => {
             const blob = new Blob([JSON.stringify(leads, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -46,29 +51,29 @@ export default function CRMExportBox({ leads = [] }) {
             a.click();
             URL.revokeObjectURL(url);
           }}
-          className={styles.exportButton}
-        >
-          🧠 JSON-Datei
-        </button>
-
-        {/* 📄 PDF-Export */}
-        <button onClick={() => exportLeadsAsPDF(leads)} className={styles.exportButton}>
-          📄 PDF exportieren
-        </button>
-
-        {/* 📋 In Zwischenablage kopieren */}
-        <button
+        />
+        <ExportCard
+          icon="📋"
+          title="Kopieren"
+          description="Leads in Zwischenablage"
           onClick={() => {
             navigator.clipboard.writeText(JSON.stringify(leads, null, 2))
-              .then(() => alert("✅ Leads wurden in die Zwischenablage kopiert"))
-              .catch(err => console.error("❌ Fehler beim Kopieren:", err));
+              .then(() => alert("✅ Leads kopiert"))
+              .catch(err => console.error("Fehler:", err));
           }}
-          className={styles.exportButton}
-        >
-          📋 In Zwischenablage kopieren
-        </button>
+        />
       </div>
     </div>
   );
 }
-// 📄 CRMExportBox.jsx
+
+// 💎 Reusable ExportCard
+function ExportCard({ icon, title, description, onClick }) {
+  return (
+    <div className={styles.exportCard} onClick={onClick}>
+      <div className={styles.icon}>{icon}</div>
+      <h4 className={styles.cardTitle}>{title}</h4>
+      <p className={styles.cardDesc}>{description}</p>
+    </div>
+  );
+}
