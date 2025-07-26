@@ -1,4 +1,4 @@
-/* 🎨 Wrapper mit Glassmorphismus */
+/* 🎨 Wrapper mit Glassmorphismus-Hintergrund */
 .uploadWrapper {
   margin-top: 1.5rem;
   padding: 1.25rem;
@@ -11,14 +11,13 @@
   transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
-
 .uploadWrapper:hover {
   border-color: rgba(255, 255, 255, 0.15);
   background-color: rgba(255, 255, 255, 0.05);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* 🏷️ Label */
+/* 🏷️ Label oberhalb des Uploads */
 .label {
   display: block;
   margin-bottom: 0.8rem;
@@ -26,20 +25,19 @@
   font-size: 1rem;
 }
 
-/* 🟩 Checkbox Styling */
+/* ✅ Checkbox für Auto-Optimierung */
 .checkboxRow {
   margin: 8px 0;
   font-size: 0.9rem;
   color: #ccc;
 }
-
 .checkboxLabel {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* 🖼️ Grid-Vorschau */
+/* 🖼️ Grid-Vorschau der Bilder */
 .gridContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -48,6 +46,7 @@
   justify-content: center;
 }
 
+/* 📦 Einzelne Bildkarte (inkl. Caption + Buttons) */
 .gridItem {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 12px;
@@ -60,49 +59,48 @@
   transition: all 0.2s ease;
 }
 
-/* 📸 Bilder */
+/* 🖼️ Bild in fester Größe & Proportion */
 .gridImage {
   width: 100%;
-  max-height: 160px;
-  object-fit: cover;
+  aspect-ratio: 4 / 3;        /* 🎯 Einheitliche Höhe unabhängig vom Originalformat */
+  object-fit: cover;          /* ✂️ Cropping statt Strecken */
   border-radius: 8px;
+  margin-bottom: 0.8rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease;
 }
-
 .gridImage:hover {
   transform: scale(1.03);
 }
 
-/* ✏️ Bildunterschrift */
+/* ✏️ Eingabe für Bildunterschrift */
 .captionInput {
-  margin-top: 0.5rem;
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 0.9rem;
+  margin-top: auto;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
+  width: 100%;
+  color: #e2e8f0;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
   backdrop-filter: blur(4px);
-  color: #f3f4f6;
-  transition: all 0.2s ease;
 }
-
 .captionInput:focus {
   outline: none;
   border-color: var(--color-accent);
   box-shadow: 0 0 6px rgba(79, 195, 247, 0.3);
 }
 
-/* 🔘 Buttons unter jedem Bild */
+/* 🔘 Buttons (▲ ▼ ❌) unter dem Bild */
 .buttonRow {
   display: flex;
   gap: 6px;
   margin-top: 6px;
   justify-content: center;
 }
-
-.btn-icon {
+.btnIcon {
   background: transparent;
   border: none;
   color: #ddd;
@@ -111,7 +109,14 @@
   padding: 0.2rem 0.4rem;
   transition: color 0.2s;
 }
-
-.btn-icon:hover {
+.btnIcon:hover {
   color: #4fc3f7;
+}
+
+/* 🧼 Container um alle Karten (Flex-Fallback für ältere Browser) */
+.previewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  justify-content: center;
 }

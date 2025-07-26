@@ -4,19 +4,27 @@ import React, {
   useState,
 } from 'react';
 
-import { moveItem } from '../utils/arrayHelpers'; // 🔁 Bilder verschieben
-import { enhanceImage } from '../utils/imageEnhancer'; // 🧽 Bildoptimierung
-import styles from './ImageUpload.module.css'; // 🎨 Styling
+import {
+  moveItem,
+} from '../utils/arrayHelpers';       // 🔁 Bilder im Array verschieben
+import {
+  enhanceImage,
+} from '../utils/imageEnhancer';  // 🧽 Bildoptimierung via GPT-Enhancer
+import styles
+  from './ImageUpload.module.css';          // 🎨 Styling via CSS Modules
 
 const ImageUpload = ({ images, setImages }) => {
   const fileInputRef = useRef();
-  const [autoEnhance, setAutoEnhance] = useState(false);
-  const [captions, setCaptions] = useState([]); // 📝 Neue Bildunterschriften
 
-  // 🔁 Bilder & Captions aus localStorage laden
+  // ⚙️ Bild-Optimierung (optional) & Captions
+  const [autoEnhance, setAutoEnhance] = useState(false);
+  const [captions, setCaptions] = useState([]); // 📝 Bildunterschriften als Parallel-Array zu images
+
+  // 🔁 Initialer Load aus localStorage
   useEffect(() => {
     const savedImages = localStorage.getItem('maklermate_images');
     const savedCaptions = localStorage.getItem('maklermate_captions');
+
     if (savedImages) {
       try {
         const parsedImages = JSON.parse(savedImages);
@@ -25,6 +33,7 @@ const ImageUpload = ({ images, setImages }) => {
         console.error('❌ Fehler beim Laden von Bildern:', err);
       }
     }
+
     if (savedCaptions) {
       try {
         const parsedCaptions = JSON.parse(savedCaptions);
@@ -35,15 +44,15 @@ const ImageUpload = ({ images, setImages }) => {
     }
   }, []);
 
-  // 💾 Änderungen speichern
+  // 💾 Automatisches Speichern bei Änderungen
   useEffect(() => {
     localStorage.setItem('maklermate_images', JSON.stringify(images));
     localStorage.setItem('maklermate_captions', JSON.stringify(captions));
   }, [images, captions]);
 
-  // 📁 Neue Bilder verarbeiten und optional optimieren
+  // 📥 Neue Bilder verarbeiten & optional optimieren
   const handleFiles = async (files) => {
-    const fileArray = Array.from(files).slice(0, 5 - images.length);
+    const fileArray = Array.from(files).slice(0, 5 - images.length); // max. 5 Bilder
 
     const base64Array = await Promise.all(
       fileArray.map((file) => {
@@ -54,13 +63,13 @@ const ImageUpload = ({ images, setImages }) => {
 
             if (autoEnhance) {
               try {
-                const enhanced = await enhanceImage(base64);
+                const enhanced = await enhanceImage(base64); // 🧠 GPT-Optimierung
                 resolve(enhanced);
               } catch {
-                resolve(base64);
+                resolve(base64); // 🛑 Fallback falls Enhancer fehlschlägt
               }
             } else {
-              resolve(base64);
+              resolve(base64); // 🚫 Ohne Optimierung
             }
           };
           reader.readAsDataURL(file);
@@ -68,11 +77,11 @@ const ImageUpload = ({ images, setImages }) => {
       })
     );
 
-    setImages([...images, ...base64Array]);
-    setCaptions([...captions, ...new Array(base64Array.length).fill('')]);
+    setImages([...images, ...base64Array]);                                // Bilder anhängen
+    setCaptions([...captions, ...new Array(base64Array.length).fill('')]); // Leere Captions anfügen
   };
 
-  // 🗑️ Bild löschen
+  // ❌ Einzelnes Bild löschen
   const removeImage = (indexToRemove) => {
     const updatedImages = images.filter((_, i) => i !== indexToRemove);
     const updatedCaptions = captions.filter((_, i) => i !== indexToRemove);
@@ -80,13 +89,14 @@ const ImageUpload = ({ images, setImages }) => {
     setCaptions(updatedCaptions);
   };
 
-  // 🔀 Bilderreihenfolge ändern
+  // 🔀 Bilder verschieben (↑ ↓)
   const moveImage = (from, to) => {
+    if (to < 0 || to >= images.length) return; // 🔒 Schutz gegen ungültige Indizes
     setImages(moveItem(images, from, to));
     setCaptions(moveItem(captions, from, to));
   };
 
-  // ✏️ Untertitel anpassen
+  // ✏️ Bildunterschrift ändern
   const updateCaption = (index, newCaption) => {
     const updated = [...captions];
     updated[index] = newCaption;
@@ -95,8 +105,10 @@ const ImageUpload = ({ images, setImages }) => {
 
   return (
     <div className={styles.uploadWrapper}>
+      {/* 🧭 Label über dem Upload */}
       <label className={styles.label}>📸 Objektfotos (max. 5):</label>
 
+      {/* ✅ Checkbox für Auto-Optimierung */}
       <div className={styles.checkboxRow}>
         <label className={styles.checkboxLabel}>
           <input
@@ -108,6 +120,7 @@ const ImageUpload = ({ images, setImages }) => {
         </label>
       </div>
 
+      {/* 📁 Datei-Input (ausgeblendet via Ref, falls du später custom UI machst) */}
       <input
         type="file"
         multiple
@@ -116,6 +129,7 @@ const ImageUpload = ({ images, setImages }) => {
         onChange={(e) => handleFiles(e.target.files)}
       />
 
+      {/* 🖼️ Bild-Grid */}
       <div className={styles.gridContainer}>
         {images.map((img, index) => (
           <div key={index} className={styles.gridItem}>
@@ -125,6 +139,7 @@ const ImageUpload = ({ images, setImages }) => {
               className={styles.gridImage}
             />
 
+            {/* 📝 Caption-Feld */}
             <input
               type="text"
               value={captions[index] || ''}
@@ -133,6 +148,7 @@ const ImageUpload = ({ images, setImages }) => {
               placeholder="Bildunterschrift (optional)"
             />
 
+            {/* 🔘 Steuerbuttons (↑ ↓ ❌) */}
             <div className={styles.buttonRow}>
               <button
                 onClick={() => moveImage(index, index - 1)}
