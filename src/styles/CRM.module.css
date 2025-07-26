@@ -208,3 +208,19 @@
   backdrop-filter: blur(6px);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
 }
+
+.crmTextarea {
+  resize: none; /* 🧽 Griff entfernen */
+}
+
+.crmInput:focus-visible,
+.crmTextarea:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.25);
+}
+
+/* 🧨 Safari & Chromium Edge Case: absolute Brechstange */
+.crmInput::-webkit-focus-ring-color,
+.crmTextarea::-webkit-focus-ring-color {
+  outline: none !important;
+}

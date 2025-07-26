@@ -1,5 +1,3 @@
-// src/components/ImageUpload.jsx
-
 import React, {
   useEffect,
   useRef,
@@ -43,7 +41,7 @@ const ImageUpload = ({ images, setImages }) => {
     localStorage.setItem('maklermate_captions', JSON.stringify(captions));
   }, [images, captions]);
 
-  // 📁 Dateien verarbeiten
+  // 📁 Neue Bilder verarbeiten und optional optimieren
   const handleFiles = async (files) => {
     const fileArray = Array.from(files).slice(0, 5 - images.length);
 
@@ -70,7 +68,6 @@ const ImageUpload = ({ images, setImages }) => {
       })
     );
 
-    // ➕ Anhängen + leere Captions generieren
     setImages([...images, ...base64Array]);
     setCaptions([...captions, ...new Array(base64Array.length).fill('')]);
   };
@@ -83,13 +80,13 @@ const ImageUpload = ({ images, setImages }) => {
     setCaptions(updatedCaptions);
   };
 
-  // 🔀 Reihenfolge anpassen
+  // 🔀 Bilderreihenfolge ändern
   const moveImage = (from, to) => {
     setImages(moveItem(images, from, to));
     setCaptions(moveItem(captions, from, to));
   };
 
-  // ✏️ Bildunterschrift ändern
+  // ✏️ Untertitel anpassen
   const updateCaption = (index, newCaption) => {
     const updated = [...captions];
     updated[index] = newCaption;
@@ -100,7 +97,6 @@ const ImageUpload = ({ images, setImages }) => {
     <div className={styles.uploadWrapper}>
       <label className={styles.label}>📸 Objektfotos (max. 5):</label>
 
-      {/* 🟩 Auto-Enhance Checkbox */}
       <div className={styles.checkboxRow}>
         <label className={styles.checkboxLabel}>
           <input
@@ -112,7 +108,6 @@ const ImageUpload = ({ images, setImages }) => {
         </label>
       </div>
 
-      {/* 📂 Datei-Auswahl */}
       <input
         type="file"
         multiple
@@ -121,50 +116,49 @@ const ImageUpload = ({ images, setImages }) => {
         onChange={(e) => handleFiles(e.target.files)}
       />
 
-     {/* 🖼️ Vorschau mit Buttons + Captions */}
-<div className={styles.previewContainer}>
-  {images.map((img, index) => (
-    <div key={index} className={styles.previewImageWrapper}>
-      <img src={img} alt={`Bild ${index + 1}`} className={styles.previewImage} />
+      <div className={styles.gridContainer}>
+        {images.map((img, index) => (
+          <div key={index} className={styles.gridItem}>
+            <img
+              src={img}
+              alt={`Bild ${index + 1}`}
+              className={styles.gridImage}
+            />
 
-      <input
-        type="text"
-        value={captions[index] || ''}
-        onChange={(e) => updateCaption(index, e.target.value)}
-        className={styles.captionInput}
-        placeholder="Bildunterschrift (optional)"
-      />
+            <input
+              type="text"
+              value={captions[index] || ''}
+              onChange={(e) => updateCaption(index, e.target.value)}
+              className={styles.captionInput}
+              placeholder="Bildunterschrift (optional)"
+            />
 
-      <div className={styles.buttonRow}>
-        <button
-          onClick={() => moveImage(index, index - 1)}
-          disabled={index === 0}
-          className="btn-icon"
-          title="Bild nach oben"
-        >
-          ▲
-        </button>
-        <button
-          onClick={() => moveImage(index, index + 1)}
-          disabled={index === images.length - 1}
-          className="btn-icon"
-          title="Bild nach unten"
-        >
-          ▼
-        </button>
-        <button
-          type="button"
-          onClick={() => removeImage(index)}
-          className="btn-icon"
-          title="Bild entfernen"
-        >
-          ❌
-        </button>
+            <div className={styles.buttonRow}>
+              <button
+                onClick={() => moveImage(index, index - 1)}
+                disabled={index === 0}
+                className={styles.btnIcon}
+              >
+                ▲
+              </button>
+              <button
+                onClick={() => moveImage(index, index + 1)}
+                disabled={index === images.length - 1}
+                className={styles.btnIcon}
+              >
+                ▼
+              </button>
+              <button
+                type="button"
+                onClick={() => removeImage(index)}
+                className={styles.btnIcon}
+              >
+                ❌
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
-
     </div>
   );
 };

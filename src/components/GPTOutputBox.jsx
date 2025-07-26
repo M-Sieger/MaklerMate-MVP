@@ -1,46 +1,43 @@
-// src/components/GPTOutputBox.jsx
+// ✅ Globale Button-Styles
+import '../styles/button.css';
 
 import React from 'react';
 
+// ✅ Modulbasierter CSS-Import
 import styles
-  from './GPTOutputBox.module.css'; // 🔁 Für Box, Headings, OutputText
+  from './GPTOutputBox.module.css'; // 🎨 Styling für Box, Text & Galerie
 
-// 📋 Copy-to-Clipboard-Logik
-const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text).then(() => {
-    alert('✅ Text wurde in die Zwischenablage kopiert!');
-  });
-};
-
-const GPTOutputBox = ({ output }) => {
-  const isEmpty = !output || output.trim() === '';
-
+export default function GPTOutputBox({ output, images = [], captions = [] }) {
   return (
     <div className={styles.previewBox}>
-      {/* 🧠 Headline mit Icon */}
+      {/* 🧠 Titel & Aktionen */}
       <div className={styles.headingRow}>
-        <h3 className={styles.heading}>🧠 KI-Textvorschau</h3>
-
-        {/* ✂️ Copy-Button im Ivy-Stil */}
-        {!isEmpty && (
-          <button
-            className="btn btn-secondary btn-small"
-            onClick={() => copyToClipboard(output)}
-            title="In Zwischenablage kopieren"
-          >
-            📋 Kopieren
-          </button>
-        )}
+        <h2 className={styles.heading}>📄 Exposé-Vorschau</h2>
+        {/* 🧩 Optional: Copy-Button oder Export */}
       </div>
 
-      {/* 📝 GPT-Output oder Vorschau anzeigen */}
-      <pre className={styles.outputText}>
-        {isEmpty
-          ? `📝 Vorschau\n\nWillkommen bei MaklerMate!\nHier erscheint dein automatisch generierter Immobilientext,\nsobald du auf "Exposé generieren" klickst.\n\n👉 Beispiel: "Dieses charmante Altbaujuwel in Köln besticht durch hohe Decken,\nstilvolle Dielen und einen sonnigen Balkon mit Blick auf den Rhein."`
-          : output}
-      </pre>
+      {/* 🤖 GPT-Textvorschau */}
+      <div className={styles.outputText}>
+        {output || 'Noch kein Text generiert.'}
+      </div>
+
+      {/* 🖼️ Bildgalerie inkl. Captions */}
+      {images.length > 0 && (
+        <div className={styles.gptGallery}>
+          {images.map((img, index) => (
+            <div key={index} className={styles.gptImageWrapper}>
+              <img
+                src={img}
+                alt={`Bild ${index + 1}`}
+                className={styles.gptImage}
+              />
+              {captions[index] && (
+                <div className={styles.gptCaption}>{captions[index]}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
-};
-
-export default GPTOutputBox;
+}

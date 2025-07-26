@@ -1,6 +1,6 @@
 /* 📦 GPT Output-Box mit Glaseffekt & Theme-Farben */
 .previewBox {
-  background: rgba(255, 255, 255, 0.04); /* etwas dezenter für Apple-Feel */
+  background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(10px);
   border-radius: var(--radius);
   padding: 1.5rem;
@@ -14,11 +14,20 @@
 
 /* 🧠 Sektionstitel */
 .heading {
-  margin-bottom: 1rem;
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-accent);
   letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+
+/* 🧠 Heading + Copy-Button nebeneinander */
+.headingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* 📄 GPT Textvorschau */
@@ -70,13 +79,40 @@
   transform: scale(1.02);
 }
 
-
-/* 🧠 Heading + Copy-Button nebeneinander */
-.headingRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* 🖼️ GPT Bild-Galerie */
+.gptGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 2rem;
 }
 
+.gptImageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gptImage {
+  width: 100%;
+  aspect-ratio: 4 / 3;                /* Einheitliches Seitenverhältnis */
+  object-fit: cover;                  /* Bild füllt Container */
+  max-height: 240px;                 /* Verhindert Überlänge bei Hochformat */
+  border-radius: 12px;
+  background-color: #0f172a;         /* Fallback bei Ladeproblemen */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+
+.gptImage:hover {
+  transform: scale(1.01);
+}
+
+.gptCaption {
+  font-size: 0.8rem;
+  color: #bbb;
+  margin-top: 0.4rem;
+  text-align: center;
+  font-style: italic;
+}

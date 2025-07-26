@@ -27,11 +27,11 @@ export default function ExposeTool() {
     preis: '', energie: '', besonderheiten: ''
   });
 
-  const [isLoading, setIsLoading] = useState(false);         // 🔄 Ladezustand für GPT
-  const [output, setOutput] = useState('');                  // 📄 GPT-Ergebnis
-  const [selectedStyle, setSelectedStyle] = useState('emotional'); // 🎨 Stilwahl für GPT
+  const [isLoading, setIsLoading] = useState(false); // 🔄 Ladezustand
+  const [output, setOutput] = useState('');           // 📄 GPT-Ausgabe
+  const [selectedStyle, setSelectedStyle] = useState('emotional'); // ✨ Stilwahl
 
-  // 🖼️ Lokaler Bildspeicher mit persistenter Initialisierung aus LocalStorage
+  // 🖼️ Lokale Bilder aus LocalStorage laden
   const [images, setImages] = useState(() => {
     const saved = localStorage.getItem('maklermate_images');
     try {
@@ -41,7 +41,10 @@ export default function ExposeTool() {
     }
   });
 
-  // 🔁 Bilddaten mit formData synchronisieren
+  // (optional) Captions anlegbar, aktuell leer
+  const [captions, setCaptions] = useState([]);
+
+  // 🧩 Bilder in FormData halten
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
@@ -49,16 +52,16 @@ export default function ExposeTool() {
     }));
   }, [images]);
 
-  // 💾 Zugriff auf gespeicherte Exposés
+  // 📁 Exposés laden
   const { exposes, addExpose, deleteExpose, loadExpose } = useSavedExposes();
 
-  // ✏️ Änderungen im Formular live übernehmen
+  // 📥 Form-Eingaben behandeln
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 🔮 GPT-Antwort generieren und anzeigen
+  // ✨ GPT-Text generieren
   const handleGenerate = async () => {
     if (!formData || Object.values(formData).every((val) => val === '')) {
       alert("Bitte zuerst das Formular ausfüllen.");
@@ -70,15 +73,14 @@ export default function ExposeTool() {
 
     try {
       const gptResponse = await fetchGPTResponse(prompt);
-
       const extracted =
         typeof gptResponse === 'object' && gptResponse.content
           ? gptResponse.content.trim?.()
           : typeof gptResponse === 'object' && gptResponse.result
-            ? gptResponse.result.trim?.()
-            : typeof gptResponse === 'string'
-              ? gptResponse.trim?.()
-              : '';
+          ? gptResponse.result.trim?.()
+          : typeof gptResponse === 'string'
+          ? gptResponse.trim?.()
+          : '';
 
       setOutput(extracted || '⚠️ Kein GPT-Ergebnis erhalten.');
     } catch (err) {
@@ -89,25 +91,20 @@ export default function ExposeTool() {
     }
   };
 
-  // 💾 Exposé lokal speichern
+  // 💾 Exposé speichern
   const handleSaveExpose = () => {
     addExpose({ formData, output, selectedStyle, images });
   };
 
-  // ✅ UI-Returnblock – Formular, Upload, GPT, Export, Vorschau, Speicher
   return (
     <div className="expose-tool-container">
       {/* 📋 Formular */}
-      <ExposeForm
-        formData={formData}
-        setFormData={setFormData}
-        onChange={handleChange}
-      />
+      <ExposeForm formData={formData} setFormData={setFormData} onChange={handleChange} />
 
-      {/* 📸 Bilder-Upload */}
-      <ImageUpload images={images} setImages={setImages} />
+      {/* 🖼️ Upload */}
+      <ImageUpload images={images} setImages={setImages} captions={captions} setCaptions={setCaptions} />
 
-      {/* 🔮 Exposé generieren & speichern */}
+      {/* ⚡ Button-Gruppe */}
       <div className="button-group center-buttons">
         <button
           onClick={handleGenerate}
@@ -123,27 +120,12 @@ export default function ExposeTool() {
         </button>
       </div>
 
-      {/* 📄 Vorschau-Bereich */}
+      {/* 📄 Vorschau inkl. Bilder */}
       <div id="pdf-export-section">
-        {/* 💬 GPT-Ausgabe */}
-        <GPTOutputBox output={output} />
-
-        {/* 🖼️ Bildervorschau */}
-        {images.length > 0 && (
-          <div className="image-preview-section">
-            {images.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`Bild ${index + 1}`}
-                className="pdf-preview-image"
-              />
-            ))}
-          </div>
-        )}
+        <GPTOutputBox output={output} images={images} captions={captions} />
       </div>
 
-      {/* 📤 Export-Buttons */}
+      {/* 📤 Export */}
       <ExportButtons
         formData={formData}
         output={output}
@@ -151,10 +133,12 @@ export default function ExposeTool() {
         images={images}
       />
 
-      {/* 💾 Gespeicherte Exposés */}
+      {/* 💾 Lokale Exposés */}
       <SavedExposes
         exposes={exposes}
-        onLoad={(expose) => loadExpose(expose, setFormData, setOutput, setSelectedStyle)}
+        onLoad={(expose) =>
+          loadExpose(expose, setFormData, setOutput, setSelectedStyle)
+        }
         onDelete={deleteExpose}
       />
     </div>
