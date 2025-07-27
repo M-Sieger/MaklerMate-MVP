@@ -8,6 +8,7 @@ import CRMExportLeads from '../../components/CRM/CRMExportLeads';
 import useLocalStorageLeads
   from '../../hooks/useLocalStorageLeads'; // 💾 Custom Hook
 import LeadForm from './LeadForm';
+import LeadList from './LeadList'; // 🧠 Anzeige + Filter
 
 export default function CRMTool() {
   // ✅ LocalStorage-Lead-Verwaltung mit Full-Update
@@ -33,19 +34,22 @@ export default function CRMTool() {
   };
 
   return (
-    <div className="crm-tool" style={{ padding: '2rem' }}>
-      <h1>📇 MaklerMate – CRM</h1>
+<div className="crm-tool" style={{ padding: '2rem' }}>
+  <h1>📇 MaklerMate – CRM</h1>
 
-      {/* 📝 Eingabeformular */}
-      <LeadForm onAddLead={handleAddLead} />
+  {/* 📝 Eingabeformular */}
+  <LeadForm onAddLead={handleAddLead} />
 
-      {/* 📋 Liste, Export, Reset */}
-      <CRMExportLeads
-        leads={leads}
-        onDelete={deleteLead}
-        onReset={resetLeads}
-        onUpdateLead={updateLead} // ✅ neue Prop
-      />
-    </div>
+  {/* 📋 Lead-Liste mit Filter */}
+  <LeadList leads={leads} onDelete={deleteLead} />
+
+  {/* 📤 Export + Reset */}
+  <CRMExportLeads
+    leads={leads}
+    onReset={resetLeads}
+    onUpdateLead={updateLead}
+  />
+</div>
+
   );
 }

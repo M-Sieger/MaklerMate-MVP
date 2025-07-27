@@ -1,40 +1,34 @@
-// 📄 CRMExportLeads.jsx – Lead-Anzeige mit Modal-Delete & ExportCards im Ivy-Stil
+// 📄 CRMExportLeads.jsx – Exportbereich mit Reset-Funktion & ExportCards
 
 import React from 'react';
 
 import styles from './CRM.module.css';
 import CRMExportBox from './CRMExportBox'; // 🎨 Fancy ExportCards
-import LeadItem from './LeadItem'; // ✅ Modal-fähiger LeadItem
 
-export default function CRMExportLeads({ leads, onDelete, onReset, onStatusChange }) {
+export default function CRMExportLeads({ leads, onReset }) {
   return (
     <div className={styles.crmSection}>
-      <h2 style={{ marginBottom: '1rem', color: '#e2e8f0' }}>📇 Gespeicherte Leads</h2>
+      {/* 🧾 Hinweis */}
+      <h2 style={{ marginBottom: '0.75rem', color: '#e2e8f0' }}>
+        📁 Leads exportieren
+      </h2>
 
-      {/* 🔁 Lead-Liste */}
-      {(!leads || leads.length === 0) ? (
-        <p style={{ color: '#94a3b8' }}>⚠️ Noch keine Leads gespeichert.</p>
-      ) : (
-        <ul className={styles.leadList}>
-          {leads.map((lead) => (
-            <LeadItem
-              key={lead.id}
-              lead={lead}
-              onDelete={onDelete}
-              onStatusChange={onStatusChange} // ➕ Hier durchgereicht
-            />
-          ))}
-        </ul>
-      )}
+      <p style={{ color: '#94a3b8', marginBottom: '1.2rem' }}>
+        📤 Exportiere die aktuell gefilterten Leads.
+      </p>
 
       {/* ♻️ Reset-Button */}
       {leads.length > 0 && (
-        <button onClick={onReset} className={styles.modalCancel} style={{ marginBottom: '2rem' }}>
+        <button
+          onClick={onReset}
+          className={styles.modalCancel}
+          style={{ marginBottom: '2rem' }}
+        >
           ♻️ Alle Leads löschen
         </button>
       )}
 
-      {/* 📤 Exportkarten */}
+      {/* 🧲 Exportkarten (PDF, CSV, JSON, Copy) */}
       <CRMExportBox leads={leads} />
     </div>
   );

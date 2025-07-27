@@ -318,3 +318,34 @@
   gap: 1rem;
   margin-top: 1.5rem;
 }
+
+
+/* 🎛️ Dropdown für Lead-Filter */
+.filterWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.dropdown {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dropdown:hover {
+  border-color: #4fc3f7;
+}
+
+.dropdown:focus {
+  outline: none;
+  border-color: #38bdf8;
+  background-color: rgba(255, 255, 255, 0.08);
+}
