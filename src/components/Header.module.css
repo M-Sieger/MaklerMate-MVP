@@ -1,13 +1,12 @@
-/* 📄 Header.css – Apple-inspirierte Navigation mit Glassmorphismus & Theme-Integration */
+/* 📄 Header.module.css – Apple-inspirierte Navigation mit Glassmorphismus */
 
-/* 🧭 Haupt-Navigationsleiste */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.04);         
-  backdrop-filter: blur(12px);                   
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: var(--shadow-soft);
   position: sticky;
@@ -15,20 +14,18 @@
   z-index: 1000;
 }
 
-/* 🎨 Logo + Titel-Gruppe */
-.logoContainer img {
-  height: 52px; /* vorher: 36px */
-  width: auto;
-}
-
+/* 🔘 Logo & Titel */
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: 1rem; /* vorher: 0.75rem */
+  gap: 1rem;
 }
 
+.logo {
+  height: 52px;
+  width: auto;
+}
 
-/* 🧠 App-Name (MaklerMate) */
 .brandName {
   font-size: 1.25rem;
   font-weight: 600;
@@ -37,7 +34,7 @@
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
-/* 📂 Navigation-Links */
+/* 🔗 Navigation */
 .navLinks {
   display: flex;
   gap: 1.2rem;
@@ -57,7 +54,13 @@
   border-bottom: 2px solid var(--color-primary);
 }
 
-/* 📱 Responsive Anpassung */
+.active {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  font-weight: 600;
+}
+
+/* 📱 Responsiv */
 @media (max-width: 768px) {
   .header {
     flex-direction: column;

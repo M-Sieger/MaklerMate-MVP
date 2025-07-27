@@ -1,26 +1,31 @@
-/* 📄 src/styles/Layout.module.css */
+/* 🎨 Layout.module.css – globales Seitenlayout + Footer-Styling */
 
-/* 🗂️ Haupt-Content-Bereich (unter Navbar, über Footer) */
+/* 🧱 Hauptbereich: Zentriert & lesbar */
 .main {
-  padding: 2rem;
-  min-height: 85vh; /* verhindert, dass Footer zu weit oben klebt */
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+  flex-grow: 1;
 }
 
-/* 📌 Footer-Container */
+/* 🧾 Footer unten auf der Seite */
 .footer {
   text-align: center;
-  color: #9ca3af;
-  font-size: 0.85rem;
-  padding: 1.5rem 0 1rem;
-  margin-top: 2rem;
-  border-top: 1px solid #1f2937;
-  background: transparent;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 🔗 Link im Footer (z. B. Impressum) */
+/* 🔗 Link im Footer */
 .footerLink {
-  color: #60a5fa;
+  color: var(--color-accent);
   text-decoration: none;
+  margin-left: 0.4rem;
+  font-weight: 500;
 }
 
 .footerLink:hover {

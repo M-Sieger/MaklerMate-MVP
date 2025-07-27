@@ -59,28 +59,34 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
     switch (activeTab) {
       case 'objekt':
         return panel(
-          <>
-            <div className={styles.formGroup}>
-              <label>🏠 Objektart</label>
-              <select
-                name='objektart'
-                value={formData.objektart || ''}
-                onChange={handleLocalChange}
-                className={styles.fancyInput}
-              >
-                <option value=''>Bitte wählen</option>
-                <option>Wohnung</option>
-                <option>Haus</option>
-                <option>Gewerbe</option>
-              </select>
-            </div>
-            {renderInput('strasse', 'Straße')}
-            {renderInput('ort', 'PLZ, Ort')}
-            {renderInput('bezirk', '📍 Bezirk / Stadtteil')}
-            {renderInput('sicht', '🌅 Sicht auf ...')}
-            {renderInput('lagebesonderheiten', '🌳 Besonderheiten der Lage')}
-          </>
-        );
+  <>
+    <div className={styles.fieldGroup}>
+      <div className={styles.formGroup}>
+        <label>🏠 Objektart</label>
+        <select
+          name='objektart'
+          value={formData.objektart || ''}
+          onChange={handleLocalChange}
+          className={styles.fancyInput}
+        >
+          <option value=''>Bitte wählen</option>
+          <option>Wohnung</option>
+          <option>Haus</option>
+          <option>Gewerbe</option>
+        </select>
+      </div>
+      {renderInput('strasse', 'Straße')}
+      {renderInput('ort', 'PLZ, Ort')}
+      {renderInput('bezirk', '📍 Bezirk / Stadtteil')}
+    </div>
+
+    <div className={styles.fieldGroup}>
+      {renderInput('sicht', '🌅 Sicht auf ...')}
+      {renderInput('lagebesonderheiten', '🌳 Besonderheiten der Lage')}
+    </div>
+  </>
+);
+
       case 'flaeche':
         return panel(
           <>

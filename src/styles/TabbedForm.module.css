@@ -1,11 +1,9 @@
-/* 🎨 TabbedForm.module.css – moderne Tabs & Input-Styling */
-
-/* 📦 Wrapper für das ganze Tab-Formular */
+/* 📦 Haupt-Wrapper für das gesamte Tab-Formular */
 .tabbedForm {
   margin-top: 2rem;
 }
 
-/* 🧭 Tabs-Header mit Glas-Effekt */
+/* 🧭 Tabs-Header mit Blur, Padding & sanftem Übergang */
 .tabsHeader {
   display: flex;
   justify-content: center;
@@ -15,19 +13,23 @@
   padding-bottom: 0.5rem;
   overflow-x: auto;
   scroll-behavior: smooth;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 1rem;
 }
 
-/* 🎨 Fancy Tab-Styling für Button */
+/* 🎨 Tab-Button Style */
 .fancyTab {
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 1.1rem;
   font-weight: 500;
   border: none;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   color: #cbd5e1;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -38,26 +40,39 @@
 .fancyTab:hover {
   color: #f1f5f9;
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transform: scale(1.015);
 }
 
-/* ✅ Aktiver Tab erhält diesen Modifier */
+/* ✅ Aktiver Tab – leuchtend und kontrastreich */
 .fancyTabActive {
-  background: rgba(255, 255, 255, 0.15);     /* ❗ sichtbar machen */
+  background: rgba(255, 255, 255, 0.15);
   border: 1px solid #4fc3f7;
-  box-shadow: 0 4px 12px rgba(79, 195, 247, 0.4); /* ❗ Kontrast erzeugen */
-  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(79, 195, 247, 0.4);
+  transform: scale(1.04);
   font-weight: 600;
-  color: white;
+  color: #ffffff;
 }
 
-
-/* 🎯 Tab-Inhalt Fancy Style */
+/* 🧱 Tab-Inhalt (zentriert, gliedert den Abschnitt) */
 .fancyTabContent {
-  padding: 1rem 0;
+  padding: 1.2rem 0;
+  animation: fadeIn 0.25s ease-in-out;
 }
 
-/* ✅ Fancy Input-Styling für alle Formularfelder */
+/* ✨ Animation beim Tab-Wechsel */
+@keyframes fadeIn {
+  from {
+    opacity: 0.2;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🧊 Glasmorph Input – fallback wenn TabbedForm Standalone */
 .fancyInput {
   background: rgba(255, 255, 255, 0.05);
   color: #f3f4f6;
