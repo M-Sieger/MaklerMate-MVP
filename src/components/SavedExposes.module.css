@@ -1,6 +1,6 @@
-
 /* 📁 SavedExposes.module.css */
 
+/* 💾 Wrapper für gespeicherte Exposés */
 .exportBox {
   background-color: #111827;
   border: 1px solid #1f2937;
@@ -10,12 +10,14 @@
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
 }
 
+/* 💡 Überschrift */
 .heading {
   color: #facc15;
   margin-bottom: 1rem;
   font-size: 1.2rem;
 }
 
+/* 📋 Liste der gespeicherten Einträge */
 .list {
   list-style: none;
   padding: 0;
@@ -30,6 +32,7 @@
   border-bottom: 1px solid #374151;
 }
 
+/* 🏡 Metadaten (Ort, Art, Zeit) */
 .meta {
   color: #e5e7eb;
 }
@@ -39,11 +42,13 @@
   font-size: 0.8rem;
 }
 
+/* 🎛️ Button-Gruppe */
 .actions {
   display: flex;
   gap: 0.5rem;
 }
 
+/* 📂 Laden-Button */
 .exportButton {
   padding: 0.5rem 1rem;
   background-color: #3b82f6;
@@ -59,6 +64,7 @@
   background-color: #2563eb;
 }
 
+/* 🗑️ Löschen-Button */
 .deleteButton {
   padding: 0.5rem 1rem;
   background-color: transparent;
@@ -75,8 +81,33 @@
   color: white;
 }
 
-.emptyText {
-  color: #9ca3af;
+/* 📭 Empty-State Box (neu in 4/5) */
+.emptyBox {
+  padding: 3rem 2rem;
   text-align: center;
-  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed #4fc3f7;
+  border-radius: 16px;
+  margin-top: 2rem;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 📨 Icon über leerem Text */
+.emptyIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 📄 Leerer Text */
+.emptyText {
+  font-size: 1.1rem;
+  color: #e2e8f0;
+  margin-bottom: 0.3rem;
+}
+
+/* 💡 Unterzeile */
+.emptyHint {
+  font-size: 0.9rem;
+  color: #94a3b8;
 }

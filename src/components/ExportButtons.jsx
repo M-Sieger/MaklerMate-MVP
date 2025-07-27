@@ -2,12 +2,13 @@
 
 import React from 'react';
 
+import styles from '../styles/ExportActions.module.css'; // 🧊 Neues Ivy-Design
 import {
   exportExposeWithImages as exportExposeAsPDF,
-} from '../utils/pdfExportExpose'; // 📄 PDF-Export mit GPT-Text + Bildern
+} from '../utils/pdfExportExpose';
 
-export default function ExportButtons({ formData, output, selectedStyle }) {
-  // 📁 JSON als Datei speichern
+export default function ExportButtons({ formData, output, selectedStyle, onSaveExpose }) {
+  // 📁 JSON-Export (für Weiterverarbeitung oder CRM)
   const handleExportJSON = () => {
     const fullData = { ...formData, output, selectedStyle };
     const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
@@ -26,7 +27,7 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
     alert('📋 Text kopiert!');
   };
 
-  // 📄 PDF exportieren
+  // 📄 PDF-Export mit GPT-Text + Bildern
   const handleExportPDF = async () => {
     try {
       const gptText =
@@ -47,22 +48,35 @@ export default function ExportButtons({ formData, output, selectedStyle }) {
     }
   };
 
+  const hasText = output && (
+    (typeof output === 'string' && output.trim() !== '') ||
+    output?.text?.trim() ||
+    output?.content?.trim()
+  );
+
   return (
-    <div className="button-group">
-      {/* 🟨 Sekundärbutton: JSON exportieren */}
-      <button className="btn btn-secondary" onClick={handleExportJSON}>
-        📁 JSON exportieren
+    <div className={styles.exportGrid}>
+      <button className={styles.exportCard} onClick={handleExportPDF}>
+        📄 PDF exportieren
+        <span className={styles.sub}>Ideal zum Teilen oder Ausdrucken</span>
       </button>
 
-      {/* 🟨 Sekundärbutton: Text kopieren */}
-      <button className="btn btn-secondary" onClick={handleCopy}>
+      <button className={styles.exportCard} onClick={handleCopy}>
         📋 Text kopieren
+        <span className={styles.sub}>Z. B. für ImmoScout oder E‑Mail</span>
       </button>
 
-      {/* 🔵 Primärbutton: PDF exportieren */}
-      <button className="btn btn-secondary" onClick={handleExportPDF}>
-  📄 PDF exportieren
-</button>
+      <button className={styles.exportCard} onClick={handleExportJSON}>
+        📁 Für CRM exportieren
+        <span className={styles.sub}>Zur Weiterverarbeitung in Software</span>
+      </button>
+
+      {hasText && (
+        <button className={`${styles.exportCard} ${styles.primary}`} onClick={onSaveExpose}>
+          💾 Exposé speichern
+          <span className={styles.sub}>Lokale Sicherung im Browser</span>
+        </button>
+      )}
     </div>
   );
 }

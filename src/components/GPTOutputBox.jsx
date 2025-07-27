@@ -11,12 +11,13 @@ import styles from './GPTOutputBox.module.css';
 export default function GPTOutputBox({ output, images = [], captions = [] }) {
   return (
     <div className={styles.previewBox}>
-      {/* 🧠 Titelzeile */}
+      {/* 🧠 Titelzeile mit Trenner */}
       <div className={styles.headingRow}>
-        <h2 className={styles.heading}>📄 Exposé-Vorschau</h2>
+        <h2 className={styles.heading}>📝 Exposé-Vorschau</h2>
+        <div className={styles.separator}></div>
       </div>
 
-      {/* ✏️ GPT-generierter Text */}
+      {/* ✏️ GPT-generierter Textbereich */}
       <div className={styles.outputText}>
         {output || 'Noch kein Text generiert.'}
       </div>

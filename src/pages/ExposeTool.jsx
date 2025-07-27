@@ -27,8 +27,8 @@ export default function ExposeTool() {
     preis: '', energie: '', besonderheiten: ''
   });
 
-  const [isLoading, setIsLoading] = useState(false); // 🔄 Ladezustand
-  const [output, setOutput] = useState('');           // 📄 GPT-Ausgabe
+  const [isLoading, setIsLoading] = useState(false);            // 🔄 Ladezustand
+  const [output, setOutput] = useState('');                      // 📄 GPT-Ausgabe
   const [selectedStyle, setSelectedStyle] = useState('emotional'); // ✨ Stilwahl
 
   // 🖼️ Lokale Bilder aus LocalStorage laden
@@ -41,10 +41,9 @@ export default function ExposeTool() {
     }
   });
 
-  // (optional) Captions anlegbar, aktuell leer
-  const [captions, setCaptions] = useState([]);
+  const [captions, setCaptions] = useState([]); // 📝 Bildunterschriften separat
 
-  // 🧩 Bilder in FormData halten
+  // 🧩 Bilder direkt im formData halten
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
@@ -52,10 +51,10 @@ export default function ExposeTool() {
     }));
   }, [images]);
 
-  // 📁 Exposés laden
+  // 📁 Exposés laden & speichern
   const { exposes, addExpose, deleteExpose, loadExpose } = useSavedExposes();
 
-  // 📥 Form-Eingaben behandeln
+  // 📝 Eingaben im Formular
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -91,20 +90,29 @@ export default function ExposeTool() {
     }
   };
 
-  // 💾 Exposé speichern
+  // 💾 Exposé lokal speichern
   const handleSaveExpose = () => {
     addExpose({ formData, output, selectedStyle, images });
   };
 
   return (
     <div className="expose-tool-container">
-      {/* 📋 Formular */}
-      <ExposeForm formData={formData} setFormData={setFormData} onChange={handleChange} />
+      {/* 📋 Eingabeformular */}
+      <ExposeForm
+        formData={formData}
+        setFormData={setFormData}
+        onChange={handleChange}
+      />
 
-      {/* 🖼️ Upload */}
-      <ImageUpload images={images} setImages={setImages} captions={captions} setCaptions={setCaptions} />
+      {/* 🖼️ Bilderupload */}
+      <ImageUpload
+        images={images}
+        setImages={setImages}
+        captions={captions}
+        setCaptions={setCaptions}
+      />
 
-      {/* ⚡ Button-Gruppe */}
+      {/* ⚡ Button-Gruppe: Exposé generieren */}
       <div className="button-group center-buttons">
         <button
           onClick={handleGenerate}
@@ -114,26 +122,23 @@ export default function ExposeTool() {
           {isLoading && <span className="spinner"></span>}
           {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
         </button>
-
-        <button className="btn btn-secondary" onClick={handleSaveExpose}>
-          💾 Exposé speichern
-        </button>
       </div>
 
-      {/* 📄 Vorschau inkl. Bilder */}
+      {/* 📄 Vorschau (inkl. Bilder & GPT-Ausgabe) */}
       <div id="pdf-export-section">
         <GPTOutputBox output={output} images={images} captions={captions} />
       </div>
 
-      {/* 📤 Export */}
+      {/* 📤 Exportmöglichkeiten */}
       <ExportButtons
         formData={formData}
         output={output}
         selectedStyle={selectedStyle}
         images={images}
+        onSaveExpose={handleSaveExpose}
       />
 
-      {/* 💾 Lokale Exposés */}
+      {/* 💾 Gespeicherte Exposés */}
       <SavedExposes
         exposes={exposes}
         onLoad={(expose) =>

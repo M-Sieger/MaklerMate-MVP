@@ -1,0 +1,50 @@
+.exportGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* 💎 Export-Card Style */
+.exportCard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 0 transparent;
+
+  /* 🧭 Apple-Style Button Reset */
+  outline: none;
+}
+
+.exportCard:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px); /* 🍏 Mini-Lift-Effekt */
+}
+
+/* ✨ Für Subtitle */
+.sub {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin-top: 0.4rem;
+  font-weight: 400;
+}
+
+/* 🌟 Speichern-Card (Primary CTA) */
+.primary {
+  border: 1px solid var(--color-accent);
+  background: rgba(79, 195, 247, 0.1);
+}
+
+.primary:hover {
+  background: rgba(79, 195, 247, 0.2);
+}

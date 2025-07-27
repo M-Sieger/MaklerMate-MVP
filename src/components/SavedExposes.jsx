@@ -2,11 +2,17 @@
 
 import React from 'react';
 
-import styles from '../styles/SavedExposes.module.css';
+import styles from './SavedExposes.module.css';
 
 export default function SavedExposes({ exposes, onLoad, onDelete }) {
-  if (exposes.length === 0) {
-    return <p className={styles.emptyText}>📭 Keine gespeicherten Exposés gefunden.</p>;
+  if (!exposes || exposes.length === 0) {
+    return (
+      <div className={styles.emptyBox}>
+        <div className={styles.emptyIcon}>📭</div>
+        <p className={styles.emptyText}>Noch keine Exposés gespeichert.</p>
+        <p className={styles.emptyHint}>Nutze den Button „💾 Exposé speichern“, um dein erstes Projekt anzulegen.</p>
+      </div>
+    );
   }
 
   return (
@@ -18,7 +24,9 @@ export default function SavedExposes({ exposes, onLoad, onDelete }) {
             <div className={styles.meta}>
               🏡 <strong>{expose.formData.objektart || 'Exposé'}</strong> – {expose.formData.ort || 'Unbekannter Ort'}
               <br />
-              <small className={styles.timestamp}>🕓 {new Date(expose.createdAt).toLocaleString()}</small>
+              <small className={styles.timestamp}>
+                🕓 {new Date(expose.createdAt).toLocaleString()}
+              </small>
             </div>
             <div className={styles.actions}>
               <button className={styles.exportButton} onClick={() => onLoad(expose)}>📂 Laden</button>
@@ -30,4 +38,3 @@ export default function SavedExposes({ exposes, onLoad, onDelete }) {
     </div>
   );
 }
-// 📄 SavedExposes.jsx – Liste gespeicherter Exposés mit Lade-/Löschfunktion
