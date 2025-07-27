@@ -1,7 +1,7 @@
 import React from 'react';
 
-import styles
-  from './ExposeImageGallery.module.css'; // 🖼️ Modul-CSS für Galerie
+// ✅ CSS-Modul aus dem richtigen Ordner (../styles)
+import styles from '../styles/ExposeImageGallery.module.css';
 
 const ExposeImageGallery = ({ images }) => {
   if (!images || images.length === 0) return null;
@@ -11,7 +11,7 @@ const ExposeImageGallery = ({ images }) => {
       {images.map((img, index) => (
         <div key={index} className={styles.galleryItem}>
           <img
-            src={img.url || img} // Fallback falls `img` ein String ist
+            src={img.url || img}
             alt={`Objektbild ${index + 1}`}
             className={styles.galleryImage}
           />

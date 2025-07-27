@@ -1,42 +1,34 @@
-// ✅ Globale Button-Styles
+// ✅ Globale Button-Styles (für z. B. Exportbuttons unten)
 import '../styles/button.css';
 
 import React from 'react';
 
-// ✅ Modulbasierter CSS-Import
-import styles
-  from './GPTOutputBox.module.css'; // 🎨 Styling für Box, Text & Galerie
+// ✅ Galerie-Komponente korrekt importieren
+import ExposeImageGallery from './ExposeImageGallery';
+// ✅ Modul-CSS für Vorschau-Box & Text
+import styles from './GPTOutputBox.module.css';
 
 export default function GPTOutputBox({ output, images = [], captions = [] }) {
   return (
     <div className={styles.previewBox}>
-      {/* 🧠 Titel & Aktionen */}
+      {/* 🧠 Titelzeile */}
       <div className={styles.headingRow}>
         <h2 className={styles.heading}>📄 Exposé-Vorschau</h2>
-        {/* 🧩 Optional: Copy-Button oder Export */}
       </div>
 
-      {/* 🤖 GPT-Textvorschau */}
+      {/* ✏️ GPT-generierter Text */}
       <div className={styles.outputText}>
         {output || 'Noch kein Text generiert.'}
       </div>
 
-      {/* 🖼️ Bildgalerie inkl. Captions */}
+      {/* 🖼️ Bild-Galerie über eigene Komponente */}
       {images.length > 0 && (
-        <div className={styles.gptGallery}>
-          {images.map((img, index) => (
-            <div key={index} className={styles.gptImageWrapper}>
-              <img
-                src={img}
-                alt={`Bild ${index + 1}`}
-                className={styles.gptImage}
-              />
-              {captions[index] && (
-                <div className={styles.gptCaption}>{captions[index]}</div>
-              )}
-            </div>
-          ))}
-        </div>
+        <ExposeImageGallery
+          images={images.map((img, i) => ({
+            url: img,
+            caption: captions[i] || '',
+          }))}
+        />
       )}
     </div>
   );
