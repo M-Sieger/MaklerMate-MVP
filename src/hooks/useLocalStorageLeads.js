@@ -1,6 +1,4 @@
-// 📄 useLocalStorageLeads.js
-// ✅ Custom React Hook zum Verwalten von Leads im localStorage
-// Ermöglicht Speichern, Löschen, Zurücksetzen – komplett persistent
+// 📄 useLocalStorageLeads.js – Hook für Lead-Verwaltung mit Full-Update-Funktion
 
 import {
   useEffect,
@@ -11,50 +9,57 @@ import {
 const STORAGE_KEY = 'maklermate-leads';
 
 export default function useLocalStorageLeads() {
-  // 🧠 React-State für gespeicherte Leads
+  // 🧠 Lead-State
   const [leads, setLeads] = useState([]);
 
-  // 🔁 Wird beim ersten Laden aufgerufen: holt Daten aus localStorage
+  // 🔁 Beim Laden: localStorage lesen
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try {
-        setLeads(JSON.parse(stored)); // 🧾 Parsen & in State speichern
+        setLeads(JSON.parse(stored));
       } catch (err) {
         console.error('❌ Fehler beim Parsen von localStorage-Daten:', err);
-        setLeads([]); // Fallback auf leeres Array
+        setLeads([]);
       }
     }
   }, []);
 
-  // 🔄 Speichert aktuellen Lead-State nach jeder Änderung im localStorage
+  // 💾 Bei Änderung: speichern
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
   }, [leads]);
 
-  // ➕ Neuen Lead hinzufügen
+  // ➕ Lead hinzufügen
   const addLead = (lead) => {
     setLeads((prev) => [...prev, lead]);
   };
 
-  // ❌ Einen Lead löschen (via Index)
+  // ❌ Einzelnen Lead löschen
   const deleteLead = (id) => {
-  const updated = leads.filter((lead) => lead.id !== id);
-  setLeads(updated);
-};
+    const updated = leads.filter((lead) => lead.id !== id);
+    setLeads(updated);
+  };
 
-
-  // 🔁 Alle Leads löschen
+  // 🔁 Alle löschen
   const resetLeads = () => {
     setLeads([]);
   };
 
-  // 🔙 Exportiere Funktionen & Daten
+  // ✏️ Lead komplett updaten (Name, Notiz, Status etc.)
+  const updateLead = (id, updatedFields) => {
+    const updated = leads.map((lead) =>
+      lead.id === id ? { ...lead, ...updatedFields } : lead
+    );
+    setLeads(updated);
+  };
+
+  // 🔙 Rückgabe
   return {
     leads,
     addLead,
     deleteLead,
     resetLeads,
+    updateLead, // ✅ Neue Funktion
   };
 }
-// 📦 Hook für persistente Lead-Verwaltung via localStorage

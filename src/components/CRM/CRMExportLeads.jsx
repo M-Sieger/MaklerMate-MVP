@@ -2,11 +2,11 @@
 
 import React from 'react';
 
-import styles from '../styles/CRM.module.css';
+import styles from './CRM.module.css';
 import CRMExportBox from './CRMExportBox'; // 🎨 Fancy ExportCards
-import LeadItem from './LeadItem';// ✅ Modal-fähiger LeadItem
+import LeadItem from './LeadItem'; // ✅ Modal-fähiger LeadItem
 
-export default function CRMExportLeads({ leads, onDelete, onReset }) {
+export default function CRMExportLeads({ leads, onDelete, onReset, onStatusChange }) {
   return (
     <div className={styles.crmSection}>
       <h2 style={{ marginBottom: '1rem', color: '#e2e8f0' }}>📇 Gespeicherte Leads</h2>
@@ -17,7 +17,12 @@ export default function CRMExportLeads({ leads, onDelete, onReset }) {
       ) : (
         <ul className={styles.leadList}>
           {leads.map((lead) => (
-            <LeadItem key={lead.id} lead={lead} onDelete={onDelete} />
+            <LeadItem
+              key={lead.id}
+              lead={lead}
+              onDelete={onDelete}
+              onStatusChange={onStatusChange} // ➕ Hier durchgereicht
+            />
           ))}
         </ul>
       )}

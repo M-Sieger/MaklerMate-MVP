@@ -1,7 +1,7 @@
 // 🧊 ConfirmModal.jsx – zentrales Bestätigungsfenster
 import React from 'react';
 
-import styles from '../styles/CRM.module.css';
+import styles from './CRM.module.css';
 
 export default function ConfirmModal({ isOpen, onConfirm, onCancel, message }) {
   if (!isOpen) return null;

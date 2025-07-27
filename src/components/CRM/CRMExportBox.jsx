@@ -2,12 +2,12 @@
 
 import React from 'react';
 
-import styles from '../styles/ExportBox.module.css';
+import styles from '../../styles/ExportBox.module.css';
 import {
   exportLeadsAsCSV,
   exportLeadsAsTXT,
-} from '../utils/crmExport';
-import { exportLeadsAsPDF } from '../utils/pdfExportLeads';
+} from '../../utils/crmExport';
+import { exportLeadsAsPDF } from '../../utils/pdfExportLeads';
 
 export default function CRMExportBox({ leads = [] }) {
   if (!leads || leads.length === 0) {

@@ -1,17 +1,23 @@
-// 📄 CRMTool.jsx – Zentrale CRM-Seite mit zentraler Validierung & Auto-Scroll
+// 📄 CRMTool.jsx – Zentrale CRM-Seite mit Full-Update-Support
 
 import React from 'react';
 
 import { toast } from 'react-hot-toast';
 
-import CRMExportLeads from '../../components/CRMExportLeads';
+import CRMExportLeads from '../../components/CRM/CRMExportLeads';
 import useLocalStorageLeads
   from '../../hooks/useLocalStorageLeads'; // 💾 Custom Hook
 import LeadForm from './LeadForm';
 
 export default function CRMTool() {
-  // ✅ LocalStorage-basierte Lead-Verwaltung
-  const { leads, addLead, deleteLead, resetLeads } = useLocalStorageLeads();
+  // ✅ LocalStorage-Lead-Verwaltung mit Full-Update
+  const {
+    leads,
+    addLead,
+    deleteLead,
+    resetLeads,
+    updateLead, // ✅ ersetzt updateLeadStatus
+  } = useLocalStorageLeads();
 
   // 🧠 Validierung + Hinzufügen
   const handleAddLead = (lead) => {
@@ -38,6 +44,7 @@ export default function CRMTool() {
         leads={leads}
         onDelete={deleteLead}
         onReset={resetLeads}
+        onUpdateLead={updateLead} // ✅ neue Prop
       />
     </div>
   );
