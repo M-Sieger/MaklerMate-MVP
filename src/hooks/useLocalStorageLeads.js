@@ -25,15 +25,28 @@ export default function useLocalStorageLeads() {
     }
   }, []);
 
-  // 💾 Bei Änderung: speichern
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
-  }, [leads]);
+// 💾 Bei Änderung: speichern
+useEffect(() => {
+  try {
+    if (Array.isArray(leads)) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
+    }
+  } catch (err) {
+    console.error('❌ Fehler beim Speichern:', err);
+  }
+}, [leads]);
+
 
   // ➕ Lead hinzufügen
-  const addLead = (lead) => {
-    setLeads((prev) => [...prev, lead]);
+const addLead = (lead) => {
+  const newLead = {
+    ...lead,
+    id: crypto.randomUUID(), // 🔐 Eindeutige ID
+    timestamp: new Date().toISOString(), // 🕒 Immer Timestamp setzen
   };
+  setLeads((prev) => [...prev, newLead]);
+};
+
 
   // ❌ Einzelnen Lead löschen
   const deleteLead = (id) => {

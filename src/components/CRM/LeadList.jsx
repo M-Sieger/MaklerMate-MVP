@@ -1,4 +1,4 @@
-// 📄 LeadList.jsx – Filterlogik für LeadTable + Suche
+// 📄 Filterlogik für LeadTable + Suche
 import React, { useState } from 'react';
 
 import styles from '../../components/CRM/CRM.module.css';

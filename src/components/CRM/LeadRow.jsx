@@ -24,7 +24,6 @@ export default function LeadRow({ lead, onDelete, onUpdate }) {
     });
   };
 
-  // 💡 Dynamische Highlight-Klasse auf Basis des Status
   const rowHighlightClass =
     lead.status?.toLowerCase() === 'vip' ? styles.rowVip :
     lead.status?.toLowerCase() === 'warm' ? styles.rowWarm : '';
@@ -33,8 +32,11 @@ export default function LeadRow({ lead, onDelete, onUpdate }) {
     <>
       <tr className={`${styles.tableRow} ${rowHighlightClass}`}>
         <td><strong>{lead.name}</strong></td>
-        <td>{lead.notiz}</td>
-        <td className={styles.timestamp}>{formatDate(lead.timestamp)}</td>
+        <td>{lead.contact}</td>
+        <td>{lead.location || '–'}</td>
+        <td>{lead.type}</td>
+        <td>{lead.note}</td>
+        <td className={styles.timestamp}>{formatDate(lead.createdAt || lead.timestamp)}</td>
         <td>
           <span className={`${styles.statusBadge} ${styles[`status-${lead.status?.toLowerCase()}`]}`}>
             {lead.status}
