@@ -9,7 +9,7 @@ export default function LeadRow({ lead, onDelete, onUpdate }) {
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const handleDetailUpdate = (id, updates) => {
-    onUpdate(id, updates.status); // oder später: name, notiz
+    onUpdate(id, updates.status);
     setShowDetailModal(false);
   };
 
@@ -24,9 +24,14 @@ export default function LeadRow({ lead, onDelete, onUpdate }) {
     });
   };
 
+  // 💡 Dynamische Highlight-Klasse auf Basis des Status
+  const rowHighlightClass =
+    lead.status?.toLowerCase() === 'vip' ? styles.rowVip :
+    lead.status?.toLowerCase() === 'warm' ? styles.rowWarm : '';
+
   return (
     <>
-      <tr className={styles.tableRow}>
+      <tr className={`${styles.tableRow} ${rowHighlightClass}`}>
         <td><strong>{lead.name}</strong></td>
         <td>{lead.notiz}</td>
         <td className={styles.timestamp}>{formatDate(lead.timestamp)}</td>
@@ -53,7 +58,6 @@ export default function LeadRow({ lead, onDelete, onUpdate }) {
         </td>
       </tr>
 
-      {/* 🔍 Modal zur Lead-Bearbeitung */}
       {showDetailModal && (
         <LeadDetailModal
           lead={lead}

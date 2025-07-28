@@ -1,23 +1,27 @@
-// 📄 LeadList.jsx – Filterlogik für LeadTable
+// 📄 LeadList.jsx – Filterlogik für LeadTable + Suche
 import React, { useState } from 'react';
 
 import styles from '../../components/CRM/CRM.module.css';
-import LeadTable
-  from '../../components/CRM/LeadTable'; // ✅ neue Tabellenkomponente
+import LeadTable from '../../components/CRM/LeadTable';
 
-// 🧠 Komponente: Status-Filter + Übergabe gefilterter Daten an die Table-Komponente
 export default function LeadList({ leads, onDelete, onUpdateLead }) {
   const [filterStatus, setFilterStatus] = useState("Alle");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // 🎯 Filterlogik: nach Status oder alle
-  const filteredLeads = leads.filter((lead) =>
-    filterStatus === "Alle" ? true : lead.status === filterStatus
-  );
+  // 🧠 Kombinierte Filterung
+  const filteredLeads = leads.filter((lead) => {
+    const matchesStatus = filterStatus === "Alle" || lead.status === filterStatus;
+    const matchesSearch = [lead.name, lead.notiz, lead.status]
+      .some((field) =>
+        field?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    return matchesStatus && matchesSearch;
+  });
 
   return (
     <div>
-      {/* 🔍 Filter Dropdown */}
-      <div className={styles.filterWrapper}>
+      {/* 🔍 Filterzeile mit Dropdown + Suche */}
+      <div className={styles.filterWrapper} style={{ gap: '1rem' }}>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
@@ -28,14 +32,23 @@ export default function LeadList({ leads, onDelete, onUpdateLead }) {
           <option value="Warm">Warm</option>
           <option value="VIP">VIP</option>
         </select>
+
+        <input
+          type="text"
+          placeholder="🔎 Suchen..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={styles.crmInput}
+          style={{ maxWidth: '300px' }}
+        />
       </div>
 
-      {/* 📋 Gefilterte Tabelle */}
+      {/* 📋 Tabelle oder Hinweis */}
       {filteredLeads.length > 0 ? (
-        <LeadTable leads={filteredLeads} onDelete={onDelete} onUpdateLead={onUpdateLead} />
+        <LeadTable leads={filteredLeads} onDelete={onDelete} onUpdate={onUpdateLead} />
       ) : (
         <p style={{ color: '#94a3b8', marginTop: '1rem' }}>
-          ⚠️ Keine Leads im aktuellen Filter gefunden.
+          ⚠️ Keine Leads im aktuellen Filter/Suchbegriff gefunden.
         </p>
       )}
     </div>
