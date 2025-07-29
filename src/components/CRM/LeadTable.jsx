@@ -1,10 +1,11 @@
 // 📄 LeadTable.jsx – Tabelle mit allen Leads
 import React from 'react';
 
+import LeadRow from '../../components/CRM/LeadRow';
 import styles from './CRM.module.css';
-import LeadRow from './LeadRow';
 
-export default function LeadTable({ leads, onDelete, onUpdate }) {
+export default function LeadTable({ leads, onDelete, onUpdateLead }) {
+
   return (
     <table className={styles.leadTable}>
       <thead>
@@ -21,12 +22,13 @@ export default function LeadTable({ leads, onDelete, onUpdate }) {
       </thead>
       <tbody>
         {leads.map((lead) => (
-          <LeadRow
-            key={lead.id}
-            lead={lead}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
-          />
+         <LeadRow
+  key={lead.id}
+  lead={lead}
+  onDelete={onDelete}
+  onUpdate={onUpdateLead}
+/>
+
         ))}
       </tbody>
     </table>

@@ -1,7 +1,9 @@
 // 📄 src/components/ToolCards.jsx
 
 import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
+
 import styles from '../styles/ToolCards.module.css'; // 🎨 neues CSS-Modul
 
 export default function ToolCards() {

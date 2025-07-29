@@ -1,0 +1,22 @@
+/* 📄 Footer.css – minimalistisch, klar, elegant */
+
+.footer {
+  text-align: center;
+  padding: 1rem 2rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-soft);
+  font-family: 'Inter', sans-serif;
+}
+
+.footerLink {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}

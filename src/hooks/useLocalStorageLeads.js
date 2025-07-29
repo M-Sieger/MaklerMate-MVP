@@ -37,12 +37,12 @@ useEffect(() => {
 }, [leads]);
 
 
-  // ➕ Lead hinzufügen
+// ➕ Lead hinzufügen
 const addLead = (lead) => {
   const newLead = {
     ...lead,
-    id: crypto.randomUUID(), // 🔐 Eindeutige ID
-    timestamp: new Date().toISOString(), // 🕒 Immer Timestamp setzen
+    id: lead.id || crypto.randomUUID(), // ✅ falls nicht schon vorhanden
+    createdAt: lead.createdAt || new Date().toISOString(), // ✅ falls nicht vorhanden
   };
   setLeads((prev) => [...prev, newLead]);
 };

@@ -1,4 +1,5 @@
-// 📄 Filterlogik für LeadTable + Suche
+// 📄 LeadList.jsx – Filterlogik für LeadTable + Suche
+
 import React, { useState } from 'react';
 
 import styles from '../../components/CRM/CRM.module.css';
@@ -8,19 +9,22 @@ export default function LeadList({ leads, onDelete, onUpdateLead }) {
   const [filterStatus, setFilterStatus] = useState("Alle");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // 🧠 Kombinierte Filterung
+  // 🧠 Kombinierte Filterung (nach Status & Suchtext)
   const filteredLeads = leads.filter((lead) => {
     const matchesStatus = filterStatus === "Alle" || lead.status === filterStatus;
-    const matchesSearch = [lead.name, lead.notiz, lead.status]
+
+    // ❗ Fix: lead.note statt lead.notiz (sonst Crash!)
+    const matchesSearch = [lead.name, lead.note, lead.status]
       .some((field) =>
         field?.toLowerCase().includes(searchQuery.toLowerCase())
       );
+
     return matchesStatus && matchesSearch;
   });
 
   return (
     <div>
-      {/* 🔍 Filterzeile mit Dropdown + Suche */}
+      {/* 🔍 Filterzeile */}
       <div className={styles.filterWrapper} style={{ gap: '1rem' }}>
         <select
           value={filterStatus}
@@ -43,9 +47,13 @@ export default function LeadList({ leads, onDelete, onUpdateLead }) {
         />
       </div>
 
-      {/* 📋 Tabelle oder Hinweis */}
+      {/* 📋 Ergebnisanzeige */}
       {filteredLeads.length > 0 ? (
-        <LeadTable leads={filteredLeads} onDelete={onDelete} onUpdate={onUpdateLead} />
+        <LeadTable
+          leads={filteredLeads}
+          onDelete={onDelete}
+          onUpdate={onUpdateLead}
+        />
       ) : (
         <p style={{ color: '#94a3b8', marginTop: '1rem' }}>
           ⚠️ Keine Leads im aktuellen Filter/Suchbegriff gefunden.

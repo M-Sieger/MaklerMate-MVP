@@ -1,0 +1,54 @@
+
+/* 🌫️ Modal-Overlay mit Blur */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 📦 Modal-Inhalt */
+.modalContent {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  color: #f1f5f9;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+/* ❌ Close-Button oben rechts */
+.closeButton {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #f87171;
+  cursor: pointer;
+}
+
+/* 🧠 Titelzeile */
+.modalTitle {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+/* 📜 Inhalt */
+.modalBody {
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}

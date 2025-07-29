@@ -7,11 +7,11 @@ import { toast } from 'react-hot-toast';
 import CRMCard from '../../components/CRM/CRMCard';
 import CRMExportLeads from '../../components/CRM/CRMExportLeads';
 import LeadForm from '../../components/CRM/LeadForm';
-import LeadList
-  from '../../components/CRM/LeadList'; // ✅ Richtige Komponente eingebunden
+import LeadList from '../../components/CRM/LeadList'; // ✅ Anzeige aller Leads
 import useLocalStorageLeads from '../../hooks/useLocalStorageLeads';
 
 export default function CRMTool() {
+  // 📦 Hook für alle Lead-Funktionen
   const {
     leads,
     addLead,
@@ -20,16 +20,17 @@ export default function CRMTool() {
     updateLead,
   } = useLocalStorageLeads();
 
+  // ➕ Neuen Lead hinzufügen (mit Validierung)
   const handleAddLead = (lead) => {
     const { name, contact, type, status } = lead;
 
-    // 🛡️ Pflichtfeld-Validierung
+    // 🛡️ Pflichtfeldprüfung
     if (!name?.trim() || !contact?.trim() || !type || !status) {
       toast.error("❌ Bitte alle Pflichtfelder ausfüllen!");
       return;
     }
 
-    // 🕓 Timestamp für Anzeige & Sortierung
+    // 🕓 Timestamp hinzufügen (zur Sicherheit)
     const leadWithTimestamp = {
       ...lead,
       createdAt: new Date().toISOString(),
@@ -42,8 +43,17 @@ export default function CRMTool() {
   return (
     <div style={{ padding: '2rem' }}>
       <CRMCard title="📇 MaklerMate – CRM-Leads">
+        {/* 📝 Formular für neue Leads */}
         <LeadForm onAddLead={handleAddLead} />
-        <LeadList leads={leads} onDelete={deleteLead} onUpdateLead={updateLead} /> {/* ✅ LeadList statt LeadTable */}
+
+        {/* 📋 Liste aller Leads mit Bearbeiten + Löschen */}
+        <LeadList
+          leads={leads}
+          onDelete={deleteLead}
+          onUpdateLead={updateLead} // ✅ Wichtig: führt zu LeadRow → updateLead korrekt!
+        />
+
+        {/* 📤 Exportfunktionen (CSV, PDF etc.) */}
         <CRMExportLeads
           leads={leads}
           onReset={resetLeads}
