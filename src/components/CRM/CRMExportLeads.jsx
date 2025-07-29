@@ -1,35 +1,66 @@
-// 📄 CRMExportLeads.jsx – Exportbereich mit Reset-Funktion & ExportCards
+// 📄 CRMExportLeads.jsx – minimalistischer Exportbereich mit Dropdown
 
-import React from 'react';
+import React, { useState } from 'react';
 
-import styles from './CRM.module.css';
-import CRMExportBox from './CRMExportBox'; // 🎨 Fancy ExportCards
+import {
+  exportLeadsAsCSV,
+  exportLeadsAsTXT,
+} from '../../utils/crmExport';
+import { exportLeadsAsPDF } from '../../utils/pdfExportLeads';
+import styles from './CRMExportLeads.module.css';
 
-export default function CRMExportLeads({ leads, onReset }) {
+export default function CRMExportLeads({ leads = [], onReset }) {
+  const [open, setOpen] = useState(false);
+
+  if (!leads.length) return null;
+
+  const handleExport = (type) => {
+    if (type === 'pdf') exportLeadsAsPDF(leads);
+    if (type === 'csv') exportLeadsAsCSV(leads);
+    if (type === 'txt') exportLeadsAsTXT(leads);
+    if (type === 'json') {
+      const blob = new Blob([JSON.stringify(leads, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'leads-export.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    if (type === 'copy') {
+      navigator.clipboard.writeText(JSON.stringify(leads, null, 2))
+        .then(() => alert('✅ Leads kopiert'))
+        .catch(err => console.error('Fehler:', err));
+    }
+    setOpen(false);
+  };
+
   return (
-    <div className={styles.crmSection}>
-      {/* 🧾 Hinweis */}
-      <h2 style={{ marginBottom: '0.75rem', color: '#e2e8f0' }}>
-        📁 Leads exportieren
-      </h2>
-
-      <p style={{ color: '#94a3b8', marginBottom: '1.2rem' }}>
-        📤 Exportiere die aktuell gefilterten Leads.
-      </p>
-
-      {/* ♻️ Reset-Button */}
-      {leads.length > 0 && (
+    <div className={styles.exportWrapper}>
+      {/* 📤 Export Trigger */}
+      <div className={styles.dropdownContainer}>
         <button
-          onClick={onReset}
-          className={styles.modalCancel}
-          style={{ marginBottom: '2rem' }}
+          className={styles.triggerButton}
+          onClick={() => setOpen(!open)}
         >
-          ♻️ Alle Leads löschen
+          📤 Export ▾
         </button>
-      )}
 
-      {/* 🧲 Exportkarten (PDF, CSV, JSON, Copy) */}
-      <CRMExportBox leads={leads} />
+        {open && (
+          <div className={styles.dropdownMenu}>
+            <button onClick={() => handleExport('pdf')}>📄 PDF</button>
+            <button onClick={() => handleExport('csv')}>📊 CSV</button>
+            <button onClick={() => handleExport('txt')}>📄 TXT</button>
+            <button onClick={() => handleExport('json')}>🧠 JSON</button>
+            <button onClick={() => handleExport('copy')}>📋 Kopieren</button>
+          </div>
+        )}
+      </div>
+
+      {/* 🗑️ Reset separat */}
+      <button onClick={onReset} className={styles.resetButton}>
+        ♻️ Alle Leads löschen
+      </button>
     </div>
   );
 }

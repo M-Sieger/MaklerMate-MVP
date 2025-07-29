@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 
 // 🧠 GPT-Hook (Proxy zu GPT-4o)
 import useAIHelper from '../../hooks/useAIHelper';
-// 🎨 Styles für Tabelle, Badges, Buttons etc.
-import styles from './CRM.module.css';
-// 🏷️ Visuelle Badge-Komponente für Statusanzeige
+// ️ Visuelle Badge-Komponente für Statusanzeige
 import IvyBadge from './IvyBadge';
 // 🧾 Formular zur Lead-Bearbeitung
 import LeadForm from './LeadForm';
+// 🎨 Styles für Tabelle, Badges, Buttons etc.
+import styles from './LeadRow.module.css';
 // 🪟 Wiederverwendbares Modal für GPT & Formulare
 import Modal from './Modal';
 
