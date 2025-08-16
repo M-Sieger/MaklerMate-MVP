@@ -4,6 +4,7 @@ import React from 'react';
 
 import { toast } from 'react-hot-toast';
 
+import styles from '../../components/CRM/CRM.module.css';
 import CRMCard from '../../components/CRM/CRMCard';
 import CRMExportLeads from '../../components/CRM/CRMExportLeads';
 import LeadForm from '../../components/CRM/LeadForm';
@@ -40,26 +41,32 @@ export default function CRMTool() {
     toast.success("✅ Lead gespeichert!");
   };
 
-  return (
-    <div style={{ padding: '2rem' }}>
-      <CRMCard title="📇 MaklerMate – CRM-Leads">
-        {/* 📝 Formular für neue Leads */}
-        <LeadForm onAddLead={handleAddLead} />
+return (
+  <div className={styles.pageWrapper}>
+    <CRMCard>
+      {/* 🧠 Titel & Abschnittsüberschrift */}
+      <div className={styles.crmCardHeader}>
+        <h1 className={styles.crmCardTitle}>📇 MaklerMate – CRM-Leads</h1>
+      </div>
 
-        {/* 📋 Liste aller Leads mit Bearbeiten + Löschen */}
-        <LeadList
-          leads={leads}
-          onDelete={deleteLead}
-          onUpdateLead={updateLead} // ✅ Wichtig: führt zu LeadRow → updateLead korrekt!
-        />
+      {/* 📝 Formular für neue Leads */}
+      <LeadForm onAddLead={handleAddLead} />
 
-        {/* 📤 Exportfunktionen (CSV, PDF etc.) */}
-        <CRMExportLeads
-          leads={leads}
-          onReset={resetLeads}
-          onUpdateLead={updateLead}
-        />
-      </CRMCard>
-    </div>
-  );
+      {/* 📋 Liste aller Leads mit Bearbeiten + Löschen */}
+      <LeadList
+        leads={leads}
+        onDelete={deleteLead}
+        onUpdateLead={updateLead}
+      />
+
+      {/* 📤 Exportfunktionen (CSV, PDF etc.) */}
+      <CRMExportLeads
+        leads={leads}
+        onReset={resetLeads}
+        onUpdateLead={updateLead}
+      />
+    </CRMCard>
+  </div>
+);
+
 }
