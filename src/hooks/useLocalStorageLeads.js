@@ -1,78 +1,54 @@
-// 📄 useLocalStorageLeads.js – Hook für Lead-Verwaltung mit Full-Update-Funktion
+// ✅ Hook für LocalStorage-Handling von Leads
+// - Lädt Leads aus localStorage beim ersten Render
+// - Speichert neue Leads automatisch
+// - Normalisiert Status-Werte (neu, warm, cold, vip)
+// - Führt Migration durch, falls alte Daten ohne Status vorliegen
 
 import {
   useEffect,
   useState,
 } from 'react';
 
-// 📦 Schlüsselname im localStorage
-const STORAGE_KEY = 'maklermate-leads';
+// Definierte Status-Werte (enum)
+export const STATUS_ENUM = ["neu", "warm", "cold", "vip"];
 
-export default function useLocalStorageLeads() {
-  // 🧠 Lead-State
+// 🛠 Migration: sorgt dafür, dass alte Leads ein korrektes Schema haben
+function migrateLead(lead) {
+  return {
+    id: lead.id || Date.now(),        // Falls keine ID vorhanden → Timestamp
+    name: lead.name || "",
+    contact: lead.contact || "",
+    location: lead.location || "",
+    type: lead.type || "",
+    note: lead.note || "",
+    // Status normalisieren: lowercase + Fallback = "neu"
+    status: STATUS_ENUM.includes((lead.status || "").toLowerCase())
+      ? lead.status.toLowerCase()
+      : "neu",
+    createdAt: lead.createdAt || new Date().toISOString(),
+  };
+}
+
+export default function useLocalStorageLeads(key = "leads") {
   const [leads, setLeads] = useState([]);
 
-  // 🔁 Beim Laden: localStorage lesen
+  // ✅ Leads beim Laden aus localStorage ziehen
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(key);
     if (stored) {
       try {
-        setLeads(JSON.parse(stored));
-      } catch (err) {
-        console.error('❌ Fehler beim Parsen von localStorage-Daten:', err);
-        setLeads([]);
+        const parsed = JSON.parse(stored);
+        setLeads(parsed.map(migrateLead));
+      } catch (e) {
+        console.error("❌ Fehler beim Laden der Leads", e);
       }
     }
-  }, []);
+  }, [key]);
 
-// 💾 Bei Änderung: speichern
-useEffect(() => {
-  try {
-    if (Array.isArray(leads)) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
-    }
-  } catch (err) {
-    console.error('❌ Fehler beim Speichern:', err);
-  }
-}, [leads]);
+  // ✅ Immer persistieren, wenn sich Leads ändern
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(leads));
+  }, [leads, key]);
 
-
-// ➕ Lead hinzufügen
-const addLead = (lead) => {
-  const newLead = {
-    ...lead,
-    id: lead.id || crypto.randomUUID(), // ✅ falls nicht schon vorhanden
-    createdAt: lead.createdAt || new Date().toISOString(), // ✅ falls nicht vorhanden
-  };
-  setLeads((prev) => [...prev, newLead]);
-};
-
-
-  // ❌ Einzelnen Lead löschen
-  const deleteLead = (id) => {
-    const updated = leads.filter((lead) => lead.id !== id);
-    setLeads(updated);
-  };
-
-  // 🔁 Alle löschen
-  const resetLeads = () => {
-    setLeads([]);
-  };
-
-  // ✏️ Lead komplett updaten (Name, Notiz, Status etc.)
-  const updateLead = (id, updatedFields) => {
-    const updated = leads.map((lead) =>
-      lead.id === id ? { ...lead, ...updatedFields } : lead
-    );
-    setLeads(updated);
-  };
-
-  // 🔙 Rückgabe
-  return {
-    leads,
-    addLead,
-    deleteLead,
-    resetLeads,
-    updateLead, // ✅ Neue Funktion
-  };
+  return [leads, setLeads];
 }

@@ -1,121 +1,61 @@
-// 📄 LeadForm.jsx – Eingabeformular im Ivy-Stil für neue oder bestehende Leads
+// ✅ Eingabeformular für neue Leads
+// - Enthält Select für Status (controlled component!)
+// - Alle Eingaben landen im lokalen State
+// - Beim Submit wird Lead zurück an Parent (CRMTool) gegeben
 
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, { useState } from 'react';
 
-import toast from 'react-hot-toast';
-
+import { STATUS_ENUM } from '../../hooks/useLocalStorageLeads';
 import styles from './LeadForm.module.css';
 
-const initialLead = {
-  name: '',
-  contact: '',
-  location: '',
-  type: '',
-  status: '',
-  note: '',
-};
+export default function LeadForm({ onAddLead }) {
+  // Initialwerte: status = "neu"
+  const [formData, setFormData] = useState({
+    name: "",
+    contact: "",
+    location: "",
+    type: "",
+    note: "",
+    status: "neu",
+  });
 
-export default function LeadForm({ onAddLead, onUpdate, lead }) {
-  const [formData, setFormData] = useState(initialLead);
-
-  useEffect(() => {
-    if (lead) setFormData(lead);
-  }, [lead]);
-
-  const handleChange = (e) => {
+  // 🛠 Input-Änderungen → State updaten
+  function handleChange(e) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  }
 
-  const handleSave = () => {
-    const { name, contact, type, status } = formData;
-
-    if (!name || !contact || !type || !status) {
-      toast.error('❌ Bitte alle Pflichtfelder ausfüllen.');
-      return;
-    }
-
-    if (lead) {
-      const { id, createdAt, ...updatedFields } = formData;
-      onUpdate(lead.id, updatedFields);
-      toast.success('🔄 Lead aktualisiert');
-    } else {
-      onAddLead(formData);
-      toast.success('✅ Lead gespeichert');
-      setFormData(initialLead);
-    }
-  };
+  // 🛠 Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    onAddLead({ ...formData, id: Date.now(), createdAt: new Date().toISOString() });
+    setFormData({ name: "", contact: "", location: "", type: "", note: "", status: "neu" });
+  }
 
   return (
-    <div className={styles.formGrid}>
-      <div className={styles.field}>
-        <label>🙍 Name</label>
-        <input
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Max Mustermann"
-        />
-      </div>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
+      <input name="contact" placeholder="Kontakt" value={formData.contact} onChange={handleChange} />
+      <input name="location" placeholder="Ort" value={formData.location} onChange={handleChange} />
+      <input name="type" placeholder="Lead-Typ" value={formData.type} onChange={handleChange} />
 
-      <div className={styles.field}>
-        <label>☎️ Kontakt</label>
-        <input
-          name="contact"
-          value={formData.contact}
-          onChange={handleChange}
-          placeholder="0151 / 1234567"
-        />
-      </div>
+      <textarea
+        name="note"
+        placeholder="Notizen"
+        value={formData.note}
+        onChange={handleChange}
+      />
 
-      <div className={styles.field}>
-        <label>📍 Ort / Bezirk</label>
-        <input
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          placeholder="z. B. Köln, Ehrenfeld"
-        />
-      </div>
+      {/* ✅ Status als Select */}
+      <select name="status" value={formData.status} onChange={handleChange}>
+        {STATUS_ENUM.map((s) => (
+          <option key={s} value={s}>
+            {s.charAt(0).toUpperCase() + s.slice(1)}
+          </option>
+        ))}
+      </select>
 
-      <div className={styles.field}>
-        <label>🏷️ Lead-Typ</label>
-        <select name="type" value={formData.type} onChange={handleChange}>
-          <option value="">Typ wählen</option>
-          <option value="Käufer">Käufer</option>
-          <option value="Verkäufer">Verkäufer</option>
-        </select>
-      </div>
-
-      <div className={styles.field}>
-        <label>🔘 Lead-Status</label>
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="">Status wählen</option>
-          <option value="Neu">Neu</option>
-          <option value="Warm">Warm</option>
-          <option value="VIP">VIP</option>
-          <option value="Kalt">Kalt</option>
-        </select>
-      </div>
-
-      <div className={`${styles.field} ${styles.full}`}>
-        <label>💬 Notiz</label>
-        <textarea
-          name="note"
-          value={formData.note}
-          onChange={handleChange}
-          placeholder="z. B. Sucht Wohnung in Köln"
-        />
-      </div>
-
-      <div className={styles.actions}>
-        <button onClick={handleSave}>
-          {lead ? '🔄 Lead aktualisieren' : '💾 Lead speichern'}
-        </button>
-      </div>
-    </div>
+      <button type="submit">➕ Lead speichern</button>
+    </form>
   );
 }
