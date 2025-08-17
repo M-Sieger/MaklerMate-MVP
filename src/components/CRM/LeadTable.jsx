@@ -1,47 +1,74 @@
-// ✅ Tabelle für alle gespeicherten Leads
-// - Keine Filterung → zeigt ALLE Leads
-// - Status wird mit IvyBadge dargestellt
-// - Sortierung: VIP > Warm > Neu > Cold
+// 📄 LeadTable.jsx — Tabellen-Layout (Header, Zeilen, Badges, Aktionen)
+// ✅ Alte Klassen aus LeadTable.module.css wieder genutzt.
 
 import React from 'react';
 
 import IvyBadge from './IvyBadge';
 import styles from './LeadTable.module.css';
 
-// Definieren, wie Status sortiert werden soll
-const STATUS_ORDER = { vip: 0, warm: 1, neu: 2, cold: 3 };
+const statusRank = { vip: 3, warm: 2, neu: 1, cold: 0 };
 
-export default function LeadTable({ leads }) {
-  // 🛠 Sortierte Liste erstellen
-  const sortedLeads = [...leads].sort(
-    (a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
-  );
+export default function LeadTable({ leads = [], onDeleteLead }) {
+  // 🔄 Leads sortieren nach Status-Priorität (VIP > Warm > Neu > Cold)
+  const sorted = [...leads].sort((a, b) => {
+    const ra = statusRank[(a.status || '').toLowerCase()] ?? -1;
+    const rb = statusRank[(b.status || '').toLowerCase()] ?? -1;
+    return rb - ra;
+  });
 
   return (
-    <table className={styles.leadTable}>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Kontakt</th>
-          <th>Ort</th>
-          <th>Typ</th>
-          <th>Status</th>
-          <th>Notiz</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedLeads.map((lead) => (
-          <tr key={lead.id}>
-            <td><strong>{lead.name}</strong></td>
-            <td>{lead.contact}</td>
-            <td>{lead.location}</td>
-            <td>{lead.type}</td>
-            {/* ✅ Status-Badge */}
-            <td><IvyBadge status={lead.status} /></td>
-            <td>{lead.note}</td>
+    <div className={styles.tableWrapper}>
+      <table className={styles.leadTable}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Kontakt</th>
+            <th>Ort</th>
+            <th>Typ</th>
+            <th>Status</th>
+            <th>Notiz</th>
+            <th className={styles.createdAtCell}>Erstellt</th>
+            <th className={styles.actionsCell}>Aktionen</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {sorted.length === 0 ? (
+            // 🚫 Keine Leads vorhanden → leere Zeile anzeigen
+            <tr className={styles.tableRow}>
+              <td colSpan={8} className={styles.emptyCell}>
+                Keine Leads gefunden.
+              </td>
+            </tr>
+          ) : (
+            sorted.map((lead) => (
+              <tr key={lead.id} className={styles.tableRow}>
+                <td>{lead.name || '—'}</td>
+                <td>{lead.contact || '—'}</td>
+                <td>{lead.location || '—'}</td>
+                <td>{lead.type || '—'}</td>
+                {/* 🏷️ Status mit IvyBadge */}
+                <td className={styles.statusCell}>
+                  <IvyBadge status={(lead.status || 'neu').toLowerCase()} />
+                </td>
+                <td>{lead.note || '—'}</td>
+                <td className={styles.createdAtCell}>
+                  {lead.createdAt
+                    ? new Date(lead.createdAt).toLocaleDateString()
+                    : '—'}
+                </td>
+                <td className={styles.actionsCell}>
+                  <button
+                    className={styles.rowDeleteButton}
+                    onClick={() => onDeleteLead && onDeleteLead(lead.id)}
+                  >
+                    Löschen
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }

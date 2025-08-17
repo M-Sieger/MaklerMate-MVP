@@ -1,9 +1,10 @@
-/* 📄 LeadForm.module.css – modernes Ivy-Layout für Lead-Eingabeformulare */
+/* 📄 LeadForm.module.css – alte Struktur & Klassen reaktiviert */
 
-.formGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+/* Wrapper für das gesamte Formular */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   padding: 1rem;
   border-radius: 16px;
   background-color: rgba(255, 255, 255, 0.03);
@@ -11,21 +12,15 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-.field {
+/* Zeilen-Container */
+.formRow {
   display: flex;
-  flex-direction: column;
+  gap: 1rem;
 }
 
-.field label {
-  margin-bottom: 0.4rem;
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: #f1f5f9;
-}
-
-.field input,
-.field select,
-.field textarea {
+/* Standard Input & Textarea */
+.input {
+  flex: 1;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
@@ -37,27 +32,42 @@
   font-family: inherit;
 }
 
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
+.input:focus {
   outline: none;
   border-color: #4fc3f7;
   box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.25);
   background: rgba(255, 255, 255, 0.08);
 }
 
-.full {
-  grid-column: 1 / -1;
+/* Dropdown-Feld */
+.select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.select:focus {
+  outline: none;
+  border-color: #4fc3f7;
+  box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Aktionen (Button-Container) */
 .actions {
-  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
-.actions button {
+/* Primärer Button */
+.primaryButton {
   background-color: #4fc3f7;
   color: #0f172a;
   border: none;
@@ -69,6 +79,10 @@
   transition: background-color 0.2s ease;
 }
 
-.actions button:hover {
+.primaryButton:hover {
   background-color: #38bdf8;
+    opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
 }
+

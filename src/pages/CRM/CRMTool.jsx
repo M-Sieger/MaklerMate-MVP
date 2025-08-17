@@ -1,72 +1,117 @@
-// 📄 CRMTool.jsx – Apple-inspirierter CRM-Bereich mit Card-Layout
+// 📄 CRMTool.jsx — Card-Layout & Seitenstruktur
+// ✅ Alte Struktur wiederhergestellt: Card-Wrapper, Header mit Toolbar, LeadForm oben, LeadTable unten.
+// ✅ Fix: window.confirm statt confirm → verhindert ESLint "no-restricted-globals" Fehler.
 
-import React from 'react';
-
-import { toast } from 'react-hot-toast';
+import React, {
+  useMemo,
+  useState,
+} from 'react';
 
 import styles from '../../components/CRM/CRM.module.css';
-import CRMCard from '../../components/CRM/CRMCard';
-import CRMExportLeads from '../../components/CRM/CRMExportLeads';
+// 🧩 CRM-Komponenten
 import LeadForm from '../../components/CRM/LeadForm';
-import LeadList from '../../components/CRM/LeadList'; // ✅ Anzeige aller Leads
-import useLocalStorageLeads from '../../hooks/useLocalStorageLeads';
+import LeadTable from '../../components/CRM/LeadTable';
 
-export default function CRMTool() {
-  // 📦 Hook für alle Lead-Funktionen
-  const {
-    leads,
-    addLead,
-    deleteLead,
-    resetLeads,
-    updateLead,
-  } = useLocalStorageLeads();
+// 🧠 Status-Sortierung (VIP > Warm > Neu > Cold)
+const statusRank = { vip: 3, warm: 2, neu: 1, cold: 0 };
 
-  // ➕ Neuen Lead hinzufügen (mit Validierung)
-  const handleAddLead = (lead) => {
-    const { name, contact, type, status } = lead;
+export default function CRMTool({ leads = [], onAddLead, onDeleteLead, onDeleteAllLeads }) {
+  const [filter, setFilter] = useState('Alle');
+  const [search, setSearch] = useState('');
 
-    // 🛡️ Pflichtfeldprüfung
-    if (!name?.trim() || !contact?.trim() || !type || !status) {
-      toast.error("❌ Bitte alle Pflichtfelder ausfüllen!");
-      return;
-    }
+  // 🔍 Filter + Suche + Sortierung
+  const visibleLeads = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const f = filter.toLowerCase();
 
-    // 🕓 Timestamp hinzufügen (zur Sicherheit)
-    const leadWithTimestamp = {
-      ...lead,
-      createdAt: new Date().toISOString(),
+    const byFilter = (lead) => {
+      if (f === 'alle') return true;
+      if (!lead.status) return f === 'alle';
+      return lead.status.toLowerCase() === f;
     };
 
-    addLead(leadWithTimestamp);
-    toast.success("✅ Lead gespeichert!");
+    const bySearch = (lead) => {
+      if (!q) return true;
+      const hay = [
+        lead.name,
+        lead.contact,
+        lead.location,
+        lead.type,
+        lead.note,
+        lead.status,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
+    };
+
+    const byStatus = (a, b) =>
+      (statusRank[(b.status || '').toLowerCase()] ?? -1) -
+      (statusRank[(a.status || '').toLowerCase()] ?? -1);
+
+    return [...leads].filter(byFilter).filter(bySearch).sort(byStatus);
+  }, [leads, filter, search]);
+
+  // 🗑️ Alle Leads löschen
+  const handleDeleteAll = () => {
+    if (visibleLeads.length === 0) return;
+    // ✅ window.confirm statt confirm → ESLint-konform
+    if (window.confirm('Alle Leads löschen?')) {
+      onDeleteAllLeads && onDeleteAllLeads();
+    }
   };
 
-return (
-  <div className={styles.pageWrapper}>
-    <CRMCard>
-      {/* 🧠 Titel & Abschnittsüberschrift */}
-      <div className={styles.crmCardHeader}>
-        <h1 className={styles.crmCardTitle}>📇 MaklerMate – CRM-Leads</h1>
+  return (
+    <div className={styles.crmCard}>
+      {/* 🧭 Header */}
+      <div className={styles.crmHeader}>
+        <h2 className={styles.title}>CRM</h2>
+
+        <div className={styles.toolbar}>
+          {/* Filter links */}
+          <div className={styles.toolbarLeft}>
+            <label className={styles.filterLabel} htmlFor="crmFilter">Filter</label>
+            <select
+              id="crmFilter"
+              className={styles.filterSelect}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option>Alle</option>
+              <option>VIP</option>
+              <option>Warm</option>
+              <option>Neu</option>
+              <option>Cold</option>
+            </select>
+          </div>
+
+          {/* Suche + Button rechts */}
+          <div className={styles.toolbarRight}>
+            <input
+              className={styles.searchInput}
+              type="text"
+              placeholder="Suchen…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              className={styles.dangerButton}
+              type="button"
+              onClick={handleDeleteAll}
+              disabled={leads.length === 0}
+            >
+              Alle Leads löschen
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* 📝 Formular für neue Leads */}
-      <LeadForm onAddLead={handleAddLead} />
-
-      {/* 📋 Liste aller Leads mit Bearbeiten + Löschen */}
-      <LeadList
-        leads={leads}
-        onDelete={deleteLead}
-        onUpdateLead={updateLead}
-      />
-
-      {/* 📤 Exportfunktionen (CSV, PDF etc.) */}
-      <CRMExportLeads
-        leads={leads}
-        onReset={resetLeads}
-        onUpdateLead={updateLead}
-      />
-    </CRMCard>
-  </div>
-);
-
+      {/* 📋 Inhalt: LeadForm + LeadTable */}
+      <div className={styles.content}>
+        <LeadForm onAddLead={onAddLead} />
+        <LeadTable leads={visibleLeads} onDeleteLead={onDeleteLead} />
+      </div>
+    </div>
+  );
 }

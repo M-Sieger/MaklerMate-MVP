@@ -1,135 +1,73 @@
-// 📄 LeadRow.jsx – Tabellenzeile mit GPT-Funktion, IvyBadge & zentralem Modal
+// 📄 LeadRow.jsx — Einzelzeile für Lead-Daten (Name, Kontakt, Ort, Typ, Status, Notiz, Aktionen)
+// ✅ Alte Klassen aus LeadRow.module.css wieder genutzt (row, actionsCell, actionButton, deleteButton).
+// ✅ Integriert IvyBadge für Statusanzeige.
+// ✅ Unterstützt Status-Cycling (neu → warm → cold → vip → neu).
 
-import React, { useState } from 'react';
+import React from 'react';
 
-// 🧠 GPT-Hook (Proxy zu GPT-4o)
-import useAIHelper from '../../hooks/useAIHelper';
-// ️ Visuelle Badge-Komponente für Statusanzeige
+import { STATUS_ENUM } from '../../hooks/useLocalStorageLeads';
 import IvyBadge from './IvyBadge';
-// 🧾 Formular zur Lead-Bearbeitung
-import LeadForm from './LeadForm';
-// 🎨 Styles für Tabelle, Badges, Buttons etc.
 import styles from './LeadRow.module.css';
-// 🪟 Wiederverwendbares Modal für GPT & Formulare
-import Modal from './Modal';
 
-export default function LeadRow({ lead, onDelete, onUpdate }) {
-  // 🛠️ Lead bearbeiten – Modal sichtbar?
-  const [showDetailModal, setShowDetailModal] = useState(false);
+// 🔄 Hilfsfunktion: Nächsten Status im Zyklus ermitteln
+function getNextStatus(current) {
+  const idx = STATUS_ENUM.indexOf(current);
+  return STATUS_ENUM[(idx + 1) % STATUS_ENUM.length];
+}
 
-  // 🧠 GPT-Modal sichtbar?
-  const [showGptModal, setShowGptModal] = useState(false);
+/**
+ * 📌 LeadRow rendert eine einzelne Tabellenzeile mit allen Lead-Daten.
+ * - Verwendet CSS-Module-Klassen für altes Layout.
+ * - Nutzt IvyBadge für Statusanzeige.
+ * - Enthält Buttons für Status-Wechsel und Löschen.
+ */
+export default function LeadRow({ lead, onUpdateLead, onDelete }) {
+  if (!lead) return null;
+  const { id, name, contact, location, type, status, note, createdAt } = lead;
 
-  // 🧠 GPT-Antworttext
-  const [gptResult, setGptResult] = useState('');
-
-  // 🌀 GPT Hook mit Ladezustand + Call
-  const { isLoading, fetchGPT } = useAIHelper();
-
-  // 📅 Formatierter Zeitstempel für Anzeige
-  const formatDate = (isoString) => {
-    const date = new Date(isoString);
-    return date.toLocaleString('de-DE', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  // 🎨 Farbige Tabellenzeile je nach Status (VIP/Warm)
-  const rowHighlightClass =
-    lead.status?.toLowerCase() === 'vip' ? styles.rowVip :
-    lead.status?.toLowerCase() === 'warm' ? styles.rowWarm : '';
-
-  // ✅ Nach Lead-Formular: Änderungen übernehmen
-  const handleDetailUpdate = (id, updates) => {
-    // Beispiel: updates = { status: 'Warm', note: 'Neuer Kontakt' }
-    onUpdate(id, updates); // 🔧 updateLead erwartet vollständiges Objekt
-    setShowDetailModal(false);
-  };
-
-  // 🧠 GPT-Funktion triggern → Prompt senden → Antwort anzeigen
-  const handleGPT = async () => {
-    const prompt = `Erstelle ein kurzes Follow-Up für folgenden Immobilien-Lead:\n\nName: ${lead.name}\nNotiz: ${lead.note}`;
-    const response = await fetchGPT(prompt);
-    if (response) {
-      setGptResult(response);
-      setShowGptModal(true);
+  // 🔄 Status per Button durchwechseln
+  function handleCycle() {
+    if (typeof onUpdateLead === 'function') {
+      onUpdateLead(id, { status: getNextStatus(status) });
     }
-  };
+  }
+
+  // 🗑️ Lead löschen
+  function handleDelete() {
+    if (typeof onDelete === 'function') {
+      onDelete(id);
+    }
+  }
 
   return (
-    <>
-      {/* 📊 Tabellenzeile mit Lead-Daten */}
-      <tr className={`${styles.tableRow} ${rowHighlightClass}`}>
-        <td><strong>{lead.name}</strong></td>
-        <td>{lead.contact}</td>
-        <td>{lead.location || '–'}</td>
-        <td>{lead.type}</td>
-
-        {/* 📝 Notiz + kompakter Timestamp */}
-        <td>
-          {lead.note}
-          <div className={styles.timestamp}>
-            {formatDate(lead.createdAt || lead.timestamp)}
-          </div>
-        </td>
-
-        {/* 🏷️ Status-Badge (z. B. VIP, Warm) */}
-        <td>
-          <IvyBadge status={lead.status} />
-        </td>
-
-        {/* 🔘 Aktionen: GPT, Edit, Delete */}
-        <td className={styles.actionsCell}>
-          {/* 🧠 Follow-Up generieren */}
-          <button
-            className={styles.gptButton}
-            onClick={handleGPT}
-            title="Follow-Up generieren"
-            disabled={isLoading}
-          >
-            {isLoading ? '⏳' : '🧠'}
-          </button>
-
-          {/* ✏️ Lead bearbeiten */}
-          <button
-            className={styles.actionButton}
-            onClick={() => setShowDetailModal(true)}
-            title="Lead bearbeiten"
-          >
-            ✏️
-          </button>
-
-          {/* 🗑️ Lead löschen */}
-          <button
-            className={styles.deleteButton}
-            onClick={() => onDelete(lead.id)}
-            title="Lead löschen"
-          >
-            🗑️
-          </button>
-        </td>
-      </tr>
-
-      {/* 🧠 GPT-Vorschlag anzeigen */}
-      {showGptModal && (
-        <Modal title="🧠 GPT Vorschlag" onClose={() => setShowGptModal(false)}>
-          <p>{gptResult}</p>
-        </Modal>
-      )}
-
-      {/* 🛠️ Lead bearbeiten */}
-      {showDetailModal && (
-        <Modal title="🛠️ Lead bearbeiten" onClose={() => setShowDetailModal(false)}>
-          <LeadForm
-            lead={lead}
-            onUpdate={handleDetailUpdate}
-          />
-        </Modal>
-      )}
-    </>
+    <tr className={styles.row}>
+      <td><strong>{name || '—'}</strong></td>
+      <td>{contact || '—'}</td>
+      <td>{location || '—'}</td>
+      <td>{type || '—'}</td>
+      <td><IvyBadge status={(status || 'neu').toLowerCase()} /></td>
+      <td>{note || '—'}</td>
+      <td>{createdAt ? new Date(createdAt).toLocaleDateString() : '—'}</td>
+      <td className={styles.actionsCell}>
+        {/* 🔄 Status ändern */}
+        <button
+          type="button"
+          onClick={handleCycle}
+          className={styles.actionButton}
+          title="Status ändern"
+        >
+          ↻
+        </button>
+        {/* 🗑️ Löschen */}
+        <button
+          type="button"
+          onClick={handleDelete}
+          className={styles.deleteButton}
+          title="Lead löschen"
+        >
+          🗑
+        </button>
+      </td>
+    </tr>
   );
 }

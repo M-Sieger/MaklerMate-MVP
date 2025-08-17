@@ -1,38 +1,30 @@
-/* 📄 LeadRow.module.css – Styling für Tabellenzeilen, Status, Aktionen & Zeit */
+/* 📄 LeadRow.module.css – Styling für Tabellenzeilen, Status, Aktionen & Zeit (fix)
+   ✅ Aliasse hinzugefügt, damit altes JSX wieder greift: .row → .tableRow
+*/
 
+/* Ursprüngliche Zeilen-Styles */
 .tableRow {
   background-color: #1f1f2f;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease-in-out;
 }
+.tableRow:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
 
-.tableRow:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-}
+/* 🔁 Legacy-Alias für altes JSX */
+.row { composes: tableRow; }
 
-.rowVip {
-  background-color: #2b0d18 !important;
-}
+/* Highlights je nach Status */
+.rowVip  { background-color: #2b0d18 !important; }
+.rowWarm { background-color: #3a2b10 !important; }
 
-.rowWarm {
-  background-color: #3a2b10 !important;
-}
+/* Zeitstempel */
+.timestamp { font-size: 0.75rem; color: #94a3b8; margin-top: 0.3rem; }
 
-.timestamp {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin-top: 0.3rem;
-}
+/* Aktionen-Zelle */
+.actionsCell { display: flex; gap: 0.4rem; justify-content: center; align-items: center; }
 
-.actionsCell {
-  display: flex;
-  gap: 0.4rem;
-  justify-content: center;
-  align-items: center;
-}
-
+/* Buttons */
 .gptButton,
 .actionButton,
 .deleteButton {
@@ -45,17 +37,9 @@
   cursor: pointer;
   transition: background 0.2s ease;
 }
-
 .gptButton:hover,
 .actionButton:hover,
-.deleteButton:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
+.deleteButton:hover { background-color: rgba(255, 255, 255, 0.08); }
 
-.deleteButton {
-  color: #f87171;
-}
-
-.deleteButton:hover {
-  background-color: rgba(239, 68, 68, 0.2);
-}
+.deleteButton { color: #f87171; }
+.deleteButton:hover { background-color: rgba(239, 68, 68, 0.2); }
