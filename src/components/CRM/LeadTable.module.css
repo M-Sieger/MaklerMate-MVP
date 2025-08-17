@@ -1,6 +1,7 @@
-/* 📄 LeadTable.module.css – Klassen für Tabelle & Zellen (fix)
+/* 📄 LeadTable.module.css – Klassen für Tabelle & Zellen (fix + Polish + Loader-State)
    Erwartet vom JSX: tableWrapper, leadTable, tableRow, statusCell, createdAtCell,
-   actionsCell, emptyCell, rowDeleteButton
+   actionsCell, emptyCell, rowDeleteButton, emptyWrapper, emptyIcon, emptyText,
+   rowDeleteButtonLoading
 */
 
 /* Wrapper um die Tabelle (Scroll + Card-Look) */
@@ -20,7 +21,7 @@
   border-collapse: collapse;
 }
 
-.leadTable thead {
+.stickyHeader {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -51,7 +52,27 @@
 .actionsCell { text-align: right; white-space: nowrap; }
 
 /* Leerer Zustand */
-.emptyCell { text-align: center; padding: 1rem; color: #94a3b8; }
+.emptyCell {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: #94a3b8;
+}
+
+.emptyWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.emptyIcon {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.emptyText {
+  font-size: 0.95rem;
+}
 
 /* Zeilen-Löschen-Button */
 .rowDeleteButton {
@@ -65,3 +86,10 @@
   transition: background 0.2s ease;
 }
 .rowDeleteButton:hover { background-color: #c53030; }
+
+/* Loader-State für Delete-Button */
+.rowDeleteButtonLoading {
+  background-color: #9b2c2c;
+  opacity: 0.7;
+  cursor: wait;
+}

@@ -1,9 +1,8 @@
-// 📄 LeadRow.jsx — Einzelzeile für Lead-Daten (Name, Kontakt, Ort, Typ, Status, Notiz, Aktionen)
-// ✅ Alte Klassen aus LeadRow.module.css wieder genutzt (row, actionsCell, actionButton, deleteButton).
-// ✅ Integriert IvyBadge für Statusanzeige.
-// ✅ Unterstützt Status-Cycling (neu → warm → cold → vip → neu).
+// 📄 LeadRow.jsx — Einzelzeile für Lead-Daten (mit Loader-State)
+// ✅ Integriert Loader-UX über .loading-Klasse aus LeadRow.module.css
+// ✅ Status-Cycling + Delete-Button mit Ladeindikator
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import { STATUS_ENUM } from '../../hooks/useLocalStorageLeads';
 import IvyBadge from './IvyBadge';
@@ -17,30 +16,37 @@ function getNextStatus(current) {
 
 /**
  * 📌 LeadRow rendert eine einzelne Tabellenzeile mit allen Lead-Daten.
- * - Verwendet CSS-Module-Klassen für altes Layout.
  * - Nutzt IvyBadge für Statusanzeige.
  * - Enthält Buttons für Status-Wechsel und Löschen.
+ * - Verwendet Loader-State für asynchrone Aktionen.
  */
 export default function LeadRow({ lead, onUpdateLead, onDelete }) {
   if (!lead) return null;
   const { id, name, contact, location, type, status, note, createdAt } = lead;
 
+  // ⏳ Lokaler Loader-State für Button-Feedback
+  const [loadingAction, setLoadingAction] = useState(null); // "cycle" | "delete" | null
+
   // 🔄 Status per Button durchwechseln
-  function handleCycle() {
+  async function handleCycle() {
     if (typeof onUpdateLead === 'function') {
-      onUpdateLead(id, { status: getNextStatus(status) });
+      setLoadingAction('cycle');
+      await onUpdateLead(id, { status: getNextStatus(status) });
+      setLoadingAction(null);
     }
   }
 
   // 🗑️ Lead löschen
-  function handleDelete() {
+  async function handleDelete() {
     if (typeof onDelete === 'function') {
-      onDelete(id);
+      setLoadingAction('delete');
+      await onDelete(id);
+      setLoadingAction(null);
     }
   }
 
   return (
-    <tr className={styles.row}>
+    <tr className={styles.tableRow}>
       <td><strong>{name || '—'}</strong></td>
       <td>{contact || '—'}</td>
       <td>{location || '—'}</td>
@@ -53,7 +59,7 @@ export default function LeadRow({ lead, onUpdateLead, onDelete }) {
         <button
           type="button"
           onClick={handleCycle}
-          className={styles.actionButton}
+          className={`${styles.actionButton} ${loadingAction === 'cycle' ? styles.loading : ''}`}
           title="Status ändern"
         >
           ↻
@@ -62,7 +68,7 @@ export default function LeadRow({ lead, onUpdateLead, onDelete }) {
         <button
           type="button"
           onClick={handleDelete}
-          className={styles.deleteButton}
+          className={`${styles.deleteButton} ${loadingAction === 'delete' ? styles.loading : ''}`}
           title="Lead löschen"
         >
           🗑

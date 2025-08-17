@@ -1,5 +1,6 @@
-/* 📄 LeadRow.module.css – Styling für Tabellenzeilen, Status, Aktionen & Zeit (fix)
+/* 📄 LeadRow.module.css – Styling für Tabellenzeilen, Status, Aktionen & Zeit (fix + Loader)
    ✅ Aliasse hinzugefügt, damit altes JSX wieder greift: .row → .tableRow
+   ✅ Enthält Styles für Buttons, Statusfarben, Zeitstempel und Loader-State.
 */
 
 /* Ursprüngliche Zeilen-Styles */
@@ -9,7 +10,10 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease-in-out;
 }
-.tableRow:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
+.tableRow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
 
 /* 🔁 Legacy-Alias für altes JSX */
 .row { composes: tableRow; }
@@ -19,12 +23,21 @@
 .rowWarm { background-color: #3a2b10 !important; }
 
 /* Zeitstempel */
-.timestamp { font-size: 0.75rem; color: #94a3b8; margin-top: 0.3rem; }
+.timestamp {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.3rem;
+}
 
 /* Aktionen-Zelle */
-.actionsCell { display: flex; gap: 0.4rem; justify-content: center; align-items: center; }
+.actionsCell {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+}
 
-/* Buttons */
+/* Buttons – universell für Aktionen (GPT, Status, Delete) */
 .gptButton,
 .actionButton,
 .deleteButton {
@@ -35,11 +48,40 @@
   padding: 0.4rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, opacity 0.2s ease;
 }
+
 .gptButton:hover,
 .actionButton:hover,
-.deleteButton:hover { background-color: rgba(255, 255, 255, 0.08); }
+.deleteButton:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
 
+/* Loader-State für Buttons */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+  position: relative;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Spezifisches Delete-Styling */
 .deleteButton { color: #f87171; }
 .deleteButton:hover { background-color: rgba(239, 68, 68, 0.2); }

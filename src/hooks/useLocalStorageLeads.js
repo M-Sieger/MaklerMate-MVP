@@ -1,107 +1,144 @@
-// 📄 useLocalStorageLeads.js — Hook zur Lead-Persistenz in localStorage
-// ✅ Alte Struktur beibehalten, Status-Normalisierung und Migration gesichert.
-// ✅ CRUD-Methoden (add, update, delete, reset) vorhanden.
-
+// 📄 hooks/useLocalStorageLeads.js — ESLint-safe Persist mit Debounce
 import {
+  useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
-// 📌 Statuswerte (enum) – immer kleingeschrieben
 export const STATUS_ENUM = ['neu', 'warm', 'cold', 'vip'];
 
-// 🔧 Status normalisieren (Fallback = "neu")
 export function normalizeStatus(rawStatus) {
   if (typeof rawStatus !== 'string') return 'neu';
-  const value = rawStatus.trim().toLowerCase();
-  return STATUS_ENUM.includes(value) ? value : 'neu';
+  const v = rawStatus.trim().toLowerCase();
+  const mapped = v === 'kalt' ? 'cold' : v;
+  return STATUS_ENUM.includes(mapped) ? mapped : 'neu';
 }
 
-// 🆕 Lead-Objekt im Schema v2 erstellen
-function createLead(partialLead) {
-  const now = new Date().toISOString();
+function toISODate(input) {
+  if (!input) return new Date().toISOString();
+  if (typeof input === 'number' || /^(\d+)$/.test(String(input))) {
+    const d = new Date(Number(input));
+    return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+  }
+  const d = new Date(input);
+  return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+}
+
+function createLead(partial) {
+  const nowISO = new Date().toISOString();
+  const createdISO = toISODate(partial.createdAt || nowISO);
   return {
-    id: partialLead.id || `${Date.now()}-${Math.floor(Math.random() * 100000)}`,
-    name: partialLead.name || '',
-    contact: partialLead.contact || '',
-    location: partialLead.location || '',
-    type: partialLead.type || '',
-    note: partialLead.note || '',
-    status: normalizeStatus(partialLead.status),
-    createdAt: partialLead.createdAt || now,
-    updatedAt: now,
+    id: partial.id || `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    name: partial.name || '',
+    contact: partial.contact || '',
+    location: partial.location || '',
+    type: partial.type || '',
+    note: partial.note || '',
+    status: normalizeStatus(partial.status),
+    createdAt: createdISO,
+    updatedAt: nowISO,
     _v: 2,
   };
 }
 
-// ♻️ Migration von alten Records auf Schema v2
 function migrateLead(raw) {
+  if (!raw || typeof raw !== 'object') return createLead({});
+  if (raw._v === 2) {
+    return {
+      ...raw,
+      status: normalizeStatus(raw.status),
+      createdAt: toISODate(raw.createdAt),
+      updatedAt: toISODate(raw.updatedAt || raw.createdAt || Date.now()),
+      _v: 2,
+    };
+  }
   return createLead({
     ...raw,
-    id: raw.id,
-    createdAt: raw.createdAt,
+    status: normalizeStatus(raw.status),
+    createdAt: toISODate(raw.createdAt),
   });
 }
 
-// 🪝 Haupt-Hook: Leads aus localStorage mit CRUD-API
 export default function useLocalStorageLeads(storageKey = 'mm_crm_leads_v2') {
   const [leads, setLeads] = useState([]);
+  const [isPersisting, setIsPersisting] = useState(false);
 
-  // 📥 Laden beim Mount (inkl. Migration)
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          const migrated = parsed.map((l) => migrateLead(l));
-          setLeads(migrated);
-        }
+        if (Array.isArray(parsed)) setLeads(parsed.map(migrateLead));
       }
-    } catch (err) {
-      console.warn('[useLocalStorageLeads] Fehler beim Laden', err);
+    } catch (e) {
+      console.warn('[useLocalStorageLeads] load error', e);
     }
   }, [storageKey]);
 
-  // 💾 Persistenz bei Änderungen
   useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(leads));
-    } catch (err) {
-      console.warn('[useLocalStorageLeads] Fehler beim Speichern', err);
-    }
-  }, [leads, storageKey]);
+    const onStorage = (e) => {
+      if (e.key === storageKey && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) setLeads(parsed.map(migrateLead));
+        } catch (e2) {
+          console.warn('[useLocalStorageLeads] storage event error', e2);
+        }
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [storageKey]);
 
-  // ➕ Lead hinzufügen
-  function addLead(leadPartial) {
-    const lead = createLead(leadPartial);
+  // ✅ Debounce ohne verbotene Hook-Aufrufe:
+  const timerRef = useRef(null);
+  const persist = useCallback((next) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setIsPersisting(true);
+    timerRef.current = setTimeout(() => {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(next));
+      } catch (e) {
+        console.warn('[useLocalStorageLeads] save error', e);
+      } finally {
+        setIsPersisting(false);
+      }
+    }, 150);
+  }, [storageKey]);
+
+  useEffect(() => {
+    persist(leads);
+    return () => timerRef.current && clearTimeout(timerRef.current);
+  }, [leads, persist]);
+
+  function addLead(partial) {
+    const lead = createLead(partial);
     setLeads((prev) => [...prev, lead]);
   }
 
-  // ✏️ Lead aktualisieren
   function updateLead(id, patch) {
     setLeads((prev) =>
-      prev.map((lead) => {
-        if (lead.id !== id) return lead;
-        return {
-          ...lead,
-          ...patch,
-          status: patch.status ? normalizeStatus(patch.status) : lead.status,
-          updatedAt: new Date().toISOString(),
-        };
-      })
+      prev.map((l) =>
+        l.id === id
+          ? {
+              ...l,
+              ...patch,
+              status: 'status' in patch ? normalizeStatus(patch.status) : l.status,
+              updatedAt: new Date().toISOString(),
+            }
+          : l
+      )
     );
   }
 
-  // 🗑️ Lead löschen
   function deleteLead(id) {
-    setLeads((prev) => prev.filter((lead) => lead.id !== id));
+    setLeads((prev) => prev.filter((l) => l.id !== id));
   }
 
-  // 🔄 Alle Leads zurücksetzen
   function resetLeads() {
     setLeads([]);
   }
 
-  return { leads, addLead, updateLead, deleteLead, resetLeads };
+  return { leads, addLead, updateLead, deleteLead, resetLeads, isPersisting };
 }

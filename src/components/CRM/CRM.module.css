@@ -1,5 +1,4 @@
 /* 🌐 Allgemeine Struktur & Layout-Komponenten */
-
 .crmSection {
   padding: 2rem;
   border-radius: 16px;
@@ -21,12 +20,10 @@
   scrollbar-color: #4fc3f7 transparent;
   border: 1px solid rgba(255, 255, 255, 0.05); /* 🧠 dezente Umrahmung */
 }
-
 .tableWrapper::-webkit-scrollbar { width: 8px; }
 .tableWrapper::-webkit-scrollbar-thumb { background-color: #4fc3f7; border-radius: 8px; }
 
 /* 🧾 Formularfelder */
-
 .crmForm {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 16px;
@@ -38,7 +35,6 @@
   flex-direction: column;
   gap: 1.2rem;
 }
-
 .crmLabel { font-weight: 500; font-size: 0.95rem; color: #e2e8f0; }
 
 .crmInput,
@@ -54,24 +50,16 @@
   transition: all 0.3s ease;
   backdrop-filter: blur(6px);
 }
-
 .crmInput:focus,
-.crmTextarea:focus,
-.crmInput:focus-visible,
-.crmTextarea:focus-visible {
+.crmTextarea:focus {
   border-color: #4fc3f7;
   background: rgba(255, 255, 255, 0.07);
   outline: none;
   box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.25);
 }
-
 .crmTextarea { resize: none; }
 
-.crmInput::-webkit-focus-ring-color,
-.crmTextarea::-webkit-focus-ring-color { outline: none !important; }
-
 /* 🧩 Select-Felder */
-
 .crmSelect,
 .statusSelect {
   padding: 0.75rem;
@@ -85,7 +73,6 @@
 }
 
 /* 💾 Formular-Button */
-
 .crmButton {
   background-color: #3b82f6;
   color: #f8fafc;
@@ -100,62 +87,66 @@
   align-items: center;
   justify-content: center;
 }
-
 .crmButton:hover { background-color: #2563eb; box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); transform: translateY(-2px); }
 
 /* 📋 Tabelle */
-
-/* 🛠️ Fix: Tabellenkopf optisch anheben + nicht abschneiden */
+/* 🛠️ Fix: Tabellenkopf optisch abheben */
 .leadTable thead {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05); /* leicht heller */
   position: sticky;
   top: 0;
   z-index: 2;
-  border-radius: 12px 12px 0 0; /* 🔼 abgerundete Ecken oben */
+  border-radius: 12px 12px 0 0;
   backdrop-filter: blur(4px);
 }
-
 .leadTable th, .leadTable td {
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
+.tableRow:hover { background-color: rgba(255, 255, 255, 0.04); }
 
-.tableRow:hover { background-color: rgba(255, 255, 255, 0.03); }
+/* 🟢 Status-Badges (Polish für LinkedIn-Screenshot) */
+.statusBadge {
+  padding: 0.4rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  min-width: 70px; /* 👉 fixierte Breite für saubere Spalten */
+  text-align: center;
+  transition: all 0.25s ease;
+}
+.statusBadge:hover { transform: translateY(-1px) scale(1.05); }
 
-/* 🟢 Status-Tag (Badge) */
+.status-neu  { background-color: rgba(34, 197, 94, 0.15); color: #4ade80; box-shadow: 0 0 6px rgba(34,197,94,0.25); }
+.status-warm { background-color: rgba(251, 191, 36, 0.15); color: #facc15; box-shadow: 0 0 6px rgba(251,191,36,0.25); }
+.status-cold { background-color: rgba(100, 116, 139, 0.15); color: #cbd5e1; box-shadow: 0 0 6px rgba(148,163,184,0.25); }
+.status-vip  { background-color: rgba(250, 204, 21, 0.15); color: gold; box-shadow: 0 0 6px rgba(250,204,21,0.35); }
 
-.statusBadge { padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; backdrop-filter: blur(4px); text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; min-width: 60px; text-align: center; }
-.status-neu { background-color: rgba(34, 197, 94, 0.15); color: #4ade80; }
-.status-warm { background-color: rgba(251, 191, 36, 0.15); color: #facc15; }
-.status-vip { background-color: rgba(250, 204, 21, 0.15); color: gold; }
-.status-kalt { background-color: rgba(100, 116, 139, 0.15); color: #cbd5e1; }
+/* 🌟 Zeilen-Highlight für VIP/Warm – dezent */
+.rowVip  { background: linear-gradient(to right, rgba(250, 204, 21, 0.06), rgba(250, 204, 21, 0.02)); box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.2); }
+.rowWarm { background: linear-gradient(to right, rgba(251, 191, 36, 0.06), rgba(251, 191, 36, 0.02)); box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.15); }
 
-/* 🌟 Zeilen-Highlight für besondere Leads */
-
-.rowVip  { background: linear-gradient(to right, rgba(250, 204, 21, 0.08), rgba(250, 204, 21, 0.03)); box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.2); }
-.rowWarm { background: linear-gradient(to right, rgba(251, 191, 36, 0.08), rgba(251, 191, 36, 0.02)); box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.15); }
-
-/* ✅ Timestamp kompakt unter Notiz */
+/* ✅ Timestamp kompakt */
 .timestamp { font-size: 0.75rem; color: #94a3b8; margin-top: 0.3rem; }
 
 /* ✏️ Aktionen */
-
 .actionButton { background: transparent; border: none; cursor: pointer; font-size: 1rem; margin-right: 0.5rem; color: #facc15; transition: transform 0.2s ease; }
 .actionButton:hover { transform: scale(1.1); }
-
 .deleteButton { background-color: #e53e3e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
 .deleteButton:hover { background-color: #c53030; }
 
 /* 📤 Exportbox */
-
 .crm-export-box { background-color: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 16px; backdrop-filter: blur(10px); margin-top: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.08); }
 .crm-export-box h4 { color: #63b3ed; margin-bottom: 0.75rem; font-weight: 500; }
 .crm-export-box button { background-color: #4fd1c5; color: #1a202c; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
 .crm-export-box button:hover { background-color: #38b2ac; }
 
 /* 🧱 Modal */
-
 .modalOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .modalContent { background: rgba(255, 255, 255, 0.04); padding: 2rem; border-radius: 16px; width: 100%; max-width: 500px; box-shadow: 0 0 12px rgba(0,0,0,0.4); }
 .modalActions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
@@ -164,7 +155,7 @@
 .modalCancel { background-color: #334155; color: #e2e8f0; padding: 0.6rem 1.2rem; border-radius: 10px; border: none; font-weight: 500; cursor: pointer; transition: background 0.2s ease; }
 .modalCancel:hover { background-color: #475569; }
 
-/* 🔍 Dropdown-Filter (alt) */
+/* 🔍 Dropdown-Filter */
 .filterWrapper { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
 .dropdown {
   padding: 0.5rem 1rem;
@@ -179,7 +170,6 @@
   transition: all 0.3s ease;
 }
 .dropdown:hover { border-color: #4fc3f7; }
-.dropdown:focus { outline: none; border-color: #38bdf8; background-color: rgba(255, 255, 255, 0.08); }
 
 /* 📦 CRMCard – Apple-Style Container */
 .crmCard {
@@ -192,80 +182,21 @@
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
-
-/* 🧠 Titel (optional) */
-.crmCardHeader { margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem; }
 .crmCardTitle { font-size: 1.75rem; font-weight: 600; color: #f1f5f9; }
 
-/* ✅ GPT-Button (🧠) – modern, dezent */
+/* ✅ GPT-Button */
 .gptButton { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem; margin-right: 0.4rem; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s ease; backdrop-filter: blur(6px); color: #f8fafc; }
 .gptButton:hover { background: rgba(79, 195, 247, 0.15); border-color: #4fc3f7; }
 
-/* ✅ GPT-Ergebnis-Zeile unterhalb eines Leads */
 .gptRow { background-color: rgba(255, 255, 255, 0.02); }
-.gptResultBox { padding: 0.75rem 1rem; margin: 0.5rem 0; border-left: 4px solid #4fc3f7; background: rgba(255, 255, 255, 0.03); font-style: italic; border-radius: 8px; color: #cbd5e1; backdrop-filter: blur(4px); }
+.gptResultBox { padding: 0.75rem 1rem; margin: 0.5rem 0; border-left: 4px solid #4fc3f7; background: rgba(255, 255, 255, 0.03); font-style: italic; border-radius: 8px; color: #cbd5e1; }
 
-/* ✅ Aktionen-Zelle (🧠 ✏️ 🗑️) */
+/* ✅ Aktionen-Zelle */
 .actionsCell { display: flex; align-items: center; gap: 0.4rem; }
 
 .pageWrapper { padding: 4rem 1rem; }
 
 /* =============================== */
 /* 🔁 LEGACY-CLASS ALIASES (für altes JSX) */
-/* Diese Klassen werden im neuen CSS auf existierende Styles gemappt, 
-   damit die alte JSX-Struktur ohne CSS-Anpassungen wieder greift. */
-
-/* Header-Zeile (Titel links, Toolbar rechts) */
 .crmHeader { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
-
-/* Überschrift im Header */
 .title { font-size: 1.75rem; font-weight: 600; color: #f1f5f9; margin: 0; }
-
-/* Toolbar-Container und Seiten */
-.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.toolbarLeft { display: flex; align-items: center; gap: 0.5rem; }
-.toolbarRight { display: flex; align-items: center; gap: 0.5rem; }
-
-/* Label & Controls in der Toolbar */
-.filterLabel { font-weight: 500; font-size: 0.95rem; color: #e2e8f0; }
-.filterSelect {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #f1f5f9;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(6px);
-  font-size: 0.95rem;
-  font-family: 'Inter', sans-serif;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.filterSelect:hover { border-color: #4fc3f7; }
-.filterSelect:focus { outline: none; border-color: #38bdf8; background-color: rgba(255, 255, 255, 0.08); }
-
-.searchInput {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f3f4f6;
-  padding: 0.6rem 0.9rem;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  width: clamp(220px, 30vw, 320px);
-  transition: all 0.25s ease;
-}
-.searchInput:focus { border-color: #4fc3f7; background: rgba(255, 255, 255, 0.07); outline: none; box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.25); }
-
-.dangerButton {
-  background-color: #e53e3e;
-  color: #fff;
-  border: none;
-  padding: 0.6rem 1.1rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-.dangerButton:hover { background-color: #c53030; transform: translateY(-1px); }
-
-/* Inhaltsbereich unterhalb des Headers */
-.content { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }

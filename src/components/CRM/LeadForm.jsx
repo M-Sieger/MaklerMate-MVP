@@ -1,6 +1,7 @@
-// 📄 LeadForm.jsx — Formular für Leads (fix: Submit fühlt sich „tot“ an)
+// 📄 LeadForm.jsx — Formular für Leads mit Loading-State & UX-Polish
+// ✅ Button zeigt Spinner beim Speichern (0.5s künstliche Verzögerung für Feedback)
 // ✅ Entfernt HTML5 required-Bubble, stattdessen Button disabled bis Name gesetzt ist.
-// ✅ Keine Style-Änderung nötig; optionaler :disabled-Style in LeadForm.module.css (separate Datei).
+// ✅ Guard + Reset nach Submit.
 
 import React, { useState } from 'react';
 
@@ -17,16 +18,16 @@ const initialLead = {
 
 export default function LeadForm({ onAddLead }) {
   const [lead, setLead] = useState(initialLead);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLead((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔒 Minimalvalidierung in JS (kein HTML5 required-Popup)
     const cleaned = {
       ...lead,
       name: lead.name.trim(),
@@ -37,7 +38,9 @@ export default function LeadForm({ onAddLead }) {
       status: (lead.status || 'neu').toLowerCase(),
     };
 
-    if (!cleaned.name) return; // Button ist bis dahin disabled; return ist nur ein zusätzlicher Guard
+    if (!cleaned.name) return;
+
+    setIsLoading(true);
 
     const now = Date.now();
     const payload = {
@@ -48,8 +51,12 @@ export default function LeadForm({ onAddLead }) {
       version: 1,
     };
 
+    // kleine künstliche Verzögerung für UX-Feedback
+    await new Promise((res) => setTimeout(res, 500));
+
     onAddLead && onAddLead(payload);
     setLead(initialLead);
+    setIsLoading(false);
   };
 
   return (
@@ -127,10 +134,10 @@ export default function LeadForm({ onAddLead }) {
           <button
             type="submit"
             className={styles.primaryButton}
-            disabled={!lead.name.trim()}
+            disabled={!lead.name.trim() || isLoading}
             title={!lead.name.trim() ? 'Bitte mindestens den Namen eintragen' : 'Lead speichern'}
           >
-            Lead speichern
+            {isLoading ? <span className={styles.spinner}></span> : 'Lead speichern'}
           </button>
         </div>
       </div>

@@ -1,117 +1,91 @@
-// 📄 CRMTool.jsx — Card-Layout & Seitenstruktur
-// ✅ Alte Struktur wiederhergestellt: Card-Wrapper, Header mit Toolbar, LeadForm oben, LeadTable unten.
-// ✅ Fix: window.confirm statt confirm → verhindert ESLint "no-restricted-globals" Fehler.
+// 📄 pages/CRM/CRMTool.jsx — Verdrahtung LeadForm ↔ useLocalStorageLeads ↔ LeadTable
+// ✅ Fix: Nach "Lead speichern" erscheint der Eintrag sofort in der Tabelle
+// ✅ Ursache war fehlendes onAddLead-Prop — jetzt korrekt mit Hook verdrahtet
+// ✅ Delete/Update weitergereicht; optionales isPersisting-Flag verfügbar
 
 import React, {
   useMemo,
   useState,
 } from 'react';
 
-import styles from '../../components/CRM/CRM.module.css';
-// 🧩 CRM-Komponenten
+import CRMCard from '../../components/CRM/CRMCard';
 import LeadForm from '../../components/CRM/LeadForm';
 import LeadTable from '../../components/CRM/LeadTable';
+import useLocalStorageLeads from '../../hooks/useLocalStorageLeads';
 
-// 🧠 Status-Sortierung (VIP > Warm > Neu > Cold)
-const statusRank = { vip: 3, warm: 2, neu: 1, cold: 0 };
+export default function CRMTool() {
+  // 🔗 Single source of truth für Leads
+  const { leads, addLead, updateLead, deleteLead, resetLeads, isPersisting } =
+    useLocalStorageLeads('mm_crm_leads_v2');
 
-export default function CRMTool({ leads = [], onAddLead, onDeleteLead, onDeleteAllLeads }) {
-  const [filter, setFilter] = useState('Alle');
-  const [search, setSearch] = useState('');
+  // 🔎 Client-Filter/Suche (sehr simpel für Demo)
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState('alle'); // alle|neu|warm|cold|vip
 
-  // 🔍 Filter + Suche + Sortierung
-  const visibleLeads = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    const f = filter.toLowerCase();
-
-    const byFilter = (lead) => {
-      if (f === 'alle') return true;
-      if (!lead.status) return f === 'alle';
-      return lead.status.toLowerCase() === f;
-    };
-
-    const bySearch = (lead) => {
+  const filteredLeads = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return leads.filter((l) => {
+      const statusOk = filter === 'alle' ? true : (l.status || '').toLowerCase() === filter;
+      if (!statusOk) return false;
       if (!q) return true;
-      const hay = [
-        lead.name,
-        lead.contact,
-        lead.location,
-        lead.type,
-        lead.note,
-        lead.status,
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
+      const hay = `${l.name} ${l.contact} ${l.location} ${l.type} ${l.note}`.toLowerCase();
       return hay.includes(q);
-    };
-
-    const byStatus = (a, b) =>
-      (statusRank[(b.status || '').toLowerCase()] ?? -1) -
-      (statusRank[(a.status || '').toLowerCase()] ?? -1);
-
-    return [...leads].filter(byFilter).filter(bySearch).sort(byStatus);
-  }, [leads, filter, search]);
-
-  // 🗑️ Alle Leads löschen
-  const handleDeleteAll = () => {
-    if (visibleLeads.length === 0) return;
-    // ✅ window.confirm statt confirm → ESLint-konform
-    if (window.confirm('Alle Leads löschen?')) {
-      onDeleteAllLeads && onDeleteAllLeads();
-    }
-  };
+    });
+  }, [leads, query, filter]);
 
   return (
-    <div className={styles.crmCard}>
-      {/* 🧭 Header */}
-      <div className={styles.crmHeader}>
-        <h2 className={styles.title}>CRM</h2>
-
-        <div className={styles.toolbar}>
-          {/* Filter links */}
-          <div className={styles.toolbarLeft}>
-            <label className={styles.filterLabel} htmlFor="crmFilter">Filter</label>
+    <div className="page-wrapper">
+      <CRMCard
+        title="CRM"
+        toolbarLeft={
+          <>
+            <label className="visually-hidden" htmlFor="crm-filter">Filter</label>
             <select
-              id="crmFilter"
-              className={styles.filterSelect}
+              id="crm-filter"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
+              className="filterSelect"
             >
-              <option>Alle</option>
-              <option>VIP</option>
-              <option>Warm</option>
-              <option>Neu</option>
-              <option>Cold</option>
+              <option value="alle">Alle</option>
+              <option value="vip">VIP</option>
+              <option value="warm">Warm</option>
+              <option value="neu">Neu</option>
+              <option value="cold">Cold</option>
             </select>
-          </div>
-
-          {/* Suche + Button rechts */}
-          <div className={styles.toolbarRight}>
+          </>
+        }
+        toolbarRight={
+          <>
             <input
-              className={styles.searchInput}
-              type="text"
+              className="searchInput"
               placeholder="Suchen…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
-            <button
-              className={styles.dangerButton}
-              type="button"
-              onClick={handleDeleteAll}
-              disabled={leads.length === 0}
-            >
+            <button className="dangerButton" onClick={resetLeads} title="Alle Leads löschen">
               Alle Leads löschen
             </button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+        footer={
+          isPersisting ? (
+            <div style={{opacity:0.8}}>Speichern…</div>
+          ) : (
+            <div style={{opacity:0.6}}>Gespeichert</div>
+          )
+        }
+      >
+        {/* 🔌 WICHTIG: addLead als onAddLead an LeadForm übergeben */}
+        <LeadForm onAddLead={addLead} />
 
-      {/* 📋 Inhalt: LeadForm + LeadTable */}
-      <div className={styles.content}>
-        <LeadForm onAddLead={onAddLead} />
-        <LeadTable leads={visibleLeads} onDeleteLead={onDeleteLead} />
-      </div>
+        {/* Tabelle erhält die gefilterten Leads + Handlers */}
+        <LeadTable
+          leads={filteredLeads}
+          onDeleteLead={deleteLead}
+          // optional: onUpdateLead fürs Status-Cycling über LeadRow
+          onUpdateLead={updateLead}
+        />
+      </CRMCard>
     </div>
   );
 }
