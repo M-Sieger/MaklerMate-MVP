@@ -1,20 +1,46 @@
-// index.js – Einstiegspunkt der App
-import './styles/button.css';
-import './index.css'; // globales Styling
-import './fonts.css';              // ✅ Schrift aktivieren
-import './styles/theme.css';       // ✅ Farbvariablen global
+// 📄 src/index.js
+// Zweck: App-Entry. Bindet den globalen AuthProvider ein und richtet die Routen ein.
+// Hinweis: Wir halten die Routen minimal, damit dein bestehendes <App/> nicht zerschossen wird.
+
+import './index.css';
 
 import React from 'react';
 
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+} from 'react-router-dom';
 
-import App from './App'; // lädt alle Routen
+import App from './App';                    // deine Haupt-App-Shell
+import { AuthProvider } from './context/AuthContext';
+import Login from './pages/Login';          // die Login-Seite
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App /> {/* App enthält Routing-Logik */}
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* 🏠 App: enthält deine bestehenden Seiten/Navigation */}
+          <Route path="/" element={<App />} />
+
+          {/* 🔐 Login separat erreichbar */}
+          <Route path="/login" element={<Login />} />
+
+          {/* ✅ Beispiel: falls du eine komplette Seite schützen willst
+              → Child-Routen unter ProtectedRoute legen.
+              Aktuell auskommentiert, damit nichts bricht.
+          */}
+          {/*
+          <Route element={<ProtectedRoute />}>
+            <Route path="/expose" element={<YourExposePageComponent />} />
+          </Route>
+          */}
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );
