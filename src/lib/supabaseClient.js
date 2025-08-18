@@ -1,12 +1,16 @@
-// 📄 src/lib/supabaseClient.js
-// Zweck: Zentrale Supabase-Instanz für das Frontend (Vite).
-// Hinweis: VITE_ Prefix ist Pflicht, sonst liest Vite die Variablen nicht ein.
-
+// 📄 src/lib/supabaseClient.js (CRA-Variante mit Checks)
 import { createClient } from '@supabase/supabase-js';
 
-// 🔐 Diese Werte kommen aus Vercel (Project → Settings → Environment Variables)
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const url = (process.env.REACT_APP_SUPABASE_URL || '').trim();
+const key = (process.env.REACT_APP_SUPABASE_ANON_KEY || '').trim();
 
-// 🧠 Einmalig erzeugen und in der App wiederverwenden
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+function isValidUrl(v) { try { new URL(v); return true; } catch { return false; } }
+
+if (!isValidUrl(url) || !key) {
+  console.error('[Supabase] ENV fehlen/ungültig. Setze im Projekt-Root (.env):\n' +
+    'REACT_APP_SUPABASE_URL=https://<projekt>.supabase.co\n' +
+    'REACT_APP_SUPABASE_ANON_KEY=<anon key>');
+  throw new Error('Supabase env missing/invalid');
+}
+
+export const supabase = createClient(url, key);
