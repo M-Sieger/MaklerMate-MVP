@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+# 🏡 MaklerMate – KI-gestützter Immobilien-Exposé-Generator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+MaklerMate ist eine React-basierte Web-App, die Immobilienmaklern in wenigen Minuten ein professionelles, druckfertiges Exposé erstellt – automatisch, stilvoll und als PDF.  
 
-## Available Scripts
+👉 **Live-Demo:** [makler-mate.vercel.app](https://makler-mate.vercel.app/)  
+🔑 **Zugangsdaten** für die Exposé-Erstellung können auf Anfrage bereitgestellt werden.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Features (MVP)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 📑 **Exposé-Generator** mit GPT-Integration (Stilwahl: sachlich, emotional, Luxus)  
+- 🖼️ **Bild-Upload** mit Captions  
+- 📦 **Export** als druckfertiges PDF & CSV  
+- 💾 **LocalStorage** für gespeicherte Exposés  
+- 👥 **CRM-Light**: einfache Lead-Verwaltung mit Status (VIP, Warm, Neu)  
+- 🎨 **Modernes UI** mit CSS Modules & Glassmorphismus  
+- 🔐 **Login**-Bereich: Benutzername wird gespeichert (localStorage)  
+- 🚧 **Protected Routes** für Exposé-Erstellung (nur mit Zugangsdaten)  
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🛠️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend:** React 19 (Hooks, `useState`) + Vite  
+- **Styling:** CSS Modules & klassische CSS-Dateien  
+- **PDF-Export:** jsPDF (PDF-fähig, inkl. Logo & Captions)  
+- **Persistenz:** LocalStorage (MVP)  
+- **Auth (geplant):** Supabase  
+- **Deployment:** Vercel → [makler-mate.vercel.app](https://makler-mate.vercel.app/)  
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📥 Installation (lokal)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+# Repo klonen
+git clone https://github.com/USERNAME/MaklerMate-MVP.git
+cd MaklerMate-MVP
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Abhängigkeiten installieren
+pnpm install   # oder npm install
 
-### `npm run eject`
+# Dev-Server starten
+pnpm run dev
+App läuft dann unter: http://localhost:5173
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+📄 Environment Variablen
+Die App benötigt .env-Dateien (nicht im Repo enthalten).
+Beispiel (.env.example):
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+env
+Kopieren
+Bearbeiten
+# Frontend
+REACT_APP_SUPABASE_URL=your_supabase_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Server / Proxy
+OPENAI_API_KEY=your_openai_key
+PORT=5001
+⚠️ Hinweis: Echte Keys dürfen nicht ins Repo committed werden.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+🔮 Roadmap
+ Supabase Auth (E-Mail-Login, später Social Logins)
 
-## Learn More
+ Stripe Integration (Subscription-Modell)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+ Erweiterung CRM (Foto-Upload, Notizen, GPT-gestützte Lead-Hilfe)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+ API-Backend (Supabase/Postgres) für persistente Speicherung
 
-### Code Splitting
+ Internationalisierung (EN/DE, später KE/UK)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+🤝 Contribution
+Pull Requests willkommen!
+Bitte folgende Guidelines beachten:
 
-### Analyzing the Bundle Size
+Branch-Namen: feature/*, bugfix/*
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Code-Stil: funktionale Komponenten, Hooks, CSS Modules
 
-### Making a Progressive Web App
+Commit Messages: klar und beschreibend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+📄 License
+MIT License – siehe LICENSE.
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+📝 Hinweis
+MaklerMate ist aktuell ein MVP – Änderungen am Code & API-Design sind jederzeit möglich.
+Für die Exposé-Erstellung werden Zugangsdaten benötigt, die auf Anfrage bereitgestellt werden.
