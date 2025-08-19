@@ -1,9 +1,6 @@
-// 📄 src/index.js
-// Zweck: App-Entry. Bindet den globalen AuthProvider ein und richtet die Routen ein.
-// Hinweis: Wir halten die Routen minimal, damit dein bestehendes <App/> nicht zerschossen wird.
-
 import './index.css';
 
+// 📄 src/index.js — Parent mit "/*", plus geschützte /expose & /profile Routen
 import React from 'react';
 
 import ReactDOM from 'react-dom/client';
@@ -13,9 +10,12 @@ import {
   Routes,
 } from 'react-router-dom';
 
-import App from './App';                    // deine Haupt-App-Shell
+import App from './App';
 import { AuthProvider } from './context/AuthContext';
-import Login from './pages/Login';          // die Login-Seite
+import ExposeTool from './pages/ExposeTool';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -24,21 +24,13 @@ root.render(
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* 🏠 App: enthält deine bestehenden Seiten/Navigation */}
-          <Route path="/" element={<App />} />
-
-          {/* 🔐 Login separat erreichbar */}
+          {/* WICHTIG: "/*" erlaubt tieferes Matching, falls App weitere <Routes> rendert */}
+          <Route path="/*" element={<App />} />
           <Route path="/login" element={<Login />} />
-
-          {/* ✅ Beispiel: falls du eine komplette Seite schützen willst
-              → Child-Routen unter ProtectedRoute legen.
-              Aktuell auskommentiert, damit nichts bricht.
-          */}
-          {/*
           <Route element={<ProtectedRoute />}>
-            <Route path="/expose" element={<YourExposePageComponent />} />
+            <Route path="/expose" element={<ExposeTool />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
-          */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
