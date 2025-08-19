@@ -24,3 +24,13 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+
+venv/
+
+venv/
+
+# Local ignores
+venv/
+.env
+.env.local
+*.zip

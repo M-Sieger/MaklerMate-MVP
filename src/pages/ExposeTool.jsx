@@ -13,11 +13,10 @@ import GPTOutputBox from '../components/GPTOutputBox';
 import ImageUpload from '../components/ImageUpload';
 import SavedExposes from '../components/SavedExposes';
 import useSavedExposes from '../hooks/useSavedExposes';
-// 🤖 GPT-Integration
-import {
-  fetchGPTResponse,
-  generatePrompt,
-} from '../lib/openai';
+// 🤖 Prompt-Erzeugung (Client-seitig ok, enthält keine Secrets)
+import { generatePrompt } from '../lib/openai';
+// 🔐 Sichere API-Calls mit Supabase-Token (wird in fetchWithAuth gesetzt)
+import { fetchWithAuth } from '../utils/fetchWithAuth';
 
 export default function ExposeTool() {
   // 📦 Zustand für das Hauptformular
@@ -28,7 +27,7 @@ export default function ExposeTool() {
   });
 
   const [isLoading, setIsLoading] = useState(false);            // 🔄 Ladezustand
-  const [output, setOutput] = useState('');                      // 📄 GPT-Ausgabe
+  const [output, setOutput] = useState('');                     // 📄 GPT-Ausgabe
   const [selectedStyle, setSelectedStyle] = useState('emotional'); // ✨ Stilwahl
 
   // 🖼️ Lokale Bilder aus LocalStorage laden
@@ -45,10 +44,7 @@ export default function ExposeTool() {
 
   // 🧩 Bilder direkt im formData halten
   useEffect(() => {
-    setFormData((prev) => ({
-      ...prev,
-      images,
-    }));
+    setFormData((prev) => ({ ...prev, images }));
   }, [images]);
 
   // 📁 Exposés laden & speichern
@@ -60,31 +56,47 @@ export default function ExposeTool() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✨ GPT-Text generieren
+  // ✨ Exposé-Text generieren – sicher via Serverless (schützt OPENAI_API_KEY)
   const handleGenerate = async () => {
-    if (!formData || Object.values(formData).every((val) => val === '')) {
-      alert("Bitte zuerst das Formular ausfüllen.");
+    // Mini-Guard: leeres Formular verhindern
+    if (!formData || Object.values({ ...formData, images: undefined }).every((val) => val === '')) {
+      alert('Bitte zuerst das Formular ausfüllen.');
       return;
     }
 
-    const prompt = generatePrompt(formData, selectedStyle);
+    // ⚠️ Hinweis: Die Vercel-Function /api/generate-expose ist im lokalen CRA-Dev-Server NICHT verfügbar.
+    //             (Sie läuft im Vercel-Deploy oder mit "vercel dev".)
+    const isLocalCra = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
     setIsLoading(true);
+    setOutput('');
 
     try {
-      const gptResponse = await fetchGPTResponse(prompt);
-      const extracted =
-        typeof gptResponse === 'object' && gptResponse.content
-          ? gptResponse.content.trim?.()
-          : typeof gptResponse === 'object' && gptResponse.result
-          ? gptResponse.result.trim?.()
-          : typeof gptResponse === 'string'
-          ? gptResponse.trim?.()
-          : '';
+      const prompt = generatePrompt(formData, selectedStyle);
 
-      setOutput(extracted || '⚠️ Kein GPT-Ergebnis erhalten.');
+      if (isLocalCra) {
+        // 🚧 Lokaler Hinweis statt 404: verhindert, dass User lange rätseln.
+        setOutput('ℹ️ Die Exposé-Generierung läuft über die Vercel-Function und ist lokal (CRA) nicht aktiv. Bitte nach dem Deploy testen.');
+        return;
+      }
+
+      // 🔐 Sicheren Endpoint aufrufen – Supabase-Session wird im Header mitgeschickt
+      const res = await fetchWithAuth('/api/generate-expose', {
+        method: 'POST',
+        body: JSON.stringify({ prompt }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const msg = data?.error || 'Fehler bei der Exposé-Generierung.';
+        throw new Error(msg);
+      }
+
+      const text = data?.text?.trim?.() || '';
+      setOutput(text || '⚠️ Kein Text erhalten.');
     } catch (err) {
-      console.error('Fehler bei GPT:', err);
-      setOutput('⚠️ Fehler beim Abruf.');
+      console.error('Exposé-Generierung fehlgeschlagen:', err);
+      setOutput(`⚠️ Fehler: ${err?.message || 'Unbekannter Fehler'}`);
     } finally {
       setIsLoading(false);
     }
@@ -118,9 +130,10 @@ export default function ExposeTool() {
           onClick={handleGenerate}
           className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
           disabled={isLoading}
+          title="Exposé wird serverseitig (Vercel) generiert"
         >
           {isLoading && <span className="spinner"></span>}
-          {isLoading ? "Generiere..." : "🔮 Exposé generieren"}
+          {isLoading ? 'Generiere…' : '🔮 Exposé generieren'}
         </button>
       </div>
 

@@ -1,20 +1,38 @@
-// index.js – Einstiegspunkt der App
-import './styles/button.css';
-import './index.css'; // globales Styling
-import './fonts.css';              // ✅ Schrift aktivieren
-import './styles/theme.css';       // ✅ Farbvariablen global
+import './index.css';
 
+// 📄 src/index.js — Parent mit "/*", plus geschützte /expose & /profile Routen
 import React from 'react';
 
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+} from 'react-router-dom';
 
-import App from './App'; // lädt alle Routen
+import App from './App';
+import { AuthProvider } from './context/AuthContext';
+import ExposeTool from './pages/ExposeTool';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import ProtectedRoute from './routes/ProtectedRoute';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App /> {/* App enthält Routing-Logik */}
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* WICHTIG: "/*" erlaubt tieferes Matching, falls App weitere <Routes> rendert */}
+          <Route path="/*" element={<App />} />
+          <Route path="/login" element={<Login />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/expose" element={<ExposeTool />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );
