@@ -34,3 +34,4 @@ venv/
 .env
 .env.local
 *.zip
+.vercel
