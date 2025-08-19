@@ -1,6 +1,5 @@
 import './index.css';
 
-// 📄 src/index.js — Parent mit "/*", plus geschützte /expose & /profile Routen
 import React from 'react';
 
 import ReactDOM from 'react-dom/client';
@@ -15,21 +14,27 @@ import { AuthProvider } from './context/AuthContext';
 import ExposeTool from './pages/ExposeTool';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import AppShell from './routes/AppShell';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
 root.render(
   <React.StrictMode>
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* WICHTIG: "/*" erlaubt tieferes Matching, falls App weitere <Routes> rendert */}
-          <Route path="/*" element={<App />} />
+          {/* Login bewusst ohne Header */}
           <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/expose" element={<ExposeTool />} />
-            <Route path="/profile" element={<Profile />} />
+
+          {/* Deine bestehende Landing/App bleibt wie sie ist */}
+          <Route path="/*" element={<App />} />
+
+          {/* Geschützte Seiten: immer mit Header */}
+          <Route element={<AppShell />}>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/expose" element={<ExposeTool />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
