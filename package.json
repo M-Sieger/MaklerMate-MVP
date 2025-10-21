@@ -32,7 +32,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "proxy": "npx dotenv node gpt-proxy.js"
+    "proxy": "npx dotenv node gpt-proxy.js",
+    "prepare": "husky",
+    "lint": "eslint src --max-warnings=0",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,json,css,md}\" \"*.{js,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json,css,md}\" \"*.{js,json,md}\""
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +58,9 @@
     ]
   },
   "devDependencies": {
-    "dotenv-cli": "^10.0.0"
+    "dotenv-cli": "^10.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.5",
+    "prettier": "^3.6.2"
   }
 }

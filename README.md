@@ -1,6 +1,6 @@
 # 🏡 MaklerMate – KI-gestützter Immobilien-Exposé-Generator
 
-MaklerMate ist eine React-basierte Web-App, die Immobilienmaklern in wenigen Minuten ein professionelles, druckfertiges Exposé erstellt – automatisch, stilvoll und als PDF.  
+MaklerMate ist eine React-basierte Web-App, die Immobilienmaklern in wenigen Minuten ein professionelles, druckfertiges Exposé erstellt – automatisch, stilvoll und als PDF.
 
 👉 **Live-Demo:** [makler-mate.vercel.app](https://makler-mate.vercel.app/)  
 🔑 **Zugangsdaten** für die Exposé-Erstellung können auf Anfrage bereitgestellt werden.
@@ -9,82 +9,205 @@ MaklerMate ist eine React-basierte Web-App, die Immobilienmaklern in wenigen Min
 
 ## 🚀 Features (MVP)
 
-- 📑 **Exposé-Generator** mit GPT-Integration (Stilwahl: sachlich, emotional, Luxus)  
-- 🖼️ **Bild-Upload** mit Captions  
-- 📦 **Export** als druckfertiges PDF & CSV  
-- 💾 **LocalStorage** für gespeicherte Exposés  
-- 👥 **CRM-Light**: einfache Lead-Verwaltung mit Status (VIP, Warm, Neu)  
-- 🎨 **Modernes UI** mit CSS Modules & Glassmorphismus  
-- 🔐 **Login**-Bereich: Benutzername wird gespeichert (localStorage)  
-- 🚧 **Protected Routes** für Exposé-Erstellung (nur mit Zugangsdaten)  
+- 📑 **Exposé-Generator** mit GPT-Integration (Stilwahl: sachlich, emotional, Luxus)
+- 🖼️ **Bild-Upload** mit Captions
+- 📦 **Export** als druckfertiges PDF & CSV
+- 💾 **LocalStorage** für gespeicherte Exposés
+- 👥 **CRM-Light**: einfache Lead-Verwaltung mit Status (VIP, Warm, Neu)
+- 🎨 **Modernes UI** mit CSS Modules & Glassmorphismus
+- 🔐 **Login**-Bereich: Benutzername wird gespeichert (localStorage)
+- 🚧 **Protected Routes** für Exposé-Erstellung (nur mit Zugangsdaten)
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React 19 (Hooks, `useState`) + Vite  
-- **Styling:** CSS Modules & klassische CSS-Dateien  
-- **PDF-Export:** jsPDF (PDF-fähig, inkl. Logo & Captions)  
-- **Persistenz:** LocalStorage (MVP)  
-- **Auth (geplant):** Supabase  
-- **Deployment:** Vercel → [makler-mate.vercel.app](https://makler-mate.vercel.app/)  
+- **Frontend:** React 19 (Hooks, `useState`) + Create React App 5.0.1
+- **Styling:** CSS Modules & klassische CSS-Dateien
+- **Backend:** Express 5.1.0 (Dev-Proxy) + Vercel Serverless (Production)
+- **Auth:** Supabase 2.55.0 (Magic-Link, Password-Login)
+- **AI:** OpenAI GPT-4o-mini (Text-Generierung)
+- **PDF-Export:** jsPDF 3.0.1 (PDF-fähig, inkl. Logo & Captions)
+- **Persistenz:** LocalStorage (MVP, Migration zu Supabase-DB geplant)
+- **Deployment:** Vercel → [makler-mate.vercel.app](https://makler-mate.vercel.app/)
+
+**Vollständige Tech-Stack-Dokumentation:** Siehe `docs/ARCHITECTURE.md`
 
 ---
 
-## 📥 Installation (lokal)
+## 📥 Installation & Setup (lokal)
+
+### **Voraussetzungen**
+
+- Node.js 22+ (empfohlen: v22.17.0)
+- pnpm 10+ (Installation: `npm install -g pnpm`)
+- Supabase-Account (kostenlos: https://supabase.com)
+- OpenAI-API-Key (https://platform.openai.com/api-keys)
+
+### **1. Repository klonen**
 
 ```bash
-# Repo klonen
-git clone https://github.com/USERNAME/MaklerMate-MVP.git
+git clone https://github.com/M-Sieger/MaklerMate-MVP.git
 cd MaklerMate-MVP
+```
 
-# Abhängigkeiten installieren
-pnpm install   # oder npm install
+### **2. Dependencies installieren**
 
-# Dev-Server starten
-pnpm run dev
-App läuft dann unter: http://localhost:5173
+```bash
+pnpm install
+```
 
-📄 Environment Variablen
-Die App benötigt .env-Dateien (nicht im Repo enthalten).
-Beispiel (.env.example):
+### **3. Environment-Variablen konfigurieren**
 
-env
-Kopieren
-Bearbeiten
-# Frontend
-REACT_APP_SUPABASE_URL=your_supabase_url
-REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+```bash
+# .env.example kopieren
+cp .env.example .env
 
-# Server / Proxy
-OPENAI_API_KEY=your_openai_key
-PORT=5001
-⚠️ Hinweis: Echte Keys dürfen nicht ins Repo committed werden.
+# .env bearbeiten (fülle deine Keys ein):
+# - REACT_APP_SUPABASE_URL (von Supabase Dashboard)
+# - REACT_APP_SUPABASE_ANON_KEY (von Supabase Dashboard)
+# - OPENAI_API_KEY (von OpenAI Dashboard)
+```
 
-🔮 Roadmap
- Supabase Auth (E-Mail-Login, später Social Logins)
+**Detaillierte Anleitung:** Siehe `.env.example` für Kommentare zu jedem Key.
 
- Stripe Integration (Subscription-Modell)
+### **4. Entwicklungs-Umgebung starten**
 
- Erweiterung CRM (Foto-Upload, Notizen, GPT-gestützte Lead-Hilfe)
+**Option A: Nur Frontend (ohne GPT-Integration)**
 
- API-Backend (Supabase/Postgres) für persistente Speicherung
+```bash
+pnpm start
+# → http://localhost:3000
+```
 
- Internationalisierung (EN/DE, später KE/UK)
+**Option B: Frontend + GPT-Proxy (empfohlen für vollständige Entwicklung)**
 
-🤝 Contribution
-Pull Requests willkommen!
-Bitte folgende Guidelines beachten:
+```bash
+# Terminal 1: Express-Proxy für GPT-Calls
+node server/gpt-proxy.js
+# → http://localhost:5001
 
-Branch-Namen: feature/*, bugfix/*
+# Terminal 2: React-Frontend
+pnpm start
+# → http://localhost:3000
+```
 
-Code-Stil: funktionale Komponenten, Hooks, CSS Modules
+**Hinweis:** Der GPT-Proxy (`server/gpt-proxy.js`) ist nur für lokale Entwicklung gedacht. Production nutzt Vercel Serverless (`api/generate-expose.js`).
 
-Commit Messages: klar und beschreibend
+---
 
-📄 License
-MIT License – siehe LICENSE.
+## 📄 Environment-Variablen (Übersicht)
 
-📝 Hinweis
-MaklerMate ist aktuell ein MVP – Änderungen am Code & API-Design sind jederzeit möglich.
+Die App benötigt folgende Variablen (siehe `.env.example` für Details):
+
+| Variable                      | Erforderlich | Zweck                                | Wo zu finden                         |
+| ----------------------------- | ------------ | ------------------------------------ | ------------------------------------ |
+| `REACT_APP_SUPABASE_URL`      | ✅           | Supabase-Projekt-URL                 | Supabase Dashboard → Settings → API  |
+| `REACT_APP_SUPABASE_ANON_KEY` | ✅           | Supabase Anonymous-Key (public-safe) | Supabase Dashboard → Settings → API  |
+| `OPENAI_API_KEY`              | ✅ (für GPT) | OpenAI API-Key                       | https://platform.openai.com/api-keys |
+| `PORT`                        | ❌           | Express-Server-Port (default: 5001)  | Optional                             |
+
+⚠️ **Sicherheits-Hinweis:** `.env` ist gitignored. Echte Keys NIE committen!
+
+## 🔮 Roadmap
+
+**Sprint 1 (Quick Wins) – ✅ Abgeschlossen**
+
+- ✅ Copilot-Instructions (Workflow-Standards)
+- ✅ ARCHITECTURE.md (Tech-Stack-Dokumentation)
+- ✅ .env.example + README-Update
+- ✅ Pre-Commit-Hooks (Husky + Prettier)
+- ✅ LICENSE (MIT)
+- ✅ README-Korrekturen (Script-Namen, Tech-Stack)
+
+**Sprint 2 (Testing + CI/CD)**
+
+- ⏳ Unit-Tests (Services, Utils, Hooks)
+- ⏳ GitHub Actions CI/CD
+- ⏳ Docker-Compose (Dev-Environment)
+- ⏳ CHANGELOG.md
+
+**Sprint 3 (TypeScript + E2E)**
+
+- ⏳ TypeScript-Migration (Strict-Mode)
+- ⏳ E2E-Tests (Playwright)
+- ⏳ Vite-Migration (CRA → Vite)
+
+**v0.2.0 (Supabase-Database)**
+
+- ⏳ Migration: LocalStorage → Supabase-Tables
+- ⏳ Real-Time-Sync (Multi-Device)
+- ⏳ Offline-First mit Supabase-Realtime
+
+**v0.3.0+ (Features)**
+
+- ⏳ Stripe Integration (Subscription-Modell)
+- ⏳ Social-Media-Content-Generator (aus Objektdaten)
+- ⏳ Internationalisierung (EN/DE, später KE/UK)
+
+**Detaillierte Roadmap:** Siehe `docs/REPO-IMPROVEMENT-PLAN.md`
+
+## 🤝 Contribution
+
+Pull Requests sind willkommen! Bitte folgende Guidelines beachten:
+
+**Workflow:**
+
+1. Fork das Repo
+2. Branch erstellen: `feature/dein-feature` oder `bugfix/dein-fix`
+3. Änderungen committen (Conventional Commits: `feat:`, `fix:`, `docs:`)
+4. Pull Request öffnen
+
+**Code-Standards:**
+
+- Funktionale Komponenten (keine Class-Components)
+- Hooks für State-Management
+- CSS-Module für Component-Styles
+- Header-Kommentare mit Emojis (📄, 🔐, 🧠) für Lesbarkeit
+
+**Vor dem Commit:**
+
+- Pre-Commit-Hooks laufen automatisch (Prettier + ESLint) ✅
+- Tests laufen: `pnpm test -- --watchAll=false` (wenn Tests vorhanden)
+- Build funktioniert: `pnpm run build`
+- Manuell formatieren: `pnpm run format` (optional)
+
+**Dokumentation:**
+
+- Primary Source of Truth: `PROJECT.md`
+- Tech-Stack: `docs/ARCHITECTURE.md`
+- Copilot-Workflow: `.github/copilot-instructions.md`
+
+---
+
+## 📄 License
+
+MIT License – siehe [LICENSE](./LICENSE)
+
+**Was bedeutet das?**
+
+- ✅ Open-Source (Code darf genutzt, modifiziert, verteilt werden)
+- ✅ Kommerzielle Nutzung erlaubt
+- ✅ Keine Garantie/Haftung
+
+---
+
+## 📚 Dokumentation
+
+| Dokument                          | Zweck                                                       |
+| --------------------------------- | ----------------------------------------------------------- |
+| `PROJECT.md`                      | Primary Source of Truth (Projekt-Übersicht, Features, ADRs) |
+| `docs/ARCHITECTURE.md`            | Tech-Stack, API-Verträge, Architektur-Entscheidungen        |
+| `docs/REPO-IMPROVEMENT-PLAN.md`   | 3-Sprint-Roadmap (Tasks, ETAs, Acceptance Criteria)         |
+| `.github/copilot-instructions.md` | Workflow-Standards für Copilot                              |
+| `docs/PRE-COMMIT-HOOKS.md`        | Pre-Commit-Hooks-Dokumentation                              |
+| `.env.example`                    | Environment-Variablen-Dokumentation                         |
+
+---
+
+## 📝 Hinweis
+
+MaklerMate ist aktuell ein MVP (v0.1.0) – Änderungen am Code & API-Design sind jederzeit möglich.  
 Für die Exposé-Erstellung werden Zugangsdaten benötigt, die auf Anfrage bereitgestellt werden.
+
+**Fragen oder Feedback?** Öffne ein [Issue](https://github.com/M-Sieger/MaklerMate-MVP/issues) auf GitHub!
