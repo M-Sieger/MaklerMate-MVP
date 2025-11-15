@@ -1,14 +1,76 @@
-// ✅ validation.js – Validation Utilities für API-Calls
-// ✅ Validierung für Exposé-Daten
-// ✅ Validierung für Lead-Daten
-// ✅ Validierung für API-Responses
+/**
+ * @fileoverview Validation Utilities - Input-Validierung für API-Calls
+ *
+ * ZWECK:
+ * - Validierung für Exposé-Formulardaten
+ * - Validierung für Lead-Daten
+ * - Validierung für API-Responses
+ * - Input-Sanitization (Security)
+ *
+ * TYPES:
+ * - ExposeFormData: Formular-Daten für Exposé-Generierung
+ * - LeadFormData: Formular-Daten für Lead-Erstellung
+ * - ValidationError: Validierungs-Fehler mit Details
+ *
+ * SECURITY:
+ * - Input-Sanitization gegen XSS
+ * - Range-Validierung (Wohnfläche, Zimmer, Baujahr)
+ * - Format-Validierung (E-Mail, Telefon)
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * LETZTE ÄNDERUNG: 2025-11-15
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ */
+
+// ==================== TYPES ====================
+
+/**
+ * Exposé-Formulardaten
+ */
+export interface ExposeFormData {
+  objektart?: string;
+  strasse?: string;
+  ort?: string;
+  bezirk?: string;
+  wohnflaeche?: string | number;
+  zimmer?: string | number;
+  baujahr?: string | number;
+  preis?: string;
+  etage?: string | number;
+  balkonTerrasse?: string;
+  ausstattung?: string;
+  besonderheiten?: string;
+  [key: string]: unknown; // Allow additional fields
+}
+
+/**
+ * Lead-Formulardaten
+ */
+export interface LeadFormData {
+  name?: string;
+  contact?: string;
+  type?: string;
+  status?: string;
+  location?: string;
+  note?: string;
+  [key: string]: unknown; // Allow additional fields
+}
+
+// ==================== EXPOSÉ VALIDATION ====================
 
 /**
  * Validiert Exposé-Formulardaten
- * @param {Object} data - Formular-Daten
- * @returns {string|null} Error-Message oder null wenn valid
+ *
+ * VALIDIERUNGEN:
+ * - Pflichtfelder: objektart, strasse, ort, wohnflaeche, zimmer, preis
+ * - Wohnfläche: > 0, < 10.000 m²
+ * - Zimmeranzahl: > 0, < 100
+ * - Baujahr: 1700 bis heute + 5 Jahre
+ *
+ * @param data - Formular-Daten
+ * @returns Error-Message oder null wenn valid
  */
-export function validateExposeData(data) {
+export function validateExposeData(data: ExposeFormData): string | null {
   const required = ['objektart', 'strasse', 'ort', 'wohnflaeche', 'zimmer', 'preis'];
 
   // Pflichtfelder prüfen
@@ -41,7 +103,7 @@ export function validateExposeData(data) {
   }
 
   // Baujahr validieren (optional)
-  if (data.baujahr && data.baujahr.trim()) {
+  if (data.baujahr && String(data.baujahr).trim()) {
     const baujahr = Number(data.baujahr);
     const currentYear = new Date().getFullYear();
     if (isNaN(baujahr) || baujahr < 1700 || baujahr > currentYear + 5) {
@@ -54,10 +116,17 @@ export function validateExposeData(data) {
 
 /**
  * Validiert Exposé-Response von API
- * @param {string} text - Generierter Text
- * @throws {Error} Wenn Response ungültig
+ *
+ * VALIDIERUNGEN:
+ * - Text muss String sein
+ * - Min. 50 Zeichen
+ * - Max. 5000 Zeichen
+ * - Keine Error-Strings im Text
+ *
+ * @param text - Generierter Text
+ * @throws Error wenn Response ungültig
  */
-export function validateExposeResponse(text) {
+export function validateExposeResponse(text: unknown): asserts text is string {
   if (!text || typeof text !== 'string') {
     throw new Error('Ungültige Response: Text muss ein String sein');
   }
@@ -87,12 +156,21 @@ export function validateExposeResponse(text) {
   }
 }
 
+// ==================== LEAD VALIDATION ====================
+
 /**
  * Validiert Lead-Daten
- * @param {Object} data - Lead-Daten
- * @returns {string|null} Error-Message oder null wenn valid
+ *
+ * VALIDIERUNGEN:
+ * - Name: Pflichtfeld, min. 2, max. 100 Zeichen
+ * - Kontakt: Optional, aber wenn gesetzt dann E-Mail oder Telefon
+ * - Type: Optional, muss in ['mieten', 'kaufen', 'verkaufen', 'vermieten'] sein
+ * - Status: Optional, muss in ['neu', 'warm', 'cold', 'vip'] sein
+ *
+ * @param data - Lead-Daten
+ * @returns Error-Message oder null wenn valid
  */
-export function validateLeadData(data) {
+export function validateLeadData(data: LeadFormData): string | null {
   if (!data.name || !data.name.trim()) {
     return 'Name ist ein Pflichtfeld';
   }
@@ -127,12 +205,17 @@ export function validateLeadData(data) {
   return null; // Valid
 }
 
+// ==================== HELPER FUNCTIONS ====================
+
 /**
  * Prüft ob String eine gültige E-Mail-Adresse ist
- * @param {string} email - Email-String
- * @returns {boolean} True wenn valid
+ *
+ * PATTERN: RFC 5322 simplified
+ *
+ * @param email - Email-String
+ * @returns True wenn valid
  */
-function isValidEmail(email) {
+function isValidEmail(email: string): boolean {
   if (typeof email !== 'string') return false;
 
   // RFC 5322 simplified pattern
@@ -142,10 +225,14 @@ function isValidEmail(email) {
 
 /**
  * Prüft ob String eine gültige Telefonnummer ist
- * @param {string} phone - Telefon-String
- * @returns {boolean} True wenn valid
+ *
+ * PATTERN: Zahlen, Leerzeichen, +, -, (, )
+ * RANGE: 7-20 Zeichen
+ *
+ * @param phone - Telefon-String
+ * @returns True wenn valid
  */
-function isValidPhone(phone) {
+function isValidPhone(phone: string): boolean {
   if (typeof phone !== 'string') return false;
 
   // Erlaubt: Zahlen, Leerzeichen, +, -, (, )
@@ -154,16 +241,26 @@ function isValidPhone(phone) {
   return pattern.test(phone.trim());
 }
 
+// ==================== SANITIZATION ====================
+
 /**
- * Sanitized String für API-Calls (entfernt gefährliche Zeichen)
- * @param {string} str - Input-String
- * @returns {string} Sanitized String
+ * Sanitized String für API-Calls
+ *
+ * SECURITY:
+ * - Entfernt HTML-Tags (<, >)
+ * - Limitiert auf 1000 Zeichen
+ * - Trimmt Whitespace
+ *
+ * @param str - Input-String
+ * @returns Sanitized String
  */
-export function sanitizeInput(str) {
+export function sanitizeInput(str: unknown): string {
   if (typeof str !== 'string') return '';
 
-  return str
-    .trim()
-    .replace(/[<>]/g, '') // Remove HTML tags
-    .substring(0, 1000); // Max length
+  return (
+    str
+      .trim()
+      .replace(/[<>]/g, '') // Remove HTML tags
+      .substring(0, 1000) // Max length
+  );
 }
