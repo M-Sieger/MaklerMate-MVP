@@ -108,6 +108,36 @@ const useExposeStore = create(
         }),
 
       /**
+       * Verschiebt Bild von einem Index zu anderem (Reordering)
+       * @param {number} fromIndex - Quell-Index
+       * @param {number} toIndex - Ziel-Index
+       */
+      moveImage: (fromIndex, toIndex) =>
+        set((state) => {
+          // Guard: Ungültige Indizes
+          if (
+            fromIndex < 0 ||
+            fromIndex >= state.images.length ||
+            toIndex < 0 ||
+            toIndex >= state.images.length
+          ) {
+            return state;
+          }
+
+          // Array.splice to reorder
+          const newImages = [...state.images];
+          const newCaptions = [...state.captions];
+
+          const [movedImage] = newImages.splice(fromIndex, 1);
+          newImages.splice(toIndex, 0, movedImage);
+
+          const [movedCaption] = newCaptions.splice(fromIndex, 1);
+          newCaptions.splice(toIndex, 0, movedCaption);
+
+          return { images: newImages, captions: newCaptions };
+        }),
+
+      /**
        * Setzt alle Bilder und Captions
        */
       setImages: (images) => set({ images }),
