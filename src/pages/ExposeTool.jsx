@@ -12,6 +12,7 @@ import ExposeForm from '../components/ExposeForm';
 import GPTOutputBox from '../components/GPTOutputBox';
 import ImageUpload from '../components/ImageUpload';
 import SavedExposes from '../components/SavedExposes';
+import usePersistentImages from '../hooks/usePersistentImages'; // 💾 Bilder für Export
 import useSavedExposes from '../hooks/useSavedExposes';
 // 🤖 Prompt-Erzeugung (Client-seitig ok, enthält keine Secrets)
 import { generatePrompt } from '../lib/openai';
@@ -30,17 +31,9 @@ export default function ExposeTool() {
   const [output, setOutput] = useState('');                     // 📄 GPT-Ausgabe
   const [selectedStyle, setSelectedStyle] = useState('emotional'); // ✨ Stilwahl
 
-  // 🖼️ Lokale Bilder aus LocalStorage laden
-  const [images, setImages] = useState(() => {
-    const saved = localStorage.getItem('maklermate_images');
-    try {
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [captions, setCaptions] = useState([]); // 📝 Bildunterschriften separat
+  // 🖼️ Bilder & Captions aus usePersistentImages (read-only für Export)
+  const [images] = usePersistentImages('maklermate_images');
+  const [captions] = usePersistentImages('maklermate_captions');
 
   // 🧩 Bilder direkt im formData halten
   useEffect(() => {
@@ -117,12 +110,7 @@ export default function ExposeTool() {
       />
 
       {/* 🖼️ Bilderupload */}
-      <ImageUpload
-        images={images}
-        setImages={setImages}
-        captions={captions}
-        setCaptions={setCaptions}
-      />
+      <ImageUpload />
 
       {/* ⚡ Button-Gruppe: Exposé generieren */}
       <div className="button-group center-buttons">

@@ -1,5 +1,4 @@
 import React, {
-  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -10,45 +9,19 @@ import {
 import {
   enhanceImage,
 } from '../utils/imageEnhancer';  // 🧽 Bildoptimierung via GPT-Enhancer
+import usePersistentImages from '../hooks/usePersistentImages'; // 💾 Persistente Bild-Speicherung
 import styles
   from './ImageUpload.module.css';          // 🎨 Styling via CSS Modules
 
-const ImageUpload = ({ images, setImages }) => {
+const ImageUpload = () => {
   const fileInputRef = useRef();
 
-  // ⚙️ Bild-Optimierung (optional) & Captions
+  // ⚙️ Bild-Optimierung (optional)
   const [autoEnhance, setAutoEnhance] = useState(false);
-  const [captions, setCaptions] = useState([]); // 📝 Bildunterschriften als Parallel-Array zu images
 
-  // 🔁 Initialer Load aus localStorage
-  useEffect(() => {
-    const savedImages = localStorage.getItem('maklermate_images');
-    const savedCaptions = localStorage.getItem('maklermate_captions');
-
-    if (savedImages) {
-      try {
-        const parsedImages = JSON.parse(savedImages);
-        if (Array.isArray(parsedImages)) setImages(parsedImages);
-      } catch (err) {
-        console.error('❌ Fehler beim Laden von Bildern:', err);
-      }
-    }
-
-    if (savedCaptions) {
-      try {
-        const parsedCaptions = JSON.parse(savedCaptions);
-        if (Array.isArray(parsedCaptions)) setCaptions(parsedCaptions);
-      } catch (err) {
-        console.error('❌ Fehler beim Laden der Captions:', err);
-      }
-    }
-  }, []);
-
-  // 💾 Automatisches Speichern bei Änderungen
-  useEffect(() => {
-    localStorage.setItem('maklermate_images', JSON.stringify(images));
-    localStorage.setItem('maklermate_captions', JSON.stringify(captions));
-  }, [images, captions]);
+  // 💾 Images & Captions mit automatischer localStorage-Persistierung
+  const [images, setImages] = usePersistentImages('maklermate_images');
+  const [captions, setCaptions] = usePersistentImages('maklermate_captions');
 
   // 📥 Neue Bilder verarbeiten & optional optimieren
   const handleFiles = async (files) => {

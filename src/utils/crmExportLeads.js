@@ -1,6 +1,6 @@
 // 📄 exportLeads.js – Hilfsfunktionen zum Exportieren von Leads (TXT, CSV, später PDF)
 
-/* 
+/*
 🧠 Ziel:
 - Einfache, klickbare Exportfunktionen für Makler:innen
 - Dateien sollen sofort herunterladbar sein
@@ -10,7 +10,7 @@
 // 🔤 Exportiere Leads als Klartext-Datei (.txt)
 export function exportLeadsAsTXT(leads) {
   const content = leads
-    .map((lead) => `${lead.name} – ${lead.email || '–'} (${lead.status})`)
+    .map((lead) => `${lead.name} – ${lead.contact || '–'} (${lead.status})`)
     .join("\n");
 
   downloadFile("leads.txt", content, "text/plain");
@@ -18,11 +18,11 @@ export function exportLeadsAsTXT(leads) {
 
 // 📊 Exportiere Leads als CSV-Datei (.csv) – kompatibel mit Excel, Numbers etc.
 export function exportLeadsAsCSV(leads) {
-  const header = "Name,Email,Status";
+  const header = "Name,Kontakt,Typ,Status";
 
   // 🔒 Felder maskieren (für Kommas, Sonderzeichen etc.)
   const rows = leads.map((l) =>
-    `"${l.name || ''}","${l.email || ''}","${l.status || ''}"`
+    `"${l.name || ''}","${l.contact || ''}","${l.type || ''}","${l.status || ''}"`
   );
 
   const content = [header, ...rows].join("\n");
