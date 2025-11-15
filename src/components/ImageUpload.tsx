@@ -34,7 +34,7 @@
  * - utils/imageEnhancer.js (enhanceImage - optional GPT-Enhancement)
  *
  * VERWENDUNG:
- * - Von ExposeTool.jsx importiert
+ * - Von ExposeTool.tsx importiert
  * - Keine Props erforderlich (nutzt Store direkt)
  *
  * MIGRATION-NOTES:
@@ -45,7 +45,7 @@
  *
  * AUTOR: Liberius (MaklerMate MVP)
  * LETZTE ÄNDERUNG: 2025-11-15
- * STATUS: 🟢 Production-Ready (refactored in Phase 3)
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
 import React, { useRef, useState } from 'react';
@@ -63,6 +63,8 @@ import styles from './ImageUpload.module.css';
 // CONSTANTS
 const MAX_IMAGES = 5; // UX-optimiert für Exposés
 
+// ==================== COMPONENT ====================
+
 export default function ImageUpload() {
   // ==================== STATE (via Zustand Store) ====================
   // WARUM: Eliminiert Prop-Drilling, Auto-Persistierung
@@ -77,14 +79,14 @@ export default function ImageUpload() {
   // ==================== LOCAL UI STATE ====================
   // HINWEIS: Nur UI-State, kein Business-State!
 
-  const fileInputRef = useRef();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   /**
    * Auto-Enhance Toggle (optional GPT-Bildoptimierung)
    * WARUM: Erlaubt User, Bilder vor Upload zu optimieren (Kontrast, Helligkeit, etc.)
    * TRADE-OFF: Langsamer Upload (GPT-API-Call), bessere Bildqualität
    */
-  const [autoEnhance, setAutoEnhance] = useState(false);
+  const [autoEnhance, setAutoEnhance] = useState<boolean>(false);
 
   // ==================== EVENT HANDLERS ====================
 
@@ -101,9 +103,12 @@ export default function ImageUpload() {
    * - Base64 für localStorage (keine Backend-Upload)
    * - FileReader.readAsDataURL() liefert data:image/jpeg;base64,...
    *
-   * @param {FileList} files - Hochgeladene Dateien
+   * @param files - Hochgeladene Dateien
    */
-  const handleFiles = async (files) => {
+  const handleFiles = async (files: FileList | null): Promise<void> => {
+    // GUARD: Keine Dateien
+    if (!files || files.length === 0) return;
+
     // GUARD: Max. Bilder erreicht
     if (images.length >= MAX_IMAGES) {
       toast.error(`⚠️ Maximal ${MAX_IMAGES} Bilder erlaubt`);
@@ -122,12 +127,12 @@ export default function ImageUpload() {
     // ENCODING: Base64 + optional GPT-Enhancement
     // WARUM: Promise.all für parallele Verarbeitung (schneller)
     const base64Array = await Promise.all(
-      fileArray.map((file) => {
-        return new Promise((resolve) => {
+      fileArray.map((file: File) => {
+        return new Promise<string | null>((resolve) => {
           const reader = new FileReader();
 
-          reader.onload = async (e) => {
-            let base64 = e.target.result;
+          reader.onload = async (e: ProgressEvent<FileReader>) => {
+            let base64 = e.target?.result as string;
 
             // OPTIONAL: GPT-Enhancement
             // WARUM: Verbessert Bildqualität (Kontrast, Helligkeit, Schärfe)
@@ -162,7 +167,9 @@ export default function ImageUpload() {
     );
 
     // FILTER: Fehlgeschlagene Uploads entfernen
-    const validImages = base64Array.filter((img) => img !== null);
+    const validImages = base64Array.filter(
+      (img): img is string => img !== null
+    );
 
     // STORE-UPDATE: Bilder hinzufügen (inkl. leere Captions)
     // WARUM: Captions werden initial leer erstellt, User kann später befüllen
@@ -180,9 +187,9 @@ export default function ImageUpload() {
   /**
    * Entfernt Bild an Index
    *
-   * @param {number} index - Index des zu löschenden Bildes
+   * @param index - Index des zu löschenden Bildes
    */
-  const handleRemove = (index) => {
+  const handleRemove = (index: number): void => {
     removeImage(index);
     toast.success('🗑️ Bild entfernt');
   };
@@ -194,10 +201,10 @@ export default function ImageUpload() {
    * - User möchte Reihenfolge der Bilder ändern (z.B. Hauptbild nach vorne)
    * - Wichtig für PDF-Export (Reihenfolge wird beibehalten)
    *
-   * @param {number} fromIndex - Quell-Index
-   * @param {number} toIndex - Ziel-Index
+   * @param fromIndex - Quell-Index
+   * @param toIndex - Ziel-Index
    */
-  const handleMove = (fromIndex, toIndex) => {
+  const handleMove = (fromIndex: number, toIndex: number): void => {
     // GUARD: Ungültige Indizes (Store macht auch Guard, aber hier für UX)
     if (toIndex < 0 || toIndex >= images.length) return;
 
@@ -207,10 +214,10 @@ export default function ImageUpload() {
   /**
    * Updated Caption an Index
    *
-   * @param {number} index - Index des Bildes
-   * @param {string} caption - Neue Bildunterschrift
+   * @param index - Index des Bildes
+   * @param caption - Neue Bildunterschrift
    */
-  const handleCaptionChange = (index, caption) => {
+  const handleCaptionChange = (index: number, caption: string): void => {
     updateCaption(index, caption);
   };
 
