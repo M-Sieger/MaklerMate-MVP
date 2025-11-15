@@ -638,3 +638,4 @@ async function handleGenerate() {
 | Datum | Version | Änderung |
 |-------|---------|----------|
 | 15.11.2025 | 1.0 | Initial draft |
+| 15.11.2025 | 1.1 | API-Utils implementiert in TypeScript (`errorHandler.ts`, `retry.ts`, `validation.ts`) |

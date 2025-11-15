@@ -435,3 +435,4 @@ export default function ExposeTool() {
 | Datum | Version | Änderung |
 |-------|---------|----------|
 | 15.11.2025 | 1.0 | Initial draft |
+| 15.11.2025 | 1.1 | Services implementiert in TypeScript (`exportService.ts`, `LeadsStorageService.ts`, `pdfService.ts`) |
