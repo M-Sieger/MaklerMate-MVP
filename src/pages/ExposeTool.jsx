@@ -248,14 +248,8 @@ export default function ExposeTool() {
       </div>
 
       {/* 📤 EXPORT-BUTTONS: PDF, JSON, Text, Speichern */}
-      {/* HINWEIS: ExportButtons wird in Task 3.3 migriert (dann keine Props mehr) */}
-      <ExportButtons
-        formData={formData}
-        output={output}
-        selectedStyle={selectedStyle}
-        images={images}
-        onSaveExpose={handleSaveExpose}
-      />
+      {/* HINWEIS: ExportButtons nutzt Store direkt (nur onSaveExpose callback) */}
+      <ExportButtons onSaveExpose={handleSaveExpose} />
 
       {/* 💾 GESPEICHERTE EXPOSÉS: Liste mit Laden/Löschen */}
       <SavedExposes
