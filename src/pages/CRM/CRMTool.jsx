@@ -1,37 +1,120 @@
-// 📄 pages/CRM/CRMTool.jsx — Verdrahtung LeadForm ↔ useLocalStorageLeads ↔ LeadTable
-// ✅ Fix: Nach "Lead speichern" erscheint der Eintrag sofort in der Tabelle
-// ✅ Ursache war fehlendes onAddLead-Prop — jetzt korrekt mit Hook verdrahtet
-// ✅ Delete/Update weitergereicht; optionales isPersisting-Flag verfügbar
+/**
+ * @fileoverview CRMTool - Hauptseite für Lead-Management
+ *
+ * ZWECK:
+ * - Lead-Verwaltung (Hinzufügen, Bearbeiten, Löschen)
+ * - Filter nach Status (Neu, Warm, VIP, Cold)
+ * - Suche über Name, Kontakt, Location, Type, Notiz
+ * - Export als CSV, JSON, PDF
+ * - Persistierung in localStorage
+ *
+ * ARCHITEKTUR:
+ * - Container Component (orchestriert CRM-Components)
+ * - State via useCRMStore (Zustand store)
+ * - Filter & Search State im Store (nicht lokal)
+ * - Presentational Components: LeadForm, LeadTable, CRMCard
+ *
+ * USER-FLOW:
+ * 1. User füllt LeadForm aus (Name, Kontakt, Type, Status)
+ * 2. User klickt "Lead speichern"
+ * 3. Lead erscheint in LeadTable
+ * 4. User kann filtern (Status-Dropdown) und suchen (Search-Input)
+ * 5. User kann Lead bearbeiten (Status ändern) oder löschen
+ * 6. User kann alle Leads exportieren (CSV, JSON, PDF)
+ *
+ * ABHÄNGIGKEITEN:
+ * - stores/crmStore.js (leads, filter, searchQuery, actions)
+ * - components/CRM/LeadForm.jsx (Formular für neue Leads)
+ * - components/CRM/LeadTable.jsx (Tabelle mit allen Leads)
+ * - components/CRM/CRMCard.jsx (Container mit Toolbar)
+ *
+ * MIGRATION-NOTES:
+ * - VORHER: useLocalStorageLeads hook
+ * - NACHHER: useCRMStore (eliminiert Custom-Hook)
+ * - VORHER: Lokales useState für filter/query
+ * - NACHHER: Store-State (filter, searchQuery)
+ * - VORHER: useMemo für gefilterte Leads
+ * - NACHHER: Store-Methode getFilteredLeads()
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * LETZTE ÄNDERUNG: 2025-11-15
+ * STATUS: 🟢 Production-Ready (refactored in Phase 3)
+ */
 
-import React, {
-  useMemo,
-  useState,
-} from 'react';
+import React from 'react';
 
+// COMPONENTS
 import CRMCard from '../../components/CRM/CRMCard';
 import LeadForm from '../../components/CRM/LeadForm';
 import LeadTable from '../../components/CRM/LeadTable';
-import useLocalStorageLeads from '../../hooks/useLocalStorageLeads';
+
+// STORE (nach DEVELOPMENT-INSTRUCTION.md: Service-Layer Pattern)
+import useCRMStore from '../../stores/crmStore';
 
 export default function CRMTool() {
-  // 🔗 Single source of truth für Leads
-  const { leads, addLead, updateLead, deleteLead, resetLeads, isPersisting } =
-    useLocalStorageLeads('mm_crm_leads_v2');
+  // ==================== STATE (via Zustand Store) ====================
+  // WARUM: Eliminiert Custom-Hook, Auto-Persistierung
+  // VORHER: useLocalStorageLeads + lokales useState für filter/query
+  // NACHHER: useCRMStore (alles zentral)
 
-  // 🔎 Client-Filter/Suche (sehr simpel für Demo)
-  const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState('alle'); // alle|neu|warm|cold|vip
+  const leads = useCRMStore((state) => state.leads);
+  const filter = useCRMStore((state) => state.filter);
+  const searchQuery = useCRMStore((state) => state.searchQuery);
 
-  const filteredLeads = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return leads.filter((l) => {
-      const statusOk = filter === 'alle' ? true : (l.status || '').toLowerCase() === filter;
-      if (!statusOk) return false;
-      if (!q) return true;
-      const hay = `${l.name} ${l.contact} ${l.location} ${l.type} ${l.note}`.toLowerCase();
-      return hay.includes(q);
-    });
-  }, [leads, query, filter]);
+  const {
+    addLead,
+    updateLead,
+    deleteLead,
+    resetLeads,
+    setFilter,
+    setSearchQuery,
+    getFilteredLeads,
+  } = useCRMStore();
+
+  // ==================== COMPUTED ====================
+
+  /**
+   * Gefilterte Leads (Status-Filter + Search-Query)
+   * WARUM: Store-Methode statt useMemo (zentralisiert Logik)
+   * VORHER: useMemo in Component (lokale Filter-Logik)
+   * NACHHER: getFilteredLeads() im Store (wiederverwendbar)
+   */
+  const filteredLeads = getFilteredLeads();
+
+  // ==================== EVENT HANDLERS ====================
+
+  /**
+   * Filter ändern (Status-Dropdown)
+   * @param {React.ChangeEvent<HTMLSelectElement>} e - Select-Event
+   */
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
+  /**
+   * Search-Query ändern (Search-Input)
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Input-Event
+   */
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  /**
+   * Alle Leads löschen (mit Confirmation)
+   * WARUM: Destructive Action, benötigt User-Bestätigung
+   */
+  const handleResetLeads = () => {
+    // CONFIRMATION: User muss bestätigen
+    const confirmed = window.confirm(
+      'Wirklich alle Leads löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
+    );
+
+    if (confirmed) {
+      resetLeads();
+    }
+  };
+
+  // ==================== RENDER ====================
 
   return (
     <div className="page-wrapper">
@@ -39,11 +122,14 @@ export default function CRMTool() {
         title="CRM"
         toolbarLeft={
           <>
-            <label className="visually-hidden" htmlFor="crm-filter">Filter</label>
+            {/* STATUS-FILTER */}
+            <label className="visually-hidden" htmlFor="crm-filter">
+              Filter
+            </label>
             <select
               id="crm-filter"
               value={filter}
-              onChange={(e) => setFilter(e.target.value)}
+              onChange={handleFilterChange}
               className="filterSelect"
             >
               <option value="alle">Alle</option>
@@ -56,33 +142,40 @@ export default function CRMTool() {
         }
         toolbarRight={
           <>
+            {/* SEARCH-INPUT */}
             <input
               className="searchInput"
               placeholder="Suchen…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
-            <button className="dangerButton" onClick={resetLeads} title="Alle Leads löschen">
+
+            {/* RESET-BUTTON */}
+            <button
+              className="dangerButton"
+              onClick={handleResetLeads}
+              title="Alle Leads löschen"
+            >
               Alle Leads löschen
             </button>
           </>
         }
         footer={
-          isPersisting ? (
-            <div style={{opacity:0.8}}>Speichern…</div>
-          ) : (
-            <div style={{opacity:0.6}}>Gespeichert</div>
-          )
+          // FOOTER: Zeigt Anzahl Leads (gefiltert vs. gesamt)
+          <div style={{ opacity: 0.6 }}>
+            {filteredLeads.length !== leads.length
+              ? `${filteredLeads.length} von ${leads.length} Leads`
+              : `${leads.length} Leads`}
+          </div>
         }
       >
-        {/* 🔌 WICHTIG: addLead als onAddLead an LeadForm übergeben */}
+        {/* LEAD-FORM: Formular für neue Leads */}
         <LeadForm onAddLead={addLead} />
 
-        {/* Tabelle erhält die gefilterten Leads + Handlers */}
+        {/* LEAD-TABLE: Tabelle mit gefilterten Leads */}
         <LeadTable
           leads={filteredLeads}
           onDeleteLead={deleteLead}
-          // optional: onUpdateLead fürs Status-Cycling über LeadRow
           onUpdateLead={updateLead}
         />
       </CRMCard>
