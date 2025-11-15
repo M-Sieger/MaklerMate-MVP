@@ -1,3 +1,16 @@
+/*
+ * 📄 crmExport.js - CRM-Export-Funktionen für Leads
+ *
+ * Zweck: Exportiert Leads in verschiedenen Formaten (JSON, TXT, CSV) für CRM-Systeme,
+ * Backups oder manuelle Weiterverarbeitung.
+ *
+ * Warum: Makler:innen benötigen flexible Export-Optionen, um Leads in externe Tools
+ * (Excel, CRM-Software, Newsletter-Tools) zu übertragen.
+ *
+ * Sicherheit: CSV-Export nutzt Escaping, um CSV-Injection zu verhindern und
+ * korrekte Darstellung von Sonderzeichen (Kommas, Anführungszeichen) zu gewährleisten.
+ */
+
 // 🔁 Exportiert Leads als .json-Datei (strukturierte Übergabe an Tools oder Backups)
 export function exportLeadsAsJSON(leads) {
   const blob = new Blob([JSON.stringify(leads, null, 2)], { type: 'application/json' });
@@ -26,7 +39,11 @@ export function exportLeadsAsTXT(leads) {
 // 📊 Exportiert Leads als CSV-Datei (z. B. für Excel, CRM-Importe, Newsletter-Tools)
 export function exportLeadsAsCSV(leads) {
   const header = "Name,Email,Status";
-  const rows = leads.map((l) => `${l.name},${l.email},${l.status}`);
+  // 🔒 CSV-Escaping: Felder in Anführungszeichen, damit Kommas in Namen (z.B. "Schmidt, Maria")
+  // das CSV-Format nicht brechen. Verhindert auch potenzielle CSV-Injection-Angriffe.
+  const rows = leads.map((l) =>
+    `"${l.name || ''}","${l.email || ''}","${l.status || ''}"`
+  );
   const content = [header, ...rows].join("\n");
 
   const blob = new Blob([content], { type: 'text/csv' });

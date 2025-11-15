@@ -37,27 +37,34 @@ Sprint 4+: Excellence (8-12 Wochen, ~80h)
 **Aufwand:** ~20h
 **ROI:** ⭐⭐⭐⭐⭐
 
-### Task 1.1: Cleanup veralteter Code (5min)
+### Task 1.1: CSV-Escaping-Bug fixen (5min) ✅ ERLEDIGT
 
-**Problem:** Veraltete API-Dateien verwirren Entwickler
+**Problem:** CSV-Export in `crmExport.js` hat kein Escaping → Namen mit Kommas brechen CSV-Format
 
-```bash
-# Dateien löschen
-rm server/gpt-proxy.js
-rm src/lib/openai.js
+**Evidenz:**
+```javascript
+// ❌ Vorher (src/utils/crmExport.js:29):
+const rows = leads.map((l) => `${l.name},${l.email},${l.status}`);
+// Bug: Name "Schmidt, Maria" → 4 Spalten statt 3!
+
+// ✅ Nachher:
+const rows = leads.map((l) =>
+  `"${l.name || ''}","${l.email || ''}","${l.status || ''}"`
+);
 ```
 
 **Begründung:**
-- `server/gpt-proxy.js` wird nicht mehr genutzt (localhost:5001)
-- `src/lib/openai.js` zeigt auf localhost:5001 (veraltet)
-- Aktuell wird `api/generate-expose.js` (Vercel) genutzt
+- CSV-Injection-Schutz
+- Korrekte Darstellung von Sonderzeichen
+- Null-Safety
 
 **Acceptance Criteria:**
-- [ ] Dateien gelöscht
-- [ ] Keine Imports in anderen Dateien
-- [ ] App läuft ohne Fehler
+- [x] CSV-Felder mit Anführungszeichen escapen
+- [x] Null-Safety mit `|| ''` Fallback
+- [x] Kommentar zur Security
 
 **Aufwand:** 5min
+**Status:** ✅ Gefixt am 15.11.2025
 
 ---
 
@@ -119,36 +126,23 @@ export async function fetchWithAuth(url, options = {}) {
 
 ---
 
-### Task 1.3: arrayHelpers durch npm-Package ersetzen (15min)
+### Task 1.3: ~~arrayHelpers durch npm-Package ersetzen~~ ❌ ÜBERSPRUNGEN
 
-**Problem:** Eigener Code für Standard-Funktionalität
-
-```bash
-npm install array-move
-```
-
-**Datei:** `src/utils/arrayHelpers.js` → LÖSCHEN
-
-**Migrationen:**
-```javascript
-// ❌ Vorher
-import { moveItem } from '../utils/arrayHelpers';
-
-// ✅ Nachher
-import { move } from 'array-move';
-```
-
-**Files die anzupassen sind:**
-- Suche nach `arrayHelpers` imports
-- Ersetze durch `array-move`
+> **⚠️ KORREKTUR (15.11.2025):**
+> Diese Empfehlung wurde als **FALSCH** identifiziert und wird **NICHT** umgesetzt.
+>
+> **Begründung:**
+> - `arrayHelpers.js`: Nur 36 LOC, dependency-free, Pure Logic
+> - `array-move` Package: 4.1 KB, zusätzliche Dependency, muss gewartet werden
+> - **Kein echter Mehrwert** durch externes Package
+> - **Empfehlung:** BEHALTEN
 
 **Acceptance Criteria:**
-- [ ] array-move installiert
-- [ ] Alle Imports aktualisiert
-- [ ] arrayHelpers.js gelöscht
-- [ ] Funktionalität unverändert
+- [x] Task übersprungen
+- [x] arrayHelpers.js bleibt im Projekt
 
-**Aufwand:** 15min
+**Aufwand:** 0min (übersprungen)
+**Status:** ❌ NICHT umgesetzt
 
 ---
 

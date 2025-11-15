@@ -88,28 +88,28 @@ Sprint 4+ (8-12 Wochen, ~80h)
 
 ---
 
-### Task 1.1: Cleanup veralteter Code (5min)
+### Task 1.1: CSV-Escaping-Bug fixen (5min) ✅ ERLEDIGT
 
-**Problem:** Veraltete API-Dateien verwirren Entwickler
+**Problem:** CSV-Export in `crmExport.js` hat kein Escaping → Namen mit Kommas brechen CSV-Format
 
-```bash
-# 1. Dateien löschen
-rm server/gpt-proxy.js
-rm src/lib/openai.js
+**Evidenz:**
+```javascript
+// ❌ Vorher (src/utils/crmExport.js:29):
+const rows = leads.map((l) => `${l.name},${l.email},${l.status}`);
+// Bug: Name "Schmidt, Maria" → CSV hat 4 statt 3 Spalten!
 
-# 2. Prüfen ob noch Imports existieren
-grep -r "gpt-proxy" src/
-grep -r "lib/openai" src/
-
-# 3. App testen
-npm start
-# Navigiere zu /expose und teste Exposé-Generierung
+// ✅ Nachher:
+const rows = leads.map((l) =>
+  `"${l.name || ''}","${l.email || ''}","${l.status || ''}"`
+);
 ```
 
 **Acceptance Criteria:**
-- [ ] Dateien gelöscht
-- [ ] Keine Import-Fehler
-- [ ] App läuft
+- [x] CSV-Felder mit Anführungszeichen escapen
+- [x] Null-Safety mit `|| ''` Fallback
+- [x] Kommentar zur CSV-Injection-Prevention
+
+**Status:** ✅ Gefixt am 15.11.2025
 
 ---
 
@@ -176,7 +176,15 @@ try {
 
 ---
 
-### Task 1.3: arrayHelpers → npm-Package (15min)
+### Task 1.3: ~~arrayHelpers → npm-Package~~ ❌ ÜBERSPRUNGEN
+
+> **⚠️ KORREKTUR (15.11.2025):**
+> Diese Empfehlung wurde als **FALSCH** identifiziert. `arrayHelpers.js` (36 LOC, dependency-free)
+> sollte **NICHT** durch ein npm-Package ersetzt werden. Kein echter Mehrwert, zusätzliche Dependency.
+> **Empfehlung:** BEHALTEN. Dieser Task wird **NICHT** umgesetzt.
+
+<details>
+<summary>Ursprüngliche (falsche) Empfehlung - nur zur Referenz</summary>
 
 ```bash
 # 1. Package installieren
@@ -195,6 +203,7 @@ rm src/utils/arrayHelpers.js
 # 5. Teste die App
 npm start
 ```
+</details>
 
 **Beispiel-Migration:**
 
