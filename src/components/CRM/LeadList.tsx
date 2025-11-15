@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
 
+import type { Lead } from '../../utils/leadHelpers';
 import LeadRow from './LeadRow';
 import styles from './LeadTable.module.css';
+
+// ==================== TYPES ====================
+
+interface LeadListProps {
+  /** Array of leads */
+  leads?: Lead[];
+
+  /** Callback to update lead */
+  onUpdateLead?: (id: string, updates: Partial<Lead>) => void | Promise<void>;
+
+  /** Callback to delete lead */
+  onDelete?: (id: string) => void | Promise<void>;
+}
+
+// ==================== COMPONENT ====================
 
 /**
  * Legacy lead list component.  This component predates the refactor and
@@ -14,8 +30,8 @@ import styles from './LeadTable.module.css';
  * (undefined) the component will use an empty array to avoid
  * crashes.  A basic status filter is implemented with a select.
  */
-export default function LeadList({ leads = [], onUpdateLead, onDelete }) {
-  const [filter, setFilter] = useState('all');
+export default function LeadList({ leads = [], onUpdateLead, onDelete }: LeadListProps) {
+  const [filter, setFilter] = useState<string>('all');
 
   // Filter leads by status if a specific filter is selected.
   const filtered = leads.filter((lead) => {

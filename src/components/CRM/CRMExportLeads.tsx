@@ -1,7 +1,8 @@
-// 📄 CRMExportLeads.jsx – minimalistischer Exportbereich mit Dropdown
+// 📄 CRMExportLeads.tsx – minimalistischer Exportbereich mit Dropdown
 
 import React, { useState } from 'react';
 
+import type { Lead } from '../../utils/leadHelpers';
 import {
   exportLeadsAsCSV,
   exportLeadsAsTXT,
@@ -9,12 +10,26 @@ import {
 import { exportLeadsAsPDF } from '../../utils/pdfExportLeads';
 import styles from './CRMExportLeads.module.css';
 
-export default function CRMExportLeads({ leads = [], onReset }) {
-  const [open, setOpen] = useState(false);
+// ==================== TYPES ====================
+
+interface CRMExportLeadsProps {
+  /** Array of leads to export */
+  leads?: Lead[];
+
+  /** Callback to reset all leads */
+  onReset?: () => void;
+}
+
+type ExportType = 'pdf' | 'csv' | 'txt' | 'json' | 'copy';
+
+// ==================== COMPONENT ====================
+
+export default function CRMExportLeads({ leads = [], onReset }: CRMExportLeadsProps) {
+  const [open, setOpen] = useState<boolean>(false);
 
   if (!leads.length) return null;
 
-  const handleExport = (type) => {
+  const handleExport = (type: ExportType): void => {
     if (type === 'pdf') exportLeadsAsPDF(leads);
     if (type === 'csv') exportLeadsAsCSV(leads);
     if (type === 'txt') exportLeadsAsTXT(leads);
@@ -58,9 +73,11 @@ export default function CRMExportLeads({ leads = [], onReset }) {
       </div>
 
       {/* 🗑️ Reset separat */}
-      <button onClick={onReset} className={styles.resetButton}>
-        ♻️ Alle Leads löschen
-      </button>
+      {onReset && (
+        <button onClick={onReset} className={styles.resetButton}>
+          ♻️ Alle Leads löschen
+        </button>
+      )}
     </div>
   );
 }
