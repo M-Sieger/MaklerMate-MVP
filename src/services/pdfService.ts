@@ -183,7 +183,7 @@ class PDFService {
 
       const lines = pdf.splitTextToSize(output, maxWidth);
 
-      lines.forEach((line) => {
+      lines.forEach((line: string) => {
         if (currentY > 270) {
           pdf.addPage();
           currentY = 20;
@@ -213,7 +213,7 @@ class PDFService {
         String(formData.ausstattung),
         180
       );
-      ausstattungLines.forEach((line) => {
+      ausstattungLines.forEach((line: string) => {
         if (currentY > 270) {
           pdf.addPage();
           currentY = 20;
@@ -243,7 +243,7 @@ class PDFService {
         String(formData.besonderheiten),
         180
       );
-      besonderheitenLines.forEach((line) => {
+      besonderheitenLines.forEach((line: string) => {
         if (currentY > 270) {
           pdf.addPage();
           currentY = 20;
@@ -290,7 +290,7 @@ class PDFService {
             pdf.setFontSize(9);
             pdf.setFont('helvetica', 'italic');
             const captionLines = pdf.splitTextToSize(caption, imgWidth);
-            captionLines.forEach((line) => {
+            captionLines.forEach((line: string) => {
               pdf.text(line, xOffset, currentY);
               currentY += 4;
             });

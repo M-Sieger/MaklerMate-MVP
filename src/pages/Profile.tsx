@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabaseClient';
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user } = useAuth() as any;
   const initial = ((user?.user_metadata?.display_name || '').toString());
   const [displayName, setDisplayName] = useState<string>(initial);
   const [busy, setBusy] = useState<boolean>(false);

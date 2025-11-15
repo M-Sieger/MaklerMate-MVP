@@ -23,7 +23,7 @@ function labelFromUser(user: any): string {
 // ==================== COMPONENT ====================
 
 export default function AuthButtons() {
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useAuth() as any;
   const navigate = useNavigate();
 
   if (!user) {

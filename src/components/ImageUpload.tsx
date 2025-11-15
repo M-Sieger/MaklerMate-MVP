@@ -264,7 +264,7 @@ export default function ImageUpload() {
 
       {/* 🖼️ BILD-GRID: Thumbnails mit Captions + Controls */}
       <div className={styles.gridContainer}>
-        {images.map((img, index) => (
+        {images.map((img: string, index: number) => (
           <div key={index} className={styles.gridItem}>
             {/* THUMBNAIL */}
             <img

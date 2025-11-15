@@ -19,7 +19,7 @@ type AuthMode = 'login' | 'signup' | 'magic';
 // ==================== COMPONENT ====================
 
 export default function Login() {
-  const { signInWithPassword, signInWithMagicLink, signUp, error } = useAuth();
+  const { signInWithPassword, signInWithMagicLink, signUp, error } = useAuth() as any;
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
