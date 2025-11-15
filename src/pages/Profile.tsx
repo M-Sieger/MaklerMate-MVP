@@ -1,4 +1,4 @@
-// 📄 src/pages/Profile.jsx
+// 📄 src/pages/Profile.tsx
 // Zweck: Minimaler Profil-Screen zum Setzen eines Display-Namens in user_metadata.
 // Vorteil: Kein zusätzliches DB-Schema nötig, perfekt für Sprint 1.
 
@@ -9,14 +9,14 @@ import { supabase } from '../lib/supabaseClient';
 
 export default function Profile() {
   const { user } = useAuth();
-  const initial = (user?.user_metadata?.display_name || '').toString();
-  const [displayName, setDisplayName] = useState(initial);
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState('');
+  const initial = ((user?.user_metadata?.display_name || '').toString());
+  const [displayName, setDisplayName] = useState<string>(initial);
+  const [busy, setBusy] = useState<boolean>(false);
+  const [msg, setMsg] = useState<string>('');
 
   if (!user) return null; // Route ist ohnehin geschützt
 
-  async function save() {
+  async function save(): Promise<void> {
     setBusy(true);
     setMsg('');
     // ✏️ user_metadata schreiben

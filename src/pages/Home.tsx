@@ -1,4 +1,4 @@
-// 📄 src/pages/Home.jsx
+// 📄 src/pages/Home.tsx
 
 import './Home.css'; // 🎨 spezifisches Styling
 
@@ -16,11 +16,11 @@ export default function Home() {
       {/* 🛠 ToolCards Sektion */}
       <section className="tools-section">
         <ToolCards />
-      
+
       </section>
 
-<WhyMaklerMate />
-      
+      <WhyMaklerMate />
+
     </div>
   );
 }

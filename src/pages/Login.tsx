@@ -1,4 +1,4 @@
-// 📄 src/pages/Login.jsx
+// 📄 src/pages/Login.tsx
 // Zweck: Minimaler Login/Signup-Screen (Email/Passwort + optional Magic Link).
 // Fokus: Funktional, kein Polishing nötig.
 
@@ -12,17 +12,23 @@ import {
 
 import { useAuth } from '../context/AuthContext';
 
+// ==================== TYPES ====================
+
+type AuthMode = 'login' | 'signup' | 'magic';
+
+// ==================== COMPONENT ====================
+
 export default function Login() {
   const { signInWithPassword, signInWithMagicLink, signUp, error } = useAuth();
-  const [mode, setMode] = useState('login'); // 'login' | 'signup' | 'magic'
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [mode, setMode] = useState<AuthMode>('login');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [busy, setBusy] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const redirectTo = location.state?.from ?? '/';
+  const redirectTo = (location.state as any)?.from ?? '/';
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     setBusy(true);
 
@@ -80,7 +86,7 @@ export default function Login() {
 
           {!!error && (
             <div style={{ color: '#f87171', marginTop: 12 }}>
-              {error.message ?? 'Fehler beim Login'}
+              {(error as any).message ?? 'Fehler beim Login'}
             </div>
           )}
 
