@@ -1,11 +1,11 @@
-// src/components/WhyMaklerMate.jsx
+// src/components/WhyMaklerMate.tsx
 
 import React, { useState } from 'react';
 
 import styles from './WhyMaklerMate.module.css';
 
 export default function WhyMaklerMate() {
-  const [showPanel, setShowPanel] = useState(false);
+  const [showPanel, setShowPanel] = useState<boolean>(false);
 
   return (
     <section className={styles.why}>

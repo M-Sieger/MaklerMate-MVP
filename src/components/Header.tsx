@@ -1,4 +1,4 @@
-// 📁 src/components/Header.jsx
+// 📁 src/components/Header.tsx
 // Zweck: Einheitlicher App-Header mit Logo, Navigation und Auth-Buttons.
 // - Links: Branding (klickbar zur Startseite)
 // - Mitte: Primärnavigation (mit Active-State via NavLink)

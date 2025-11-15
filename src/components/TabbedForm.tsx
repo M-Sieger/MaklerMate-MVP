@@ -1,13 +1,33 @@
-// src/components/TabbedForm.jsx
+// src/components/TabbedForm.tsx
 
 import React, { useState } from 'react';
 
 // 🎨 Importiere das zugehörige CSS-Modul
 import styles from '../styles/TabbedForm.module.css';
 
-const TabbedForm = ({ tabs }) => {
+// ==================== TYPES ====================
+
+interface TabItem {
+  /** Tab label */
+  label: string;
+
+  /** Optional icon */
+  icon?: string;
+
+  /** Tab content (React element) */
+  content: React.ReactElement;
+}
+
+interface TabbedFormProps {
+  /** Array of tabs */
+  tabs: TabItem[];
+}
+
+// ==================== COMPONENT ====================
+
+const TabbedForm = ({ tabs }: TabbedFormProps) => {
   // 🧠 Local State für aktives Tab (Index)
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
   return (
     <div className={styles.tabbedForm}> {/* 📦 Haupt-Wrapper für das Tab-System */}

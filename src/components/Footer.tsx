@@ -1,4 +1,4 @@
-// 📄 Footer.jsx – Fixierter Footer im Apple-Glasmorph-Stil
+// 📄 Footer.tsx – Fixierter Footer im Apple-Glasmorph-Stil
 
 import './Footer.css';
 

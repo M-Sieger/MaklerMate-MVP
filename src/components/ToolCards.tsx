@@ -1,4 +1,4 @@
-// 📄 src/components/ToolCards.jsx
+// 📄 src/components/ToolCards.tsx
 
 import React from 'react';
 

@@ -1,4 +1,4 @@
-// 📁 src/components/Hero.jsx
+// 📁 src/components/Hero.tsx
 
 import './Hero.css'; // 🎨 Stil & Animation
 

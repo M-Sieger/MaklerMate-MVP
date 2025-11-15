@@ -1,4 +1,4 @@
-// 📄 src/components/Layout.jsx
+// 📄 src/components/Layout.tsx
 import React from 'react';
 
 import {
