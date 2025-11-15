@@ -38,7 +38,7 @@
  *
  * AUTOR: Liberius (MaklerMate MVP)
  * LETZTE ÄNDERUNG: 2025-11-15
- * STATUS: 🟢 Production-Ready (refactored in Phase 3)
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
 import React from 'react';
@@ -50,6 +50,8 @@ import LeadTable from '../../components/CRM/LeadTable';
 
 // STORE (nach DEVELOPMENT-INSTRUCTION.md: Service-Layer Pattern)
 import useCRMStore from '../../stores/crmStore';
+
+// ==================== COMPONENT ====================
 
 export default function CRMTool() {
   // ==================== STATE (via Zustand Store) ====================
@@ -63,7 +65,6 @@ export default function CRMTool() {
 
   const {
     addLead,
-    updateLead,
     deleteLead,
     resetLeads,
     setFilter,
@@ -85,17 +86,17 @@ export default function CRMTool() {
 
   /**
    * Filter ändern (Status-Dropdown)
-   * @param {React.ChangeEvent<HTMLSelectElement>} e - Select-Event
+   * @param e - Select-Event
    */
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setFilter(e.target.value);
   };
 
   /**
    * Search-Query ändern (Search-Input)
-   * @param {React.ChangeEvent<HTMLInputElement>} e - Input-Event
+   * @param e - Input-Event
    */
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchQuery(e.target.value);
   };
 
@@ -103,7 +104,7 @@ export default function CRMTool() {
    * Alle Leads löschen (mit Confirmation)
    * WARUM: Destructive Action, benötigt User-Bestätigung
    */
-  const handleResetLeads = () => {
+  const handleResetLeads = (): void => {
     // CONFIRMATION: User muss bestätigen
     const confirmed = window.confirm(
       'Wirklich alle Leads löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
@@ -176,7 +177,6 @@ export default function CRMTool() {
         <LeadTable
           leads={filteredLeads}
           onDeleteLead={deleteLead}
-          onUpdateLead={updateLead}
         />
       </CRMCard>
     </div>

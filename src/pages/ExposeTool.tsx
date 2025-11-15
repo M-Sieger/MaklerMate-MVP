@@ -25,7 +25,7 @@
  *
  * ABHÄNGIGKEITEN:
  * - stores/exposeStore.js (formData, output, images, savedExposes)
- * - hooks/useExpose.js (generateExpose API-wrapper)
+ * - hooks/useExpose.ts (generateExpose API-wrapper)
  * - components/ExposeForm.jsx, ImageUpload.jsx, ExportButtons.jsx, etc.
  *
  * MIGRATION-NOTES:
@@ -38,7 +38,7 @@
  *
  * AUTOR: Liberius (MaklerMate MVP)
  * LETZTE ÄNDERUNG: 2025-11-15
- * STATUS: 🟢 Production-Ready (refactored in Phase 3)
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
 import '../styles/ExposeTool.css';
@@ -57,6 +57,26 @@ import useExposeStore from '../stores/exposeStore';
 
 // HOOK (wraps exposeService for API calls)
 import { useExpose } from '../hooks/useExpose';
+
+// TYPES
+import type { ExposeFormData } from '../api/utils/validation';
+
+// ==================== TYPES ====================
+
+/**
+ * Expose-Object (wie im Store gespeichert)
+ */
+interface SavedExpose {
+  id?: string;
+  formData?: ExposeFormData;
+  output?: string;
+  selectedStyle?: string;
+  images?: string[];
+  captions?: string[];
+  exportedAt?: string;
+}
+
+// ==================== COMPONENT ====================
 
 export default function ExposeTool() {
   // ==================== STATE (via Zustand Store) ====================
@@ -109,9 +129,11 @@ export default function ExposeTool() {
    * 3. Store-Action updateFormData wird aufgerufen
    * 4. Store updated formData (auto-persist)
    *
-   * @param {React.ChangeEvent<HTMLInputElement>} e - Input-Event
+   * @param e - Input-Event
    */
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     const { name, value } = e.target;
     updateFormData({ [name]: value });
   };
@@ -138,7 +160,7 @@ export default function ExposeTool() {
    * - Supabase Auth-Token wird via apiClient mitgeschickt
    * - Input-Validation im Service (validateExposeData)
    */
-  const handleGenerate = async () => {
+  const handleGenerate = async (): Promise<void> => {
     // VALIDATION: Mindestens ein Feld muss ausgefüllt sein
     // WARUM: Leeres Formular würde sinnlosen API-Call verursachen
     const hasData = Object.entries(formData)
@@ -165,11 +187,11 @@ export default function ExposeTool() {
 
     // SERVICE-CALL: Delegiert an useExpose hook
     // WARUM: Alle API-Details (retry, error-handling) sind gekapselt
-    const result = await generateExpose(formData, selectedStyle);
+    const { data } = await generateExpose(formData, selectedStyle);
 
     // SUCCESS: Store-Update
-    if (result) {
-      setOutput(result);
+    if (data) {
+      setOutput(data);
     }
     // ERROR: Hook zeigt bereits Toast-Notification (via error state)
   };
@@ -188,7 +210,7 @@ export default function ExposeTool() {
    * - localStorage Key: "maklermate-expose-storage"
    * - Auto-Sync über Tabs via Zustand persist
    */
-  const handleSaveExpose = () => {
+  const handleSaveExpose = (): void => {
     saveExpose();
     // Note: Toast-Notification wird im Store angezeigt
   };
@@ -196,9 +218,9 @@ export default function ExposeTool() {
   /**
    * Gespeichertes Exposé laden
    *
-   * @param {Object} expose - Gespeichertes Expose-Object
+   * @param expose - Gespeichertes Expose-Object
    */
-  const handleLoadExpose = (expose) => {
+  const handleLoadExpose = (expose: SavedExpose): void => {
     loadExpose(expose);
     // Note: Toast-Notification wird im Store angezeigt
   };
@@ -206,9 +228,9 @@ export default function ExposeTool() {
   /**
    * Gespeichertes Exposé löschen
    *
-   * @param {number} index - Index im savedExposes-Array
+   * @param index - Index im savedExposes-Array
    */
-  const handleDeleteExpose = (index) => {
+  const handleDeleteExpose = (index: number): void => {
     deleteExpose(index);
     // Note: Toast-Notification wird im Store angezeigt
   };
