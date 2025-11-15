@@ -1,12 +1,92 @@
-// 🏪 exposeStore.js – Zustand Store für Exposé-Tool
-// ✅ Zentrales State-Management ohne Prop-Drilling
-// ✅ Auto-Persistierung in localStorage
-// ✅ Actions für alle State-Updates
+/**
+ * @fileoverview Exposé Store - Zustand Store für Exposé-Tool
+ *
+ * ZWECK:
+ * - Zentrales State-Management ohne Prop-Drilling
+ * - Auto-Persistierung in localStorage
+ * - Actions für alle State-Updates
+ *
+ * FEATURES:
+ * - FormData für Immobilien-Details
+ * - Output-Text vom GPT
+ * - Bild-Management (Upload, Reorder, Captions)
+ * - Saved Exposés (Save, Load, Delete)
+ * - Reset-Funktionen
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * LETZTE ÄNDERUNG: 2025-11-15
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ */
 
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-const initialFormData = {
+import type { ExposeFormData } from '@/api/utils/validation';
+
+// ==================== TYPES ====================
+
+/**
+ * Stil-Optionen für Exposé-Generierung
+ */
+export type ExposeStyle = 'emotional' | 'sachlich' | 'luxus';
+
+/**
+ * Gespeichertes Exposé
+ */
+export interface SavedExpose {
+  id: number;
+  formData: ExposeFormData;
+  output: string;
+  selectedStyle: ExposeStyle;
+  images: string[];
+  captions: string[];
+  createdAt: string;
+}
+
+/**
+ * Exposé Store State
+ */
+interface ExposeState {
+  // ==================== STATE ====================
+  formData: ExposeFormData;
+  output: string;
+  selectedStyle: ExposeStyle;
+  isLoading: boolean;
+  images: string[];
+  captions: string[];
+  savedExposes: SavedExpose[];
+
+  // ==================== FORM ACTIONS ====================
+  setFormData: (data: ExposeFormData) => void;
+  updateFormData: (updates: Partial<ExposeFormData>) => void;
+  updateFormField: (field: keyof ExposeFormData, value: string) => void;
+  setOutput: (output: string) => void;
+  setStyle: (style: ExposeStyle) => void;
+  setSelectedStyle: (style: ExposeStyle) => void; // Alias for backward compatibility
+  setLoading: (loading: boolean) => void;
+
+  // ==================== IMAGE ACTIONS ====================
+  addImage: (image: string) => void;
+  removeImage: (index: number) => void;
+  updateCaption: (index: number, caption: string) => void;
+  moveImage: (fromIndex: number, toIndex: number) => void;
+  setImages: (images: string[]) => void;
+  setCaptions: (captions: string[]) => void;
+
+  // ==================== SAVED EXPOSES ACTIONS ====================
+  saveExpose: () => void;
+  deleteExpose: (indexOrId: number) => void;
+  loadExpose: (expose: SavedExpose) => void;
+
+  // ==================== RESET ====================
+  reset: () => void;
+  resetImages: () => void;
+  clearSavedExposes: () => void;
+}
+
+// ==================== INITIAL STATE ====================
+
+const initialFormData: ExposeFormData = {
   objektart: '',
   strasse: '',
   ort: '',
@@ -21,7 +101,9 @@ const initialFormData = {
   besonderheiten: '',
 };
 
-const useExposeStore = create(
+// ==================== STORE ====================
+
+const useExposeStore = create<ExposeState>()(
   persist(
     (set, get) => ({
       // ==================== STATE ====================
@@ -42,7 +124,6 @@ const useExposeStore = create(
 
       /**
        * Updated FormData (merge mit bestehendem State)
-       * @param {Object} updates - Partial FormData Object zum Mergen
        */
       updateFormData: (updates) =>
         set((state) => ({
@@ -109,8 +190,6 @@ const useExposeStore = create(
 
       /**
        * Verschiebt Bild von einem Index zu anderem (Reordering)
-       * @param {number} fromIndex - Quell-Index
-       * @param {number} toIndex - Ziel-Index
        */
       moveImage: (fromIndex, toIndex) =>
         set((state) => {
@@ -170,7 +249,6 @@ const useExposeStore = create(
 
       /**
        * Löscht gespeichertes Exposé
-       * @param {number} indexOrId - Index im Array oder ID des Exposés
        */
       deleteExpose: (indexOrId) =>
         set((state) => {

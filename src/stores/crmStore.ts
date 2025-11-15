@@ -1,12 +1,93 @@
-// 🏪 crmStore.js – Zustand Store für CRM-Tool
-// ✅ Zentrales Lead-Management
-// ✅ Auto-Persistierung in localStorage
-// ✅ Filter & Search State
+/**
+ * @fileoverview CRM Store - Zustand Store für CRM-Tool
+ *
+ * ZWECK:
+ * - Zentrales Lead-Management
+ * - Auto-Persistierung in localStorage
+ * - Filter & Search State
+ *
+ * FEATURES:
+ * - CRUD Operations für Leads
+ * - Filter nach Status (alle, neu, warm, vip, cold)
+ * - Search-Query über alle Lead-Felder
+ * - Bulk-Operations (Delete, Status-Update)
+ * - Statistics (Total, byStatus, byType)
+ * - Import/Export als JSON
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * LETZTE ÄNDERUNG: 2025-11-15
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ */
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const useCRMStore = create(
+import type { Lead, LeadStatus } from '@/utils/leadHelpers';
+
+// ==================== TYPES ====================
+
+/**
+ * Filter-Optionen für Lead-Status
+ */
+export type LeadFilter = 'alle' | 'neu' | 'warm' | 'vip' | 'cold';
+
+/**
+ * Lead-Statistiken
+ */
+export interface LeadStats {
+  total: number;
+  byStatus: {
+    neu: number;
+    warm: number;
+    vip: number;
+    cold: number;
+  };
+  byType: Record<string, number>;
+}
+
+/**
+ * Import-Result
+ */
+export interface ImportResult {
+  success: boolean;
+  count?: number;
+  error?: string;
+}
+
+/**
+ * CRM Store State
+ */
+interface CRMState {
+  // ==================== STATE ====================
+  leads: Lead[];
+  filter: LeadFilter;
+  searchQuery: string;
+
+  // ==================== LEAD ACTIONS ====================
+  addLead: (lead: Omit<Lead, 'id' | 'createdAt' | 'updatedAt' | '_v'>) => void;
+  updateLead: (id: string, patch: Partial<Lead>) => void;
+  deleteLead: (id: string) => void;
+  deleteLeads: (ids: string[]) => void;
+  setLeads: (leads: Lead[]) => void;
+  resetLeads: () => void;
+
+  // ==================== FILTER & SEARCH ====================
+  setFilter: (filter: LeadFilter) => void;
+  setSearchQuery: (query: string) => void;
+  getFilteredLeads: () => Lead[];
+
+  // ==================== STATS ====================
+  getStats: () => LeadStats;
+
+  // ==================== BULK OPERATIONS ====================
+  bulkUpdateStatus: (ids: string[], newStatus: LeadStatus) => void;
+  exportLeadsAsJSON: () => string;
+  importLeadsFromJSON: (jsonString: string) => ImportResult;
+}
+
+// ==================== STORE ====================
+
+const useCRMStore = create<CRMState>()(
   persist(
     (set, get) => ({
       // ==================== STATE ====================
@@ -21,7 +102,7 @@ const useCRMStore = create(
        */
       addLead: (lead) =>
         set((state) => {
-          const newLead = {
+          const newLead: Lead = {
             ...lead,
             id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
             createdAt: new Date().toISOString(),
@@ -130,11 +211,14 @@ const useCRMStore = create(
           cold: state.leads.filter((l) => l.status === 'cold').length,
         };
 
-        const byType = state.leads.reduce((acc, lead) => {
-          const type = lead.type || 'unbekannt';
-          acc[type] = (acc[type] || 0) + 1;
-          return acc;
-        }, {});
+        const byType = state.leads.reduce<Record<string, number>>(
+          (acc, lead) => {
+            const type = lead.type || 'unbekannt';
+            acc[type] = (acc[type] || 0) + 1;
+            return acc;
+          },
+          {}
+        );
 
         return {
           total,
@@ -170,14 +254,17 @@ const useCRMStore = create(
        */
       importLeadsFromJSON: (jsonString) => {
         try {
-          const leads = JSON.parse(jsonString);
+          const leads = JSON.parse(jsonString) as unknown;
           if (Array.isArray(leads)) {
-            set({ leads });
+            set({ leads: leads as Lead[] });
             return { success: true, count: leads.length };
           }
           return { success: false, error: 'Ungültiges Format' };
         } catch (error) {
-          return { success: false, error: error.message };
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unbekannter Fehler',
+          };
         }
       },
     }),

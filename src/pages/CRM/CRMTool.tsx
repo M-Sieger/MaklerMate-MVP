@@ -49,7 +49,7 @@ import LeadForm from '../../components/CRM/LeadForm';
 import LeadTable from '../../components/CRM/LeadTable';
 
 // STORE (nach DEVELOPMENT-INSTRUCTION.md: Service-Layer Pattern)
-import useCRMStore from '../../stores/crmStore';
+import useCRMStore, { type LeadFilter } from '../../stores/crmStore';
 
 // ==================== COMPONENT ====================
 
@@ -89,7 +89,7 @@ export default function CRMTool() {
    * @param e - Select-Event
    */
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setFilter(e.target.value);
+    setFilter(e.target.value as LeadFilter);
   };
 
   /**

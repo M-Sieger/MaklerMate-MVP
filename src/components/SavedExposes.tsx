@@ -2,20 +2,11 @@
 
 import React from 'react';
 
+import type { SavedExpose } from '../stores/exposeStore';
+
 import styles from './SavedExposes.module.css';
 
 // ==================== TYPES ====================
-
-interface SavedExpose {
-  id: string;
-  formData: {
-    objektart?: string;
-    ort?: string;
-    [key: string]: unknown;
-  };
-  createdAt: string;
-  [key: string]: unknown;
-}
 
 interface SavedExposesProps {
   /** Array von gespeicherten Exposés */

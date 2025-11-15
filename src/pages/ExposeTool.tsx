@@ -53,28 +53,10 @@ import ImageUpload from '../components/ImageUpload';
 import SavedExposes from '../components/SavedExposes';
 
 // STORE (nach DEVELOPMENT-INSTRUCTION.md: Service-Layer Pattern)
-import useExposeStore from '../stores/exposeStore';
+import useExposeStore, { type SavedExpose } from '../stores/exposeStore';
 
 // HOOK (wraps exposeService for API calls)
 import { useExpose } from '../hooks/useExpose';
-
-// TYPES
-import type { ExposeFormData } from '../api/utils/validation';
-
-// ==================== TYPES ====================
-
-/**
- * Expose-Object (wie im Store gespeichert)
- */
-interface SavedExpose {
-  id?: string;
-  formData?: ExposeFormData;
-  output?: string;
-  selectedStyle?: string;
-  images?: string[];
-  captions?: string[];
-  exportedAt?: string;
-}
 
 // ==================== COMPONENT ====================
 
