@@ -355,9 +355,14 @@ class LeadsStorageService {
   }
 }
 
-// ==================== SINGLETON EXPORT ====================
+// ==================== EXPORTS ====================
 
 /**
  * Singleton-Instanz für globale Verwendung
  */
 export default new LeadsStorageService();
+
+/**
+ * Export class for testing purposes
+ */
+export { LeadsStorageService };
