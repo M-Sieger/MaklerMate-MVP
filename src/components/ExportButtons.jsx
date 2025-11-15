@@ -1,5 +1,6 @@
 // 📁 src/components/ExportButtons.jsx
 
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import styles from '../styles/ExportActions.module.css'; // 🧊 Neues Ivy-Design
@@ -7,7 +8,7 @@ import {
   exportExposeWithImages as exportExposeAsPDF,
 } from '../utils/pdfExportExpose';
 
-export default function ExportButtons({ formData, output, selectedStyle, onSaveExpose }) {
+function ExportButtons({ formData, output, selectedStyle, onSaveExpose }) {
   // 📁 JSON-Export (für Weiterverarbeitung oder CRM)
   const handleExportJSON = () => {
     const fullData = { ...formData, output, selectedStyle };
@@ -63,7 +64,7 @@ export default function ExportButtons({ formData, output, selectedStyle, onSaveE
 
       <button className={styles.exportCard} onClick={handleCopy}>
         📋 Text kopieren
-        <span className={styles.sub}>Z. B. für ImmoScout oder E‑Mail</span>
+        <span className={styles.sub}>Z. B. für ImmoScout oder E‑Mail</span>
       </button>
 
       <button className={styles.exportCard} onClick={handleExportJSON}>
@@ -80,3 +81,21 @@ export default function ExportButtons({ formData, output, selectedStyle, onSaveE
     </div>
   );
 }
+
+ExportButtons.propTypes = {
+  formData: PropTypes.shape({
+    images: PropTypes.arrayOf(PropTypes.string),
+    captions: PropTypes.arrayOf(PropTypes.string),
+  }),
+  output: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      text: PropTypes.string,
+      content: PropTypes.string,
+    }),
+  ]),
+  selectedStyle: PropTypes.string,
+  onSaveExpose: PropTypes.func.isRequired,
+};
+
+export default ExportButtons;

@@ -3,6 +3,7 @@
 // ✅ Entfernt HTML5 required-Bubble, stattdessen Button disabled bis Name gesetzt ist.
 // ✅ Guard + Reset nach Submit.
 
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 import styles from './LeadForm.module.css';
@@ -16,7 +17,7 @@ const initialLead = {
   status: 'neu', // 🟢 Default-Status
 };
 
-export default function LeadForm({ onAddLead }) {
+function LeadForm({ onAddLead }) {
   const [lead, setLead] = useState(initialLead);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -144,3 +145,9 @@ export default function LeadForm({ onAddLead }) {
     </form>
   );
 }
+
+LeadForm.propTypes = {
+  onAddLead: PropTypes.func.isRequired,
+};
+
+export default LeadForm;

@@ -16,6 +16,36 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import AppShell from './routes/AppShell';
 import ProtectedRoute from './routes/ProtectedRoute';
+import { validateEnvironment } from './utils/validateEnv';
+
+// 🔐 Validiere Umgebungsvariablen vor App-Start
+try {
+  validateEnvironment();
+} catch (error) {
+  console.error(error.message);
+  // Zeige Fehler im Browser wenn kritische Variablen fehlen
+  document.body.innerHTML = `
+    <div style="
+      font-family: 'Courier New', monospace;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff3cd;
+      border: 2px solid #856404;
+      border-radius: 8px;
+    ">
+      <h2 style="color: #856404; margin-top: 0;">⚠️ Konfigurationsfehler</h2>
+      <pre style="
+        white-space: pre-wrap;
+        background: #fff;
+        padding: 1rem;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      ">${error.message}</pre>
+    </div>
+  `;
+  throw error;
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

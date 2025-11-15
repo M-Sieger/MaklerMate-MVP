@@ -1,5 +1,6 @@
 // src/components/ExposeForm.jsx
 
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 import styles from './ExposeForm.module.css'; // 🔄 Direkt im Component-Ordner
@@ -192,6 +193,27 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
       <div className={styles.tabContent}>{renderTab()}</div>
     </div>
   );
+};
+
+ExposeForm.propTypes = {
+  formData: PropTypes.shape({
+    objektart: PropTypes.string,
+    strasse: PropTypes.string,
+    ort: PropTypes.string,
+    bezirk: PropTypes.string,
+    sicht: PropTypes.string,
+    lagebesonderheiten: PropTypes.string,
+    wohnflaeche: PropTypes.string,
+    grundstueck: PropTypes.string,
+    zimmer: PropTypes.string,
+    baujahr: PropTypes.string,
+    zustand: PropTypes.string,
+    preis: PropTypes.string,
+    energie: PropTypes.string,
+    besonderheiten: PropTypes.string,
+  }).isRequired,
+  setFormData: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
 };
 
 export default ExposeForm;

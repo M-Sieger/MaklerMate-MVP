@@ -13,6 +13,8 @@ import {
   Routes,
 } from 'react-router-dom';
 
+// 🛡️ Error Boundary für graceful error handling
+import ErrorBoundary from './components/ErrorBoundary';
 // 🔁 Layout enthält Navbar + Footer + <Outlet />
 import Layout from './components/Layout';
 // 🧩 Seiten
@@ -26,9 +28,21 @@ const App = () => {
       {/* 🔀 Router mit Layout als Wrapper */}
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />               {/* 🏠 Startseite */}
-          <Route path="crm" element={<CRMTool />} />       {/* 📇 CRM */}
-          <Route path="expose" element={<ExposeTool />} /> {/* 🧾 Exposé */}
+          <Route index element={
+            <ErrorBoundary>
+              <Home />
+            </ErrorBoundary>
+          } />
+          <Route path="crm" element={
+            <ErrorBoundary>
+              <CRMTool />
+            </ErrorBoundary>
+          } />
+          <Route path="expose" element={
+            <ErrorBoundary>
+              <ExposeTool />
+            </ErrorBoundary>
+          } />
         </Route>
       </Routes>
 
