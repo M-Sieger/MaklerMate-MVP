@@ -21,12 +21,12 @@
  * 5. Toast-Notification bei Success/Error
  *
  * ABHÄNGIGKEITEN:
- * - services/pdfService.js (exportExposeAsPDF)
- * - services/exportService.js (exportExposeAsJSON)
+ * - services/pdfService.ts (exportExposeAsPDF)
+ * - services/exportService.ts (exportExposeAsJSON)
  * - stores/exposeStore.js (formData, output, images, captions)
  *
  * VERWENDUNG:
- * - Von ExposeTool.jsx importiert
+ * - Von ExposeTool.tsx importiert
  * - Props: onSaveExpose (callback für "Speichern"-Button)
  *
  * MIGRATION-NOTES:
@@ -39,12 +39,11 @@
  *
  * AUTOR: Liberius (MaklerMate MVP)
  * LETZTE ÄNDERUNG: 2025-11-15
- * STATUS: 🟢 Production-Ready (refactored in Phase 3)
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
 import React from 'react';
 import toast from 'react-hot-toast';
-import PropTypes from 'prop-types';
 
 // SERVICES (nach DEVELOPMENT-INSTRUCTION.md: Service-Layer Pattern)
 import pdfService from '../services/pdfService';
@@ -56,7 +55,16 @@ import useExposeStore from '../stores/exposeStore';
 // STYLES
 import styles from '../styles/ExportActions.module.css';
 
-export default function ExportButtons({ onSaveExpose }) {
+// ==================== TYPES ====================
+
+interface ExportButtonsProps {
+  /** Callback für "Exposé speichern"-Button */
+  onSaveExpose: () => void;
+}
+
+// ==================== COMPONENT ====================
+
+export default function ExportButtons({ onSaveExpose }: ExportButtonsProps) {
   // ==================== STATE (via Zustand Store) ====================
   // WARUM: Eliminiert Prop-Drilling, Zugriff auf alle Export-relevanten Daten
   // VORHER: formData, output, selectedStyle, images als Props
@@ -77,8 +85,8 @@ export default function ExportButtons({ onSaveExpose }) {
   const hasText =
     output &&
     ((typeof output === 'string' && output.trim() !== '') ||
-      output?.text?.trim() ||
-      output?.content?.trim());
+      (output as any)?.text?.trim() ||
+      (output as any)?.content?.trim());
 
   // ==================== EVENT HANDLERS ====================
 
@@ -97,7 +105,7 @@ export default function ExportButtons({ onSaveExpose }) {
    * - Component nur Event-Handler + Error-Handling
    * - Service enthält alle jsPDF-Details (Fonts, Layout, Images)
    */
-  const handleExportPDF = async () => {
+  const handleExportPDF = async (): Promise<void> => {
     try {
       // VALIDATION: Kein Text → keine PDF
       if (!hasText) {
@@ -131,7 +139,7 @@ export default function ExportButtons({ onSaveExpose }) {
    * - JSON-Erstellung in exportService (standardisiert)
    * - Enthält: formData, output, selectedStyle, images, captions, timestamp
    */
-  const handleExportJSON = () => {
+  const handleExportJSON = (): void => {
     try {
       // VALIDATION: Mindestens formData sollte vorhanden sein
       if (!formData || Object.keys(formData).length === 0) {
@@ -177,7 +185,7 @@ export default function ExportButtons({ onSaveExpose }) {
    * - Benötigt HTTPS oder localhost
    * - Async-Operation (await)
    */
-  const handleCopy = async () => {
+  const handleCopy = async (): Promise<void> => {
     try {
       // VALIDATION: Kein Text → Error
       if (!hasText) {
@@ -190,7 +198,9 @@ export default function ExportButtons({ onSaveExpose }) {
       const safeText =
         typeof output === 'string'
           ? output
-          : output?.text || output?.content || JSON.stringify(output, null, 2);
+          : (output as any)?.text ||
+            (output as any)?.content ||
+            JSON.stringify(output, null, 2);
 
       // CLIPBOARD-API: Modern Browser API
       // WARUM: Sicher, async, standardisiert (keine document.execCommand mehr)
@@ -257,7 +267,3 @@ export default function ExportButtons({ onSaveExpose }) {
     </div>
   );
 }
-
-ExportButtons.propTypes = {
-  onSaveExpose: PropTypes.func.isRequired,
-};

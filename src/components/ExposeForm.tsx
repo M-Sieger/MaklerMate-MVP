@@ -1,9 +1,13 @@
-// src/components/ExposeForm.jsx
+// src/components/ExposeForm.tsx
 
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-import styles from './ExposeForm.module.css'; // 🔄 Direkt im Component-Ordner
+import styles from './ExposeForm.module.css';
+
+// TYPES
+import type { ExposeFormData } from '../api/utils/validation';
+
+// ==================== CONSTANTS ====================
 
 // 🗂️ Tabdefinitionen mit Icons
 const TABS = [
@@ -15,26 +19,38 @@ const TABS = [
   { id: 'verkehr', label: '🚆 Anbindung' },
   { id: 'verfuegbarkeit', label: '📆 Verfügbarkeit' },
   { id: 'besonderheiten', label: '✨ Besonderheiten' }
-];
+] as const;
 
-const ExposeForm = ({ formData, setFormData, onChange }) => {
-  const [activeTab, setActiveTab] = useState('objekt');
+type TabId = typeof TABS[number]['id'];
+
+// ==================== TYPES ====================
+
+interface ExposeFormProps {
+  formData: ExposeFormData;
+  setFormData: (data: ExposeFormData) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+}
+
+// ==================== COMPONENT ====================
+
+const ExposeForm = ({ formData, setFormData, onChange }: ExposeFormProps) => {
+  const [activeTab, setActiveTab] = useState<TabId>('objekt');
 
   // 🔁 Eingabelogik (lokal & extern)
-  const handleLocalChange = (e) => {
+  const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     if (onChange) onChange(e);
   };
 
   // 🧩 Dynamisches Input-Rendering
-  const renderInput = (name, placeholder, type = 'input') => (
+  const renderInput = (name: string, placeholder: string, type: 'input' | 'textarea' = 'input') => (
     <div className={styles.formGroup}>
       <label>{placeholder}</label>
       {type === 'textarea' ? (
         <textarea
           name={name}
-          value={formData[name] || ''}
+          value={(formData as any)[name] || ''}
           onChange={handleLocalChange}
           placeholder={placeholder}
           className={styles.fancyInput}
@@ -42,7 +58,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
       ) : (
         <input
           name={name}
-          value={formData[name] || ''}
+          value={(formData as any)[name] || ''}
           placeholder={placeholder}
           onChange={handleLocalChange}
           className={styles.fancyInput}
@@ -53,7 +69,7 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
 
   // 🧠 Panelstruktur für jede Tab-Sektion
   const renderTab = () => {
-    const panel = (children) => (
+    const panel = (children: React.ReactNode) => (
       <div className={styles.panelSection}>{children}</div>
     );
 
@@ -155,14 +171,14 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
             {renderInput('highlights', '✨ Highlights', 'textarea')}
             {renderInput('beschreibung', 'Beschreibung', 'textarea')}
             <label>🖋 Stil</label>
-            <select name='stil' value={formData.stil || ''} onChange={handleLocalChange} className={styles.fancyInput}>
+            <select name='stil' value={(formData as any).stil || ''} onChange={handleLocalChange} className={styles.fancyInput}>
               <option value=''>Bitte wählen</option>
               <option value='modern'>Modern</option>
               <option value='klassisch'>Klassisch</option>
               <option value='emotional'>Emotional</option>
             </select>
             <label>🎯 Zielgruppe</label>
-            <select name='zielgruppe' value={formData.zielgruppe || ''} onChange={handleLocalChange} className={styles.fancyInput}>
+            <select name='zielgruppe' value={(formData as any).zielgruppe || ''} onChange={handleLocalChange} className={styles.fancyInput}>
               <option value=''>Bitte wählen</option>
               <option value='familien'>Familien</option>
               <option value='investoren'>Investoren</option>
@@ -193,27 +209,6 @@ const ExposeForm = ({ formData, setFormData, onChange }) => {
       <div className={styles.tabContent}>{renderTab()}</div>
     </div>
   );
-};
-
-ExposeForm.propTypes = {
-  formData: PropTypes.shape({
-    objektart: PropTypes.string,
-    strasse: PropTypes.string,
-    ort: PropTypes.string,
-    bezirk: PropTypes.string,
-    sicht: PropTypes.string,
-    lagebesonderheiten: PropTypes.string,
-    wohnflaeche: PropTypes.string,
-    grundstueck: PropTypes.string,
-    zimmer: PropTypes.string,
-    baujahr: PropTypes.string,
-    zustand: PropTypes.string,
-    preis: PropTypes.string,
-    energie: PropTypes.string,
-    besonderheiten: PropTypes.string,
-  }).isRequired,
-  setFormData: PropTypes.func.isRequired,
-  onChange: PropTypes.func,
 };
 
 export default ExposeForm;

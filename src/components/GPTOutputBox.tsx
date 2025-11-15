@@ -1,4 +1,4 @@
-// ✅ Globale Button-Styles (für z. B. Exportbuttons unten)
+// ✅ Globale Button-Styles (für z. B. Exportbuttons unten)
 import '../styles/button.css';
 
 import React from 'react';
@@ -8,7 +8,22 @@ import ExposeImageGallery from './ExposeImageGallery';
 // ✅ Modul-CSS für Vorschau-Box & Text
 import styles from './GPTOutputBox.module.css';
 
-export default function GPTOutputBox({ output, images = [], captions = [] }) {
+// ==================== TYPES ====================
+
+interface GPTOutputBoxProps {
+  /** Generierter Exposé-Text */
+  output: string;
+
+  /** Array von Bild-URLs (Base64) */
+  images?: string[];
+
+  /** Array von Bildunterschriften */
+  captions?: string[];
+}
+
+// ==================== COMPONENT ====================
+
+export default function GPTOutputBox({ output, images = [], captions = [] }: GPTOutputBoxProps) {
   return (
     <div className={styles.previewBox}>
       {/* 🧠 Titelzeile mit Trenner */}
