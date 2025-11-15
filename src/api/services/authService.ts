@@ -1,20 +1,52 @@
-// 🔐 authService.js – Service-Layer für Authentication
-// ✅ Wraps Supabase Auth-Methods
-// ✅ Einheitliches Error-Handling
-// ✅ Type-Safe Return-Values
+/**
+ * @fileoverview Authentication Service
+ *
+ * ZWECK:
+ * - Wraps Supabase Auth-Methods
+ * - Einheitliches Error-Handling
+ * - Type-Safe Return-Values
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ */
+
+import type { User, Session } from '@supabase/supabase-js';
 
 import { handleApiError } from '../utils/errorHandler';
 import { supabase } from '../../lib/supabaseClient';
 
+/**
+ * Auth Response Type
+ */
+interface AuthResponse {
+  user: User | null;
+  session: Session | null;
+}
+
+/**
+ * User Metadata Type
+ */
+interface UserMetadata {
+  [key: string]: unknown;
+}
+
+/**
+ * Authentication Service
+ *
+ * SINGLETON:
+ * - Eine Instance für gesamte App
+ * - Export als `export default new AuthService()`
+ */
 class AuthService {
   /**
    * Meldet User mit Email/Password an
-   * @param {string} email - Email-Adresse
-   * @param {string} password - Passwort
-   * @returns {Promise<{user: Object, session: Object}>} User & Session
-   * @throws {ApiError} Bei Authentifizierungsfehlern
+   *
+   * @param email - Email-Adresse
+   * @param password - Passwort
+   * @returns User & Session
+   * @throws ApiError bei Authentifizierungsfehlern
    */
-  async signIn(email, password) {
+  async signIn(email: string, password: string): Promise<AuthResponse> {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -31,14 +63,15 @@ class AuthService {
 
   /**
    * Registriert neuen User
-   * @param {string} email - Email-Adresse
-   * @param {string} password - Passwort
-   * @returns {Promise<{user: Object, session: Object}>} User & Session
-   * @throws {ApiError} Bei Registrierungsfehlern
+   *
+   * @param email - Email-Adresse
+   * @param password - Passwort
+   * @returns User & Session
+   * @throws ApiError bei Registrierungsfehlern
    */
-  async signUp(email, password) {
+  async signUp(email: string, password: string): Promise<AuthResponse> {
     try {
-      const { data, error} = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -53,9 +86,10 @@ class AuthService {
 
   /**
    * Meldet User ab
-   * @throws {ApiError} Bei Logout-Fehlern
+   *
+   * @throws ApiError bei Logout-Fehlern
    */
-  async signOut() {
+  async signOut(): Promise<void> {
     try {
       const { error } = await supabase.auth.signOut();
 
@@ -67,10 +101,11 @@ class AuthService {
 
   /**
    * Gibt aktuelle Session zurück
-   * @returns {Promise<Object|null>} Session oder null
-   * @throws {ApiError} Bei Session-Fehlern
+   *
+   * @returns Session oder null
+   * @throws ApiError bei Session-Fehlern
    */
-  async getSession() {
+  async getSession(): Promise<Session | null> {
     try {
       const { data, error } = await supabase.auth.getSession();
 
@@ -84,11 +119,12 @@ class AuthService {
 
   /**
    * Aktualisiert User-Metadata
-   * @param {Object} metadata - Metadata-Object
-   * @returns {Promise<Object>} Updated User
-   * @throws {ApiError} Bei Update-Fehlern
+   *
+   * @param metadata - Metadata-Object
+   * @returns Updated User
+   * @throws ApiError bei Update-Fehlern
    */
-  async updateUserMetadata(metadata) {
+  async updateUserMetadata(metadata: UserMetadata): Promise<User | null> {
     try {
       const { data, error } = await supabase.auth.updateUser({
         data: metadata,
@@ -104,10 +140,11 @@ class AuthService {
 
   /**
    * Sendet Password-Reset-Email
-   * @param {string} email - Email-Adresse
-   * @throws {ApiError} Bei Reset-Fehlern
+   *
+   * @param email - Email-Adresse
+   * @throws ApiError bei Reset-Fehlern
    */
-  async resetPassword(email) {
+  async resetPassword(email: string): Promise<void> {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email);
 
@@ -119,9 +156,10 @@ class AuthService {
 
   /**
    * Prüft ob User eingeloggt ist
-   * @returns {Promise<boolean>} True wenn eingeloggt
+   *
+   * @returns True wenn eingeloggt
    */
-  async isAuthenticated() {
+  async isAuthenticated(): Promise<boolean> {
     try {
       const session = await this.getSession();
       return !!session;

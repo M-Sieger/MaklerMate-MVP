@@ -1,4 +1,4 @@
-// 📄 App.js – Zentrale Routing-Konfiguration + globales Theme-Styling
+// 📄 App.tsx – Zentrale Routing-Konfiguration + globales Theme-Styling
 
 // ✅ Globales Styling & Fonts laden
 import './fonts.css';       // 🔤 Schriftarten (Manrope)
@@ -22,7 +22,7 @@ import CRMTool from './pages/CRM/CRMTool';     // 📇 CRM
 import ExposeTool from './pages/ExposeTool';   // 🧾 Exposé-Generator
 import Home from './pages/Home';               // 🏠 Startseite
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <>
       {/* 🔀 Router mit Layout als Wrapper */}

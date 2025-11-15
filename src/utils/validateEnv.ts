@@ -1,15 +1,35 @@
-// 🔐 validateEnv.js – Environment Variable Validation
-// ✅ Prüft ob alle notwendigen ENV-Variablen gesetzt sind
-// ✅ Zeigt hilfreiche Fehlermeldungen bei fehlenden Variablen
-// ✅ Verhindert Runtime-Fehler durch Missing-Config
+/**
+ * @fileoverview Environment Variable Validation
+ *
+ * ZWECK:
+ * - Prüft erforderliche ENV-Variablen
+ * - Verhindert Runtime-Fehler durch Missing-Config
+ * - Hilfreiche Fehlermeldungen
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ */
+
+/**
+ * ENV Info Object
+ */
+export interface EnvInfo {
+  nodeEnv: string | undefined;
+  hasSupabaseUrl: boolean;
+  hasSupabaseKey: boolean;
+  isVercel: boolean;
+  isDevelopment: boolean;
+  isProduction: boolean;
+}
 
 /**
  * Validiert erforderliche Umgebungsvariablen
- * @throws {Error} Wenn erforderliche Variablen fehlen
+ *
+ * @throws Error wenn erforderliche Variablen fehlen
  */
-export function validateEnvironment() {
-  const errors = [];
-  const warnings = [];
+export function validateEnvironment(): void {
+  const errors: string[] = [];
+  const warnings: string[] = [];
 
   // 🔑 Required: Supabase-Konfiguration
   if (!process.env.REACT_APP_SUPABASE_URL) {
@@ -21,15 +41,17 @@ export function validateEnvironment() {
   }
 
   // ⚠️ Optional aber empfohlen: OpenAI-Konfiguration
-  // (kann fehlen in lokaler Entwicklung, da Vercel Function verwendet wird)
   const isProduction = process.env.NODE_ENV === 'production';
   const isVercelDeploy = process.env.VERCEL === '1';
 
   if (isProduction && !isVercelDeploy) {
-    if (!process.env.REACT_APP_OPENAI_API_KEY && !process.env.OPENAI_API_KEY) {
+    if (
+      !process.env.REACT_APP_OPENAI_API_KEY &&
+      !process.env.OPENAI_API_KEY
+    ) {
       warnings.push(
         'Keine OpenAI API-Konfiguration gefunden. ' +
-        'Exposé-Generierung funktioniert nur über Vercel Functions.'
+          'Exposé-Generierung funktioniert nur über Vercel Functions.'
       );
     }
   }
@@ -38,7 +60,7 @@ export function validateEnvironment() {
   if (errors.length > 0) {
     const errorMessage = [
       '❌ Fehlende Umgebungsvariablen:',
-      ...errors.map(e => `  - ${e}`),
+      ...errors.map((e) => `  - ${e}`),
       '',
       '💡 Tipp: Erstelle eine .env Datei im Projekt-Root mit:',
       '  REACT_APP_SUPABASE_URL=your-supabase-url',
@@ -53,7 +75,7 @@ export function validateEnvironment() {
   // ⚠️ Warnungen im Development-Mode ausgeben
   if (warnings.length > 0 && process.env.NODE_ENV === 'development') {
     console.warn('⚠️ Umgebungsvariablen-Warnungen:');
-    warnings.forEach(w => console.warn(`  - ${w}`));
+    warnings.forEach((w) => console.warn(`  - ${w}`));
   }
 
   // ✅ Erfolgreich validiert
@@ -64,8 +86,10 @@ export function validateEnvironment() {
 
 /**
  * Gibt sichere (nicht-sensitive) ENV-Infos für Debugging zurück
+ *
+ * @returns ENV Info Object
  */
-export function getEnvInfo() {
+export function getEnvInfo(): EnvInfo {
   return {
     nodeEnv: process.env.NODE_ENV,
     hasSupabaseUrl: !!process.env.REACT_APP_SUPABASE_URL,

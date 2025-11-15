@@ -1,13 +1,30 @@
-// 🌐 apiClient.js – Zentraler API-Client mit Auth & Error-Handling
-// ✅ Axios-basiert mit Request/Response-Interceptors
-// ✅ Auto-Auth via Supabase
-// ✅ Session-Refresh bei 401
-// ✅ Timeout-Configuration
+/**
+ * @fileoverview Zentraler API-Client mit Auth & Error-Handling
+ *
+ * FEATURES:
+ * - Axios-basiert mit Interceptors
+ * - Auto-Auth via Supabase
+ * - Session-Refresh bei 401
+ * - Timeout-Configuration
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ */
 
-import axios from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 import { supabase } from '../../lib/supabaseClient';
 
+/**
+ * Axios Config mit Retry-Flag
+ */
+interface RetryAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+/**
+ * Zentraler API-Client
+ */
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL || '',
   timeout: 30000, // 30s default
@@ -18,12 +35,12 @@ const apiClient = axios.create({
 
 // 🔑 Request-Interceptor: Auto-Auth
 apiClient.interceptors.request.use(
-  async (config) => {
+  async (config: InternalAxiosRequestConfig) => {
     try {
       const { data } = await supabase.auth.getSession();
       const token = data?.session?.access_token;
 
-      if (token) {
+      if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
 
@@ -33,23 +50,25 @@ apiClient.interceptors.request.use(
       return config;
     }
   },
-  (error) => Promise.reject(error)
+  (error: AxiosError) => Promise.reject(error)
 );
 
 // 🔄 Response-Interceptor: Error-Handling & Session-Refresh
 apiClient.interceptors.response.use(
   (response) => response,
-  async (error) => {
+  async (error: AxiosError) => {
+    const config = error.config as RetryAxiosRequestConfig;
+
     // 401: Session refresh versuchen
-    if (error.response?.status === 401 && !error.config._retry) {
-      error.config._retry = true;
+    if (error.response?.status === 401 && config && !config._retry) {
+      config._retry = true;
 
       try {
         const { data } = await supabase.auth.refreshSession();
 
-        if (data?.session?.access_token) {
-          error.config.headers.Authorization = `Bearer ${data.session.access_token}`;
-          return apiClient(error.config);
+        if (data?.session?.access_token && config.headers) {
+          config.headers.Authorization = `Bearer ${data.session.access_token}`;
+          return apiClient(config);
         }
       } catch (refreshError) {
         console.error('❌ Session-Refresh fehlgeschlagen:', refreshError);

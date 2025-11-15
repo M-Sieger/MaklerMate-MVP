@@ -22,7 +22,9 @@ import { validateEnvironment } from './utils/validateEnv';
 try {
   validateEnvironment();
 } catch (error) {
-  console.error(error.message);
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  console.error(errorMessage);
+
   // Zeige Fehler im Browser wenn kritische Variablen fehlen
   document.body.innerHTML = `
     <div style="
@@ -41,13 +43,18 @@ try {
         padding: 1rem;
         border-radius: 4px;
         border: 1px solid #ddd;
-      ">${error.message}</pre>
+      ">${errorMessage}</pre>
     </div>
   `;
   throw error;
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+
+const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <AuthProvider>
