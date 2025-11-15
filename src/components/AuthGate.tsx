@@ -1,4 +1,4 @@
-// 📄 src/components/AuthGate.jsx
+// 📄 src/components/AuthGate.tsx
 // Zweck: UI-Guard. Rendert Kinder nur wenn eingeloggt – sonst Hinweis + Link.
 // Einsatz: Umschließt die Exposé-Erstellung (z. B. Button oder ganze Section).
 
@@ -11,7 +11,22 @@ import {
 
 import { useAuth } from '../context/AuthContext';
 
-export default function AuthGate({ children, fallbackMessage = 'Bitte einloggen, um ein Exposé zu erstellen.' }) {
+// ==================== TYPES ====================
+
+interface AuthGateProps {
+  /** Child elements to render when authenticated */
+  children: React.ReactNode;
+
+  /** Message to show when not authenticated */
+  fallbackMessage?: string;
+}
+
+// ==================== COMPONENT ====================
+
+export default function AuthGate({
+  children,
+  fallbackMessage = 'Bitte einloggen, um ein Exposé zu erstellen.'
+}: AuthGateProps) {
   const { user, loading } = useAuth();
   const location = useLocation();
 

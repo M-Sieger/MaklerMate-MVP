@@ -1,4 +1,4 @@
-// 📄 src/components/AuthButtons.jsx
+// 📄 src/components/AuthButtons.tsx
 // Zweck: Rechts im Header – zeigt Display-Name (oder E-Mail) + Link zum Profil + Logout.
 
 import React from 'react';
@@ -10,13 +10,17 @@ import {
 
 import { useAuth } from '../context/AuthContext';
 
-function labelFromUser(user) {
+// ==================== HELPERS ====================
+
+function labelFromUser(user: any): string {
   const metaName = user?.user_metadata?.display_name;
   if (metaName && String(metaName).trim()) return String(metaName).trim();
   // Fallback: lokaler Teil der E-Mail
   const email = user?.email || '';
   return email.includes('@') ? email.split('@')[0] : email;
 }
+
+// ==================== COMPONENT ====================
 
 export default function AuthButtons() {
   const { user, signOut } = useAuth();

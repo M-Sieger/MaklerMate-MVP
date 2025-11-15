@@ -1,4 +1,4 @@
-// src/components/Loader.jsx
+// src/components/Loader.tsx
 
 import React from 'react';
 
