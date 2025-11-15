@@ -1,14 +1,33 @@
-// 📄 LeadForm.jsx — Formular für Leads mit Loading-State & UX-Polish
+// 📄 LeadForm.tsx — Formular für Leads mit Loading-State & UX-Polish
 // ✅ Button zeigt Spinner beim Speichern (0.5s künstliche Verzögerung für Feedback)
 // ✅ Entfernt HTML5 required-Bubble, stattdessen Button disabled bis Name gesetzt ist.
 // ✅ Guard + Reset nach Submit.
 
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 import styles from './LeadForm.module.css';
 
-const initialLead = {
+// TYPES
+import type { Lead, LeadStatus } from '../../utils/leadHelpers';
+
+// ==================== TYPES ====================
+
+interface LeadFormData {
+  name: string;
+  contact: string;
+  location: string;
+  type: string;
+  note: string;
+  status: LeadStatus;
+}
+
+interface LeadFormProps {
+  onAddLead: (lead: Lead) => void;
+}
+
+// ==================== CONSTANTS ====================
+
+const initialLead: LeadFormData = {
   name: '',
   contact: '',
   location: '',
@@ -17,26 +36,30 @@ const initialLead = {
   status: 'neu', // 🟢 Default-Status
 };
 
-function LeadForm({ onAddLead }) {
-  const [lead, setLead] = useState(initialLead);
-  const [isLoading, setIsLoading] = useState(false);
+// ==================== COMPONENT ====================
 
-  const handleChange = (e) => {
+function LeadForm({ onAddLead }: LeadFormProps) {
+  const [lead, setLead] = useState<LeadFormData>(initialLead);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target;
     setLead((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const cleaned = {
+    const cleaned: LeadFormData = {
       ...lead,
       name: lead.name.trim(),
       contact: lead.contact.trim(),
       location: lead.location.trim(),
       type: lead.type.trim(),
       note: lead.note.trim(),
-      status: (lead.status || 'neu').toLowerCase(),
+      status: (lead.status || 'neu') as LeadStatus,
     };
 
     if (!cleaned.name) return;
@@ -45,12 +68,12 @@ function LeadForm({ onAddLead }) {
 
     const now = Date.now();
     const payload = {
+      _v: 2,
       ...cleaned,
       id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
-      createdAt: now,
-      updatedAt: now,
-      version: 1,
-    };
+      createdAt: new Date(now).toISOString(),
+      updatedAt: new Date(now).toISOString(),
+    } as Lead;
 
     // kleine künstliche Verzögerung für UX-Feedback
     await new Promise((res) => setTimeout(res, 500));
@@ -145,9 +168,5 @@ function LeadForm({ onAddLead }) {
     </form>
   );
 }
-
-LeadForm.propTypes = {
-  onAddLead: PropTypes.func.isRequired,
-};
 
 export default LeadForm;

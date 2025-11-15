@@ -1,4 +1,4 @@
-// 📄 LeadTable.jsx — Sticky-Header, Empty-State, Delete-Loader & A11y
+// 📄 LeadTable.tsx — Sticky-Header, Empty-State, Delete-Loader & A11y
 // Wirkung:
 // - Loader-State pro Zeile beim Löschen (visual & disabled)
 // - Empty-State mit Icon/Text (passt zu LeadTable.module.css)
@@ -9,11 +9,28 @@ import React, { useState } from 'react';
 import IvyBadge from './IvyBadge';
 import styles from './LeadTable.module.css';
 
-const statusRank = { vip: 3, warm: 2, neu: 1, cold: 0 };
+// TYPES
+import type { Lead, LeadStatus } from '../../utils/leadHelpers';
 
-export default function LeadTable({ leads = [], onDeleteLead }) {
+// ==================== TYPES ====================
+
+interface LeadTableProps {
+  /** Array von Leads */
+  leads?: Lead[];
+
+  /** Callback zum Löschen eines Leads (per ID) */
+  onDeleteLead: (id: string) => void;
+}
+
+// ==================== CONSTANTS ====================
+
+const statusRank: Record<string, number> = { vip: 3, warm: 2, neu: 1, cold: 0 };
+
+// ==================== COMPONENT ====================
+
+export default function LeadTable({ leads = [], onDeleteLead }: LeadTableProps) {
   // 🧠 UI-State: welche Zeile gerade "lädt" (Delete)
-  const [loadingId, setLoadingId] = useState(null);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
   // 🔄 Sortierung nach Status (VIP → Warm → Neu → Cold)
   const sorted = [...leads].sort((a, b) => {
@@ -23,7 +40,7 @@ export default function LeadTable({ leads = [], onDeleteLead }) {
   });
 
   // 🗑️ Delete mit kurzem Loader-Feedback (UX)
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string): Promise<void> => {
     setLoadingId(id);
     // kleine künstliche Verzögerung für spürbares Feedback
     await new Promise((r) => setTimeout(r, 400));
@@ -74,14 +91,14 @@ export default function LeadTable({ leads = [], onDeleteLead }) {
 
                   {/* 🏷️ Status */}
                   <td className={styles.statusCell}>
-                    <IvyBadge status={(lead.status || 'neu').toLowerCase()} />
+                    <IvyBadge status={(lead.status || 'neu').toLowerCase() as LeadStatus} />
                   </td>
 
                   <td>{lead.note || '—'}</td>
 
                   <td className={styles.createdAtCell}>
                     {lead.createdAt ? (
-                      <time dateTime={createdISO}>
+                      <time dateTime={createdISO || undefined}>
                         {new Date(lead.createdAt).toLocaleDateString()}
                       </time>
                     ) : (

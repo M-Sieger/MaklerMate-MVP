@@ -1,14 +1,34 @@
-// 📦 CRMCard.jsx
+// 📦 CRMCard.tsx
 import React, { useId } from 'react';
 
 import styles from './CRM.module.css';
 
+// ==================== TYPES ====================
+
+interface CRMCardProps {
+  /** Überschrift im Header (optional) */
+  title?: string;
+
+  /** ReactNode für Filter, Suche, etc. (linke Seite der Toolbar) */
+  toolbarLeft?: React.ReactNode;
+
+  /** ReactNode für Aktionen (rechte Seite der Toolbar) */
+  toolbarRight?: React.ReactNode;
+
+  /** ReactNode, z. B. CSV-Export Zeile (optional) */
+  footer?: React.ReactNode;
+
+  /** Zusätzliche CSS-Klassen (optional) */
+  className?: string;
+
+  /** Kinder-Elemente */
+  children: React.ReactNode;
+}
+
+// ==================== COMPONENT ====================
+
 /**
  * CRMCard – Apple-Style Container mit optionalem Header (Titel + Toolbar) und Footer.
- * - title: Überschrift im Header (optional)
- * - toolbarLeft / toolbarRight: ReactNode für Filter, Suche, Aktionen (optional)
- * - footer: ReactNode, z. B. CSV-Export Zeile (optional)
- * - className: zusätzliche Klassen (optional)
  *
  * ⚠️ Abwärtskompatibel:
  *  - Bestehende Consumer, die nur {title}{children} nutzen, verhalten sich unverändert.
@@ -21,7 +41,7 @@ export default function CRMCard({
   footer,
   className = '',
   children,
-}) {
+}: CRMCardProps) {
   const headingId = useId(); // A11y: verbindet section mit der Überschrift
 
   return (
