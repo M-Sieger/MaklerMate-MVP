@@ -41,11 +41,11 @@ function getNextStatus(current: LeadStatus): LeadStatus {
  * - Verwendet Loader-State für asynchrone Aktionen.
  */
 export default function LeadRow({ lead, onUpdateLead, onDelete }: LeadRowProps) {
-  if (!lead) return null;
-  const { id, name, contact, location, type, status, note, createdAt } = lead;
-
   // ⏳ Lokaler Loader-State für Button-Feedback
   const [loadingAction, setLoadingAction] = useState<LoadingAction>(null);
+
+  if (!lead) return null;
+  const { id, name, contact, location, type, status, note, createdAt } = lead;
 
   // 🔄 Status per Button durchwechseln
   async function handleCycle(): Promise<void> {
