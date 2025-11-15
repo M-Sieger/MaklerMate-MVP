@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 
-import { STATUS_ENUM } from '../../hooks/useLocalStorageLeads';
+import { STATUS_ENUM } from '../../utils/leadHelpers';
 import IvyBadge from './IvyBadge';
 import styles from './LeadRow.module.css';
 
