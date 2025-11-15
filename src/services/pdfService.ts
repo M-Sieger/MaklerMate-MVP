@@ -1,21 +1,125 @@
-// 📄 pdfService.js – Zentraler PDF-Export Service
-// ✅ Konsolidiert alle PDF-Export-Funktionen
-// ✅ Exposé-PDF mit Text + Bildern
-// ✅ Leads-PDF mit Tabelle
-// ✅ Optimiert (kein html2canvas, nur jsPDF + autotable)
+/**
+ * @fileoverview PDF Service - Zentraler PDF-Export Service
+ *
+ * ZWECK:
+ * - Exposé-PDF mit Text + Bildern
+ * - Leads-PDF mit Tabelle (autoTable)
+ * - Konsolidiert alle PDF-Export-Funktionen
+ * - Optimiert (kein html2canvas, nur jsPDF)
+ *
+ * FEATURES:
+ * - Multi-Page Support (automatischer Seitenumbruch)
+ * - Bild-Integration (Base64)
+ * - Caption-Support für Bilder
+ * - Tabellen-Export via jspdf-autotable
+ * - Automatische Dateinamen-Generierung
+ *
+ * DEPENDENCIES:
+ * - jsPDF: PDF-Erstellung
+ * - jspdf-autotable: Tabellen-Support
+ *
+ * AUTOR: Liberius (MaklerMate MVP)
+ * LETZTE ÄNDERUNG: 2025-11-15
+ * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ */
 
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import type { Lead } from '@/utils/leadHelpers';
+import type { ExposeFormData } from '@/api/utils/validation';
 
+// Extend jsPDF with autoTable (TypeScript augmentation)
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: AutoTableOptions) => jsPDF;
+    lastAutoTable: {
+      finalY: number;
+    };
+  }
+}
+
+// ==================== TYPES ====================
+
+/**
+ * jsPDF autoTable Options
+ */
+interface AutoTableOptions {
+  head?: string[][];
+  body?: string[][];
+  startY?: number;
+  styles?: {
+    fontSize?: number;
+    cellPadding?: number;
+  };
+  headStyles?: {
+    fillColor?: number[];
+    textColor?: number[];
+    fontStyle?: string;
+  };
+  alternateRowStyles?: {
+    fillColor?: number[];
+  };
+  margin?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
+}
+
+// ==================== SERVICE CLASS ====================
+
+/**
+ * PDF Service für PDF-Export-Funktionalität
+ *
+ * SINGLETON:
+ * - Eine Instance für gesamte App
+ * - Export als `export default new PDFService()`
+ *
+ * METHODS:
+ * - exportExposeAsPDF(): Exposé mit Text + Bildern
+ * - exportLeadsAsPDF(): Lead-Tabelle
+ * - _truncate(): Text kürzen (private)
+ */
 class PDFService {
   /**
    * Exportiert Immobilien-Exposé als PDF
-   * @param {Object} formData - Formular-Daten
-   * @param {string} output - Generierter Exposé-Text
-   * @param {string[]} images - Base64-Image-Strings
-   * @param {string[]} captions - Bild-Unterschriften
+   *
+   * CONTENT:
+   * - Header: "Immobilien-Exposé"
+   * - Adresse (Straße, Ort, Bezirk)
+   * - Objektart
+   * - Eckdaten (Wohnfläche, Zimmer, Baujahr, etc.)
+   * - Exposé-Text (GPT-generiert)
+   * - Ausstattung (optional)
+   * - Besonderheiten (optional)
+   * - Bilder mit Captions (optional)
+   *
+   * LAYOUT:
+   * - A4 Portrait
+   * - Auto-Pagination bei Überlauf
+   * - Bilder zentriert, 120x80mm
+   * - Margins: 15mm
+   *
+   * @param formData - Formular-Daten
+   * @param output - Generierter Exposé-Text
+   * @param images - Base64-Image-Strings (data:image/jpeg;base64,...)
+   * @param captions - Bild-Unterschriften
+   *
+   * @example
+   * pdfService.exportExposeAsPDF(
+   *   formData,
+   *   'Wunderschöne 3-Zimmer-Wohnung...',
+   *   ['data:image/jpeg;base64,...'],
+   *   ['Wohnzimmer mit Blick auf den Park']
+   * );
    */
-  exportExposeAsPDF(formData, output, images = [], captions = []) {
+  exportExposeAsPDF(
+    formData: ExposeFormData,
+    output: string,
+    images: string[] = [],
+    captions: string[] = []
+  ): void {
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -51,12 +155,14 @@ class PDFService {
     pdf.setFontSize(10);
     pdf.setFont('helvetica', 'normal');
 
-    const eckdaten = [];
-    if (formData.wohnflaeche) eckdaten.push(`Wohnfläche: ${formData.wohnflaeche} m²`);
+    const eckdaten: string[] = [];
+    if (formData.wohnflaeche)
+      eckdaten.push(`Wohnfläche: ${formData.wohnflaeche} m²`);
     if (formData.zimmer) eckdaten.push(`Zimmer: ${formData.zimmer}`);
     if (formData.baujahr) eckdaten.push(`Baujahr: ${formData.baujahr}`);
     if (formData.etage) eckdaten.push(`Etage: ${formData.etage}`);
-    if (formData.balkonTerrasse) eckdaten.push(`Balkon/Terrasse: ${formData.balkonTerrasse}`);
+    if (formData.balkonTerrasse)
+      eckdaten.push(`Balkon/Terrasse: ${formData.balkonTerrasse}`);
     if (formData.preis) eckdaten.push(`Preis: ${formData.preis}`);
 
     eckdaten.forEach((item) => {
@@ -90,7 +196,7 @@ class PDFService {
     }
 
     // ==================== AUSSTATTUNG ====================
-    if (formData.ausstattung && formData.ausstattung.trim()) {
+    if (formData.ausstattung && String(formData.ausstattung).trim()) {
       if (currentY > 250) {
         pdf.addPage();
         currentY = 20;
@@ -103,7 +209,10 @@ class PDFService {
 
       pdf.setFontSize(10);
       pdf.setFont('helvetica', 'normal');
-      const ausstattungLines = pdf.splitTextToSize(formData.ausstattung, 180);
+      const ausstattungLines = pdf.splitTextToSize(
+        String(formData.ausstattung),
+        180
+      );
       ausstattungLines.forEach((line) => {
         if (currentY > 270) {
           pdf.addPage();
@@ -117,7 +226,7 @@ class PDFService {
     }
 
     // ==================== BESONDERHEITEN ====================
-    if (formData.besonderheiten && formData.besonderheiten.trim()) {
+    if (formData.besonderheiten && String(formData.besonderheiten).trim()) {
       if (currentY > 250) {
         pdf.addPage();
         currentY = 20;
@@ -130,7 +239,10 @@ class PDFService {
 
       pdf.setFontSize(10);
       pdf.setFont('helvetica', 'normal');
-      const besonderheitenLines = pdf.splitTextToSize(formData.besonderheiten, 180);
+      const besonderheitenLines = pdf.splitTextToSize(
+        String(formData.besonderheiten),
+        180
+      );
       besonderheitenLines.forEach((line) => {
         if (currentY > 270) {
           pdf.addPage();
@@ -147,7 +259,11 @@ class PDFService {
     if (images && images.length > 0) {
       images.forEach((imgData, idx) => {
         // Nur data:image URLs verarbeiten
-        if (!imgData || typeof imgData !== 'string' || !imgData.startsWith('data:image')) {
+        if (
+          !imgData ||
+          typeof imgData !== 'string' ||
+          !imgData.startsWith('data:image')
+        ) {
           return;
         }
 
@@ -168,7 +284,8 @@ class PDFService {
           currentY += imgHeight + 5;
 
           // Caption wenn vorhanden
-          const caption = captions && captions[idx] ? captions[idx].trim() : '';
+          const caption =
+            captions && captions[idx] ? captions[idx].trim() : '';
           if (caption) {
             pdf.setFontSize(9);
             pdf.setFont('helvetica', 'italic');
@@ -193,9 +310,31 @@ class PDFService {
 
   /**
    * Exportiert CRM-Leads als PDF-Tabelle
-   * @param {Object[]} leads - Array von Lead-Objekten
+   *
+   * CONTENT:
+   * - Header: "CRM Leads"
+   * - Timestamp
+   * - Tabelle mit allen Leads
+   * - Footer mit Anzahl
+   *
+   * LAYOUT:
+   * - A4 Landscape (für mehr Spalten)
+   * - Auto-Pagination
+   * - Alternierende Zeilen-Farben
+   * - Header-Zeile farbig (blau)
+   *
+   * COLUMNS:
+   * - Name, Kontakt, Typ, Status, Ort, Notiz (gekürzt), Erstellt
+   *
+   * @param leads - Array von Lead-Objekten
+   *
+   * @example
+   * pdfService.exportLeadsAsPDF([
+   *   { name: 'Max Müller', contact: 'max@example.com', ... },
+   *   { name: 'Anna Schmidt', contact: '+49 123 456', ... },
+   * ]);
    */
-  exportLeadsAsPDF(leads) {
+  exportLeadsAsPDF(leads: Lead[]): void {
     const pdf = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
@@ -229,15 +368,7 @@ class PDFService {
     // Tabelle erstellen
     pdf.autoTable({
       head: [
-        [
-          'Name',
-          'Kontakt',
-          'Typ',
-          'Status',
-          'Ort',
-          'Notiz',
-          'Erstellt',
-        ],
+        ['Name', 'Kontakt', 'Typ', 'Status', 'Ort', 'Notiz', 'Erstellt'],
       ],
       body: tableData,
       startY: 30,
@@ -268,12 +399,33 @@ class PDFService {
 
   /**
    * Hilfsfunktion: Kürzt Text auf max. Länge
+   *
+   * VERWENDUNG:
+   * - Für Tabellen-Zellen (Notiz-Spalte)
+   * - Fügt "..." hinzu wenn gekürzt
+   *
    * @private
+   * @param text - Zu kürzender Text
+   * @param maxLength - Maximale Länge
+   * @returns Gekürzter Text mit "..."
    */
-  _truncate(text, maxLength) {
+  private _truncate(text: string, maxLength: number): string {
     if (!text || text.length <= maxLength) return text;
     return text.substring(0, maxLength - 3) + '...';
   }
 }
 
+// ==================== SINGLETON EXPORT ====================
+
+/**
+ * Singleton-Instance des PDFService
+ *
+ * VERWENDUNG:
+ * ```typescript
+ * import pdfService from '@/services/pdfService';
+ *
+ * pdfService.exportExposeAsPDF(formData, text, images, captions);
+ * pdfService.exportLeadsAsPDF(leads);
+ * ```
+ */
 export default new PDFService();
