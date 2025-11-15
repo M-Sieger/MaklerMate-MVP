@@ -41,6 +41,15 @@ const useExposeStore = create(
       setFormData: (data) => set({ formData: data }),
 
       /**
+       * Updated FormData (merge mit bestehendem State)
+       * @param {Object} updates - Partial FormData Object zum Mergen
+       */
+      updateFormData: (updates) =>
+        set((state) => ({
+          formData: { ...state.formData, ...updates },
+        })),
+
+      /**
        * Updated einzelnes Formular-Feld
        */
       updateFormField: (field, value) =>
@@ -57,6 +66,11 @@ const useExposeStore = create(
        * Setzt gewählten Stil
        */
       setStyle: (style) => set({ selectedStyle: style }),
+
+      /**
+       * Alias für setStyle (backward compatibility)
+       */
+      setSelectedStyle: (style) => set({ selectedStyle: style }),
 
       /**
        * Setzt Loading-Status
@@ -126,11 +140,31 @@ const useExposeStore = create(
 
       /**
        * Löscht gespeichertes Exposé
+       * @param {number} indexOrId - Index im Array oder ID des Exposés
        */
-      deleteExpose: (id) =>
-        set((state) => ({
-          savedExposes: state.savedExposes.filter((e) => e.id !== id),
-        })),
+      deleteExpose: (indexOrId) =>
+        set((state) => {
+          // Check if it's an index (number < savedExposes.length) or an ID
+          const isIndex =
+            typeof indexOrId === 'number' &&
+            indexOrId < state.savedExposes.length;
+
+          if (isIndex) {
+            // Delete by index
+            return {
+              savedExposes: state.savedExposes.filter(
+                (_, i) => i !== indexOrId
+              ),
+            };
+          } else {
+            // Delete by ID
+            return {
+              savedExposes: state.savedExposes.filter(
+                (e) => e.id !== indexOrId
+              ),
+            };
+          }
+        }),
 
       /**
        * Lädt gespeichertes Exposé in aktuelles Formular
