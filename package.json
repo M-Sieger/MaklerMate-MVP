@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@supabase/supabase-js": "^2.55.0",
+    "@supabase/supabase-js": "^2.81.1",
     "@testing-library/dom": "^10.4.0",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
