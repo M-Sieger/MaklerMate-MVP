@@ -1,4 +1,20 @@
 // 📄 App.tsx – Zentrale Routing-Konfiguration + globales Theme-Styling
+//
+// 🔧 SAAS-INTEGRATION NOTE:
+// Diese Komponente ist die **Haupt-Engine** für die MaklerMate-App.
+// Sie kann später in eine Next.js-SaaS-Hülle eingebettet werden:
+//
+// // In Next.js: /app/app/page.tsx
+// import MaklerMateApp from '@/components/maklermate/App';
+// export default function AppPage() {
+//   return (
+//     <AppProvider userId={session.user.id} plan={session.user.plan}>
+//       <MaklerMateApp />
+//     </AppProvider>
+//   );
+// }
+//
+// Siehe: docs/architecture/APP-INTEGRATION-OVERVIEW.md
 
 // ✅ Globales Styling & Fonts laden
 import './fonts.css';       // 🔤 Schriftarten (Manrope)

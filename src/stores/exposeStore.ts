@@ -13,8 +13,28 @@
  * - Saved Exposés (Save, Load, Delete)
  * - Reset-Funktionen
  *
+ * 🔧 SAAS-INTEGRATION NOTE (v0.2.x):
+ * Dieser Store nutzt aktuell Zustand persist middleware mit localStorage.
+ * Bilder werden als Base64 gespeichert (große Datenmenge, LocalStorage-Limit).
+ *
+ * In v0.2.x wird die Persistierungs-Logik ersetzt durch:
+ *   - IExposeRepository Interface (src/repositories/IExposeRepository.ts)
+ *   - SupabaseExposeRepository Implementation
+ *   - Bilder in Supabase Storage (statt Base64 in JSON)
+ *   - User-spezifische Daten (userId Filter)
+ *   - Real-Time Sync zwischen Devices
+ *
+ * Migration-Plan:
+ *   1. Extrahiere Persistierungs-Logik in LocalStorageExposeRepository
+ *   2. Inject Repository via Dependency Injection
+ *   3. Implementiere SupabaseExposeRepository + Storage Upload
+ *   4. Feature-Flag für schrittweise Migration
+ *
+ * Siehe: docs/architecture/STORAGE-ABSTRACTION.md
+ *       docs/architecture/SUPABASE-SCHEMA.md (expose_images Tabelle)
+ *
  * AUTOR: Liberius (MaklerMate MVP)
- * LETZTE ÄNDERUNG: 2025-11-15
+ * LETZTE ÄNDERUNG: 2025-11-16
  * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 

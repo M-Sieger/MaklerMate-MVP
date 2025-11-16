@@ -18,9 +18,26 @@
  * - subscribe() für Callbacks bei Storage-Changes
  * - Cross-Tab-Sync: Automatisch via Browser-Events
  *
+ * ⚠️ DEPRECATION NOTE:
+ * Dieser Service ist REDUNDANT zu crmStore (Zustand persist middleware).
+ * Beide speichern Leads in LocalStorage, was zu Inkonsistenzen führen kann.
+ *
+ * MIGRATION-PLAN:
+ *   1. Phase 1: Konsolidierung
+ *      - Entferne LeadsStorageService
+ *      - Nutze nur crmStore (Zustand persist)
+ *
+ *   2. Phase 2: Repository Pattern (v0.2.x)
+ *      - Extrahiere Persistierung aus crmStore
+ *      - Implementiere ILeadRepository (siehe src/repositories/ILeadRepository.ts)
+ *      - LocalStorageLeadRepository als Übergangs-Implementierung
+ *      - SupabaseLeadRepository als finale Implementierung
+ *
+ * Siehe: docs/architecture/STORAGE-ABSTRACTION.md
+ *
  * AUTOR: Liberius (MaklerMate MVP)
- * LETZTE ÄNDERUNG: 2025-11-15
- * STATUS: 🟢 Production-Ready (TypeScript Migration)
+ * LETZTE ÄNDERUNG: 2025-11-16
+ * STATUS: ⚠️ Legacy/Redundant (zu konsolidieren)
  */
 
 import { Lead, migrateLead } from '@/utils/leadHelpers';

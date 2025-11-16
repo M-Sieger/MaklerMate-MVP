@@ -14,8 +14,24 @@
  * - Statistics (Total, byStatus, byType)
  * - Import/Export als JSON
  *
+ * 🔧 SAAS-INTEGRATION NOTE (v0.2.x):
+ * Dieser Store nutzt aktuell Zustand persist middleware mit localStorage.
+ * In v0.2.x wird die Persistierungs-Logik ersetzt durch:
+ *   - ILeadRepository Interface (src/repositories/ILeadRepository.ts)
+ *   - SupabaseLeadRepository Implementation
+ *   - User-spezifische Daten (userId Filter)
+ *   - Real-Time Sync zwischen Devices
+ *
+ * Migration-Plan:
+ *   1. Extrahiere Persistierungs-Logik in LocalStorageLeadRepository
+ *   2. Inject Repository via Dependency Injection
+ *   3. Implementiere SupabaseLeadRepository
+ *   4. Feature-Flag für schrittweise Migration
+ *
+ * Siehe: docs/architecture/STORAGE-ABSTRACTION.md
+ *
  * AUTOR: Liberius (MaklerMate MVP)
- * LETZTE ÄNDERUNG: 2025-11-15
+ * LETZTE ÄNDERUNG: 2025-11-16
  * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
