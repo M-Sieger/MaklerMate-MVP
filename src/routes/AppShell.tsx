@@ -25,7 +25,7 @@ import Header from '../components/Header';
  * </Route>
  * ```
  */
-export default function AppShell(): JSX.Element {
+export default function AppShell(): React.ReactElement {
   return (
     <>
       <Header />

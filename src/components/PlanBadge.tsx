@@ -28,7 +28,7 @@ import styles from './PlanBadge.module.css';
  * <PlanBadge />
  * ```
  */
-export function PlanBadge(): JSX.Element {
+export function PlanBadge(): React.ReactElement {
   const { plan } = useAppContext();
 
   const isPro = plan === 'pro';

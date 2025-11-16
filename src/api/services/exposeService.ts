@@ -66,7 +66,7 @@ interface StyleHints {
  * SINGLETON:
  * - Eine Instance für gesamte App
  * - Export als `export default new ExposeService()`
- * - Verwendung: `import exposeService from '@/api/services/exposeService'`
+ * - Verwendung: `import exposeService from '../services/exposeService'`
  *
  * METHODS:
  * - generateExpose(formData, style): Generiert Exposé-Text
@@ -242,7 +242,7 @@ class ExposeService {
  *
  * VERWENDUNG:
  * ```typescript
- * import exposeService from '@/api/services/exposeService';
+ * import exposeService from '../services/exposeService';
  *
  * const text = await exposeService.generateExpose(formData, 'emotional');
  * ```

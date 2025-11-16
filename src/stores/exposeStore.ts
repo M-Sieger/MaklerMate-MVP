@@ -41,7 +41,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import type { ExposeFormData } from '@/api/utils/validation';
+import type { ExposeFormData } from '../api/utils/validation';
 
 // ==================== TYPES ====================
 

@@ -66,7 +66,7 @@ interface AuthProviderProps {
  * - Auth State Change Listener
  * - Error Handling
  */
-export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
+export function AuthProvider({ children }: AuthProviderProps): React.ReactElement {
   const [user, setUser] = useState<User | null>(null);        // 👤 Aktueller User (oder null)
   const [loading, setLoading] = useState<boolean>(true);     // ⏳ Bootstrapping-Status (Session check)
   const [error, setError] = useState<AuthError | null>(null); // ❗ Letzter Auth-Fehler (optional für UI)

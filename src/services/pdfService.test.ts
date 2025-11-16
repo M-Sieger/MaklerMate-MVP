@@ -13,8 +13,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { Lead } from '@/utils/leadHelpers';
-import type { ExposeFormData } from '@/api/utils/validation';
+import type { Lead } from '../utils/leadHelpers';
+import type { ExposeFormData } from '../api/utils/validation';
 
 // Mock jsPDF at the top level
 const mockPDF = {
@@ -319,7 +319,7 @@ describe('PDFService', () => {
           name: 'Anna Schmidt',
           contact: '+49 123 456',
           type: 'kaufen',
-          status: 'kontaktiert',
+          status: 'warm',
           location: 'München',
           note: 'Sucht Einfamilienhaus',
           createdAt: '2025-11-14T10:00:00.000Z',
@@ -373,7 +373,7 @@ describe('PDFService', () => {
           id: '1',
           name: 'Test Lead',
           contact: '',
-          type: '',
+          type: 'mieten' as any,
           status: 'neu',
           location: '',
           note: '',

@@ -14,15 +14,15 @@
  * DATUM: 2025-11-15
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import LeadForm from './LeadForm';
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../../utils/leadHelpers';
 
 describe('LeadForm', () => {
-  let mockOnAddLead: ReturnType<typeof vi.fn>;
+  let mockOnAddLead: Mock;
 
   beforeEach(() => {
     mockOnAddLead = vi.fn();

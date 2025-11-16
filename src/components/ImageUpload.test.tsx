@@ -31,7 +31,7 @@ vi.mock('../utils/imageEnhancer');
 // Mock FileReader
 global.FileReader = class FileReader {
   result: string | null = null;
-  onload: ((e: ProgressEvent<FileReader>) => void) | null = null;
+  onload: ((e: any) => void) | null = null;
   onerror: (() => void) | null = null;
 
   readAsDataURL(file: File) {
@@ -39,7 +39,7 @@ global.FileReader = class FileReader {
     setTimeout(() => {
       this.result = `data:image/jpeg;base64,fake-${file.name}`;
       if (this.onload) {
-        this.onload({ target: this } as ProgressEvent<FileReader>);
+        this.onload({ target: this } as any);
       }
     }, 0);
   }

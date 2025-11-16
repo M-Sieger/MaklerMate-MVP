@@ -40,7 +40,7 @@
  * STATUS: ⚠️ Legacy/Redundant (zu konsolidieren)
  */
 
-import { Lead, migrateLead } from '@/utils/leadHelpers';
+import { Lead, migrateLead } from '../utils/leadHelpers';
 
 // ==================== TYPES ====================
 

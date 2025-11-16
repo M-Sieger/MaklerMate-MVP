@@ -16,7 +16,7 @@
  * STATUS: 🔧 In Preparation (SaaS Integration)
  */
 
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../utils/leadHelpers';
 
 /**
  * Lead Repository Interface

@@ -38,7 +38,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type { Lead, LeadStatus } from '@/utils/leadHelpers';
+import type { Lead, LeadStatus } from '../utils/leadHelpers';
 
 // ==================== TYPES ====================
 

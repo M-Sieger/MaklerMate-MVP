@@ -17,7 +17,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 
 import useExposeStore from './exposeStore';
-import type { ExposeFormData } from '@/api/utils/validation';
+import type { ExposeFormData } from '../api/utils/validation';
 import type { SavedExpose } from './exposeStore';
 
 describe('Exposé Store', () => {
@@ -361,7 +361,7 @@ describe('Exposé Store', () => {
       const { result } = renderHook(() => useExposeStore());
 
       const savedExpose: SavedExpose = {
-        id: Date.now(),
+        id: String(Date.now()),
         formData: {
           objektart: 'Einfamilienhaus',
           strasse: 'Teststraße 1',

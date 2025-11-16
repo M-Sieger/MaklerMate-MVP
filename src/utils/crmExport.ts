@@ -7,7 +7,7 @@
  * STATUS: ⚠️ Legacy (TypeScript Migration - marked for removal)
  */
 
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from './leadHelpers';
 
 /**
  * @deprecated Use exportService.exportLeadsAsJSON() instead

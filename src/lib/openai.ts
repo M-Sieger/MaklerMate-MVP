@@ -10,7 +10,7 @@
  * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
-import type { ExposeFormData } from '@/api/utils/validation';
+import type { ExposeFormData } from '../api/utils/validation';
 
 /**
  * GPT API Response

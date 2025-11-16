@@ -4,8 +4,8 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { LocalStorageExposeRepository } from './LocalStorageExposeRepository';
-import type { SavedExpose } from '@/stores/exposeStore';
-import type { ExposeFormData } from '@/api/utils/validation';
+import type { SavedExpose } from '../../stores/exposeStore';
+import type { ExposeFormData } from '../../api/utils/validation';
 
 describe('LocalStorageExposeRepository', () => {
   let repository: LocalStorageExposeRepository;
@@ -274,8 +274,7 @@ describe('LocalStorageExposeRepository', () => {
     it('should throw helpful error when localStorage quota exceeded', async () => {
       // Mock localStorage.setItem to throw QuotaExceededError
       global.localStorage.setItem = vi.fn(() => {
-        const error = new DOMException('QuotaExceededError');
-        error.name = 'QuotaExceededError';
+        const error = new DOMException('QuotaExceededError', 'QuotaExceededError');
         throw error;
       });
 

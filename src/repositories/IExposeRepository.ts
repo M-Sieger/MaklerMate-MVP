@@ -16,8 +16,8 @@
  * STATUS: 🔧 In Preparation (SaaS Integration)
  */
 
-import type { ExposeFormData } from '@/api/utils/validation';
-import type { ExposeStyle, SavedExpose } from '@/stores/exposeStore';
+import type { ExposeFormData } from '../api/utils/validation';
+import type { ExposeStyle, SavedExpose } from '../stores/exposeStore';
 
 /**
  * Exposé Repository Interface

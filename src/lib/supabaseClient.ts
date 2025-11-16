@@ -42,7 +42,7 @@ if (!isValidUrl(url) || !key) {
  *
  * VERWENDUNG:
  * ```typescript
- * import { supabase } from '@/lib/supabaseClient';
+ * import { supabase } from './supabaseClient';
  *
  * const { data, error } = await supabase.from('table').select('*');
  * ```

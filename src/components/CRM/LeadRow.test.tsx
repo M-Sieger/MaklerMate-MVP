@@ -14,12 +14,12 @@
  * DATUM: 2025-11-15
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import LeadRow from './LeadRow';
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../../utils/leadHelpers';
 
 describe('LeadRow', () => {
   const mockLead: Lead = {
@@ -27,7 +27,7 @@ describe('LeadRow', () => {
     name: 'Max Mustermann',
     contact: 'max@example.com',
     location: 'Berlin',
-    type: 'Käufer',
+    type: 'kaufen',
     status: 'neu',
     note: 'Wichtiger Interessent',
     createdAt: '2025-01-15T10:00:00.000Z',
@@ -35,8 +35,8 @@ describe('LeadRow', () => {
     _v: 2,
   };
 
-  let mockOnUpdateLead: ReturnType<typeof vi.fn>;
-  let mockOnDelete: ReturnType<typeof vi.fn>;
+  let mockOnUpdateLead: Mock;
+  let mockOnDelete: Mock;
 
   beforeEach(() => {
     mockOnUpdateLead = vi.fn();
@@ -56,7 +56,7 @@ describe('LeadRow', () => {
       expect(screen.getByText('Max Mustermann')).toBeInTheDocument();
       expect(screen.getByText('max@example.com')).toBeInTheDocument();
       expect(screen.getByText('Berlin')).toBeInTheDocument();
-      expect(screen.getByText('Käufer')).toBeInTheDocument();
+      expect(screen.getByText('kaufen')).toBeInTheDocument();
       expect(screen.getByText('Wichtiger Interessent')).toBeInTheDocument();
     });
 
@@ -124,7 +124,7 @@ describe('LeadRow', () => {
         name: 'Test User',
         contact: '',
         location: '',
-        type: '',
+        type: '' as any,
         status: 'neu',
         note: '',
         createdAt: '2025-01-15T10:00:00.000Z',

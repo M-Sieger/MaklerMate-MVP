@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { LocalStorageLeadRepository } from './LocalStorageLeadRepository';
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../../utils/leadHelpers';
 
 describe('LocalStorageLeadRepository', () => {
   let repository: LocalStorageLeadRepository;
@@ -45,6 +45,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Test Lead',
           contact: 'test@example.com',
           type: 'mieten',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'neu',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -85,6 +87,8 @@ describe('LocalStorageLeadRepository', () => {
         name: 'Test Lead',
         contact: 'test@example.com',
         type: 'mieten',
+        location: 'Berlin',
+        note: 'Test note',
         status: 'neu',
         _v: 2,
         createdAt: '2025-01-01T00:00:00Z',
@@ -104,6 +108,8 @@ describe('LocalStorageLeadRepository', () => {
         name: 'New Lead',
         contact: 'new@example.com',
         type: 'kaufen',
+        location: 'Berlin',
+        note: 'Test note',
         status: 'warm',
       });
 
@@ -119,6 +125,8 @@ describe('LocalStorageLeadRepository', () => {
         name: 'New Lead',
         contact: 'new@example.com',
         type: 'kaufen',
+        location: 'Berlin',
+        note: 'Test note',
         status: 'warm',
       });
 
@@ -135,6 +143,8 @@ describe('LocalStorageLeadRepository', () => {
         name: 'Test Lead',
         contact: 'test@example.com',
         type: 'mieten',
+        location: 'Berlin',
+        note: 'Test note',
         status: 'neu',
         _v: 2,
         createdAt: '2025-01-01T00:00:00Z',
@@ -164,6 +174,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Lead 1',
           contact: 'lead1@example.com',
           type: 'mieten',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'neu',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -174,6 +186,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Lead 2',
           contact: 'lead2@example.com',
           type: 'kaufen',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'warm',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -205,6 +219,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Lead 1',
           contact: 'lead1@example.com',
           type: 'mieten',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'neu',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -215,6 +231,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Lead 2',
           contact: 'lead2@example.com',
           type: 'kaufen',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'warm',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -225,6 +243,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Lead 3',
           contact: 'lead3@example.com',
           type: 'verkaufen',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'cold',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -250,6 +270,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Lead 1',
           contact: 'lead1@example.com',
           type: 'mieten',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'neu',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -274,6 +296,8 @@ describe('LocalStorageLeadRepository', () => {
           name: 'Imported Lead',
           contact: 'import@example.com',
           type: 'mieten',
+          location: 'Berlin',
+          note: 'Test note',
           status: 'neu',
           _v: 2,
           createdAt: '2025-01-01T00:00:00Z',
@@ -296,6 +320,8 @@ describe('LocalStorageLeadRepository', () => {
         name: 'Existing Lead',
         contact: 'existing@example.com',
         type: 'mieten',
+        location: 'Berlin',
+        note: 'Test note',
         status: 'neu',
         _v: 2,
         createdAt: '2025-01-01T00:00:00Z',

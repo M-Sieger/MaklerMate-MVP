@@ -70,12 +70,16 @@ describe('CRM Store', () => {
           contact: 'lead1@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 2',
           contact: 'lead2@test.com',
           type: 'kaufen',
           status: 'neu',
+          location: '',
+          note: '',
         });
       });
 
@@ -101,6 +105,8 @@ describe('CRM Store', () => {
           contact: 'original@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
       });
 
@@ -136,6 +142,8 @@ describe('CRM Store', () => {
           contact: 'delete@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
       });
 
@@ -161,18 +169,24 @@ describe('CRM Store', () => {
           contact: 'lead1@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 2',
           contact: 'lead2@test.com',
           type: 'kaufen',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 3',
           contact: 'lead3@test.com',
           type: 'mieten',
           status: 'warm',
+          location: '',
+          note: '',
         });
       });
 
@@ -200,6 +214,10 @@ describe('CRM Store', () => {
           contact: 'set1@test.com',
           type: 'mieten',
           status: 'neu',
+
+          location: '',
+
+          note: '',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           _v: 2,
@@ -210,6 +228,10 @@ describe('CRM Store', () => {
           contact: 'set2@test.com',
           type: 'kaufen',
           status: 'warm',
+
+          location: '',
+
+          note: '',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           _v: 2,
@@ -234,12 +256,16 @@ describe('CRM Store', () => {
           contact: 'lead1@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 2',
           contact: 'lead2@test.com',
           type: 'kaufen',
           status: 'neu',
+          location: '',
+          note: '',
         });
       });
 
@@ -266,6 +292,7 @@ describe('CRM Store', () => {
           type: 'mieten',
           status: 'neu',
           location: 'Berlin',
+          note: '',
         });
         result.current.addLead({
           name: 'Max Müller',
@@ -273,6 +300,7 @@ describe('CRM Store', () => {
           type: 'kaufen',
           status: 'warm',
           location: 'München',
+          note: '',
         });
         result.current.addLead({
           name: 'Lisa Weber',
@@ -280,6 +308,7 @@ describe('CRM Store', () => {
           type: 'mieten',
           status: 'vip',
           location: 'Hamburg',
+          note: '',
         });
       });
     });
@@ -354,6 +383,7 @@ describe('CRM Store', () => {
           type: 'mieten',
           status: 'neu',
           location: 'Köln',
+          note: '',
         });
       });
 
@@ -391,24 +421,32 @@ describe('CRM Store', () => {
           contact: 'lead1@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 2',
           contact: 'lead2@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 3',
           contact: 'lead3@test.com',
           type: 'kaufen',
           status: 'warm',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 4',
           contact: 'lead4@test.com',
           type: 'verkaufen',
           status: 'vip',
+          location: '',
+          note: '',
         });
       });
 
@@ -449,18 +487,24 @@ describe('CRM Store', () => {
           contact: 'lead1@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 2',
           contact: 'lead2@test.com',
           type: 'kaufen',
           status: 'neu',
+          location: '',
+          note: '',
         });
         result.current.addLead({
           name: 'Lead 3',
           contact: 'lead3@test.com',
           type: 'mieten',
           status: 'warm',
+          location: '',
+          note: '',
         });
       });
 
@@ -488,6 +532,8 @@ describe('CRM Store', () => {
           contact: 'export@test.com',
           type: 'mieten',
           status: 'neu',
+          location: '',
+          note: '',
         });
       });
 
@@ -510,6 +556,10 @@ describe('CRM Store', () => {
           contact: 'import1@test.com',
           type: 'mieten',
           status: 'neu',
+
+          location: '',
+
+          note: '',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           _v: 2,
@@ -520,13 +570,17 @@ describe('CRM Store', () => {
           contact: 'import2@test.com',
           type: 'kaufen',
           status: 'warm',
+
+          location: '',
+
+          note: '',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           _v: 2,
         },
       ];
 
-      let importResult;
+      let importResult: any;
       act(() => {
         importResult = result.current.importLeadsFromJSON(
           JSON.stringify(importData)

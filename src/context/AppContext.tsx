@@ -225,7 +225,7 @@ export interface AppProviderProps {
  * </AppProvider>
  * ```
  */
-export function AppProvider({ children, userId: initialUserId, plan: initialPlan }: AppProviderProps): JSX.Element {
+export function AppProvider({ children, userId: initialUserId, plan: initialPlan }: AppProviderProps): React.ReactElement {
   // NOTE: In the MVP, we load userId/plan from LocalStorage (fallback to props).
   //       In v0.2.x+, these will be passed from the Next.js host (NextAuth session).
 

@@ -5,7 +5,7 @@
 // Sie kann später in eine Next.js-SaaS-Hülle eingebettet werden:
 //
 // // In Next.js: /app/app/page.tsx
-// import MaklerMateApp from '@/components/maklermate/App';
+// import MaklerMateApp from './components/maklermate/App';
 // export default function AppPage() {
 //   return (
 //     <AppProvider userId={session.user.id} plan={session.user.plan}>

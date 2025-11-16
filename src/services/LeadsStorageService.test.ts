@@ -15,7 +15,7 @@
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { LeadsStorageService } from './LeadsStorageService';
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../utils/leadHelpers';
 
 describe('LeadsStorageService', () => {
   let storageService: InstanceType<typeof LeadsStorageService>;

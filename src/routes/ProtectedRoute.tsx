@@ -36,7 +36,7 @@ import { useAuth } from '../context/AuthContext';
  * 3. Redirect zu /login wenn nicht eingeloggt
  * 4. Render Outlet wenn eingeloggt
  */
-export default function ProtectedRoute(): JSX.Element {
+export default function ProtectedRoute(): React.ReactElement {
   const { user, loading } = useAuth();
   const location = useLocation();
 

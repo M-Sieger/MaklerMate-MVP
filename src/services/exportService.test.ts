@@ -12,7 +12,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import exportService from './exportService';
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../utils/leadHelpers';
 
 describe('ExportService', () => {
   describe('importLeadsFromJSON', () => {
@@ -192,10 +192,10 @@ describe('ExportService', () => {
 
       // @ts-expect-error - mocking DOM API
       document.createElement = mockCreateElement;
-      document.body.appendChild = vi.fn();
-      document.body.removeChild = vi.fn();
-      URL.createObjectURL = mockCreateObjectURL;
-      URL.revokeObjectURL = mockRevokeObjectURL;
+      document.body.appendChild = vi.fn() as any;
+      document.body.removeChild = vi.fn() as any;
+      URL.createObjectURL = mockCreateObjectURL as any;
+      URL.revokeObjectURL = mockRevokeObjectURL as any;
 
       // Mock Blob
       global.Blob = vi.fn(function (this: Blob, parts: BlobPart[], options?: BlobPropertyBag) {
@@ -265,15 +265,15 @@ describe('ExportService', () => {
 
     beforeEach(() => {
       mockCreateObjectURL = vi.fn(() => 'blob:mock-url');
-      URL.createObjectURL = mockCreateObjectURL;
-      URL.revokeObjectURL = vi.fn();
+      URL.createObjectURL = mockCreateObjectURL as any;
+      URL.revokeObjectURL = vi.fn() as any;
 
       document.createElement = vi.fn(() => ({
         click: vi.fn(),
         style: {},
-      })) as unknown as typeof document.createElement;
-      document.body.appendChild = vi.fn();
-      document.body.removeChild = vi.fn();
+      })) as any;
+      document.body.appendChild = vi.fn() as any;
+      document.body.removeChild = vi.fn() as any;
 
       global.Blob = vi.fn(function (this: Blob, parts: BlobPart[]) {
         // @ts-expect-error - simplified Blob mock
