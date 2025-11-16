@@ -36,9 +36,10 @@ describe('AuthGate', () => {
         loading: false,
         error: null,
         signInWithPassword: vi.fn(),
-        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signUp: vi.fn(),
         signOut: vi.fn(),
-        resetPassword: vi.fn(),
+        getAccessToken: vi.fn(),
       });
     });
 
@@ -90,9 +91,10 @@ describe('AuthGate', () => {
         loading: false,
         error: null,
         signInWithPassword: vi.fn(),
-        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signUp: vi.fn(),
         signOut: vi.fn(),
-        resetPassword: vi.fn(),
+        getAccessToken: vi.fn(),
       });
     });
 
@@ -166,9 +168,10 @@ describe('AuthGate', () => {
         loading: true,
         error: null,
         signInWithPassword: vi.fn(),
-        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signUp: vi.fn(),
         signOut: vi.fn(),
-        resetPassword: vi.fn(),
+        getAccessToken: vi.fn(),
       });
     });
 
@@ -229,9 +232,10 @@ describe('AuthGate', () => {
         loading: false,
         error: null,
         signInWithPassword: vi.fn(),
-        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signUp: vi.fn(),
         signOut: vi.fn(),
-        resetPassword: vi.fn(),
+        getAccessToken: vi.fn(),
       });
 
       const { container } = render(
@@ -250,9 +254,10 @@ describe('AuthGate', () => {
         loading: false,
         error: null,
         signInWithPassword: vi.fn(),
-        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signUp: vi.fn(),
         signOut: vi.fn(),
-        resetPassword: vi.fn(),
+        getAccessToken: vi.fn(),
       });
 
       render(
@@ -282,9 +287,10 @@ describe('AuthGate', () => {
         loading: true,
         error: null,
         signInWithPassword: vi.fn(),
-        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signUp: vi.fn(),
         signOut: vi.fn(),
-        resetPassword: vi.fn(),
+        getAccessToken: vi.fn(),
       });
 
       rerender(
@@ -303,9 +309,10 @@ describe('AuthGate', () => {
         loading: false,
         error: null,
         signInWithPassword: vi.fn(),
-        signInWithOAuth: vi.fn(),
+        signInWithMagicLink: vi.fn(),
+        signUp: vi.fn(),
         signOut: vi.fn(),
-        resetPassword: vi.fn(),
+        getAccessToken: vi.fn(),
       });
 
       rerender(

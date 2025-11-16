@@ -15,9 +15,9 @@
  * STATUS: 🟢 Production-Ready
  */
 
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../../utils/leadHelpers';
 import type { ILeadRepository } from '../ILeadRepository';
-import { migrateLead, normalizeLead } from '@/utils/leadHelpers';
+import { migrateLead } from '../../utils/leadHelpers';
 
 /**
  * LocalStorage Lead Repository
@@ -79,12 +79,12 @@ export class LocalStorageLeadRepository implements ILeadRepository {
     const leads = await this.getAll(userId);
 
     const newLead: Lead = {
-      ...normalizeLead(lead as any),
+      ...lead,
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       _v: 2,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    };
+    } as Lead;
 
     leads.push(newLead);
     await this._saveAll(leads);

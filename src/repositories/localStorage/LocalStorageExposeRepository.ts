@@ -19,8 +19,8 @@
  * STATUS: 🟢 Production-Ready
  */
 
-import type { ExposeFormData } from '@/api/utils/validation';
-import type { ExposeStyle, SavedExpose } from '@/stores/exposeStore';
+import type { ExposeFormData } from '../../api/utils/validation';
+import type { ExposeStyle, SavedExpose } from '../../stores/exposeStore';
 import type { IExposeRepository } from '../IExposeRepository';
 
 /**

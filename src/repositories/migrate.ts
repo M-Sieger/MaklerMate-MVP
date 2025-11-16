@@ -15,8 +15,8 @@
  */
 
 import { leadRepository, exposeRepository } from './factory';
-import type { Lead } from '@/utils/leadHelpers';
-import type { SavedExpose } from '@/stores/exposeStore';
+import type { Lead } from '../utils/leadHelpers';
+import type { SavedExpose } from '../stores/exposeStore';
 
 /**
  * Migrate Leads from Zustand persist to Repository
