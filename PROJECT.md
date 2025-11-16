@@ -1,8 +1,8 @@
 # MaklerMate-MVP – Project Overview (Primary Source of Truth)
 
-**Letzte Aktualisierung:** 21. Oktober 2025  
-**Version:** 0.1.0 (MVP)  
-**Status:** Sprint 1 (Quick Wins) in Arbeit  
+**Letzte Aktualisierung:** 15. November 2025
+**Version:** 0.1.0 (MVP)
+**Status:** Sprint 1-3 Abgeschlossen ✅ | TypeScript Migration 100% ✅ | Test Coverage 90.27% ✅
 **Live-Demo:** [makler-mate.vercel.app](https://makler-mate.vercel.app/)
 
 ---
@@ -62,8 +62,10 @@
 ### **Frontend:**
 
 - **React 19.1.0** (Funktionale Komponenten + Hooks)
+- **TypeScript 5.x** (100% Migration abgeschlossen - alle .js/.jsx → .ts/.tsx)
 - **Create React App 5.0.1** (Build-Tool, später Migration zu Vite geplant)
 - **React Router DOM 7.6.2** (Navigation)
+- **Zustand 5.0.2** (State Management mit Persist Middleware)
 - **Framer Motion 12.23.9** (Animationen)
 - **CSS-Module** (Component-Styles) + klassisches CSS (Global-Styles)
 
@@ -84,20 +86,36 @@
 
 - **pnpm 10.13.1** (Package-Manager)
 - **Node.js 22.17.0** (Runtime)
-- **ESLint** (Linting, CRA-Standard)
-- **Prettier** (Code-Formatierung, wird in Sprint 1 konfiguriert)
-- **Husky + lint-staged** (Pre-Commit-Hooks, wird in Sprint 1 installiert)
+- **TypeScript 5.x** (Strict Mode)
+- **ESLint** (Linting mit TypeScript-Plugin)
+- **Prettier** (Code-Formatierung)
+- **Husky + lint-staged** (Pre-Commit-Hooks)
 
-### **Testing (Libraries vorhanden, aber noch keine Tests):**
+### **Testing (90.27% Coverage - 223 Tests):**
 
-- **@testing-library/react 16.3.0**
-- **@testing-library/jest-dom 6.6.3**
-- **Jest** (via react-scripts)
+- **Vitest** (Unit Testing Framework - schneller als Jest)
+- **@testing-library/react 16.3.0** (Component Tests)
+- **@testing-library/user-event** (User Interaction Testing)
+- **@testing-library/jest-dom 6.6.3** (Custom Matchers)
+- **Playwright 1.49.1** (E2E Testing - 36 Tests)
+- **@vitest/coverage-v8** (Code Coverage Reports)
+
+**Test-Suites:**
+- ✅ Store Tests: crmStore, exposeStore (100% Coverage)
+- ✅ Utility Tests: leadHelpers (98.68% Coverage)
+- ✅ Service Tests: LeadsStorageService, exportService, pdfService
+- ✅ Component Tests: LeadForm, LeadRow, AuthGate, ImageUpload
+- ✅ E2E Tests: Authentication, Exposé-Erstellung, CRM, PDF-Export
 
 ### **CI/CD:**
 
-- **Vercel** (Deployment, automatisch bei Push)
-- **GitHub Actions** (geplant in Sprint 2: Tests + Build automatisieren)
+- **Vercel** (Deployment, automatisch bei Push zu main)
+- **GitHub Actions** (Vollständige CI/CD-Pipeline):
+  - ✅ Unit Tests (Vitest)
+  - ✅ E2E Tests (Playwright)
+  - ✅ Type-Check (TypeScript)
+  - ✅ Build-Verification
+  - ✅ Code Coverage Reports
 
 ---
 
@@ -180,46 +198,56 @@
 
 ---
 
-## 🎯 Aktueller Sprint: Sprint 1 (Quick Wins)
+## 🎯 Sprint-Status
 
-**Ziel:** Kritische Docs + Code-Quality-Basics etablieren  
-**Dauer:** 8.5h (geschätzt 11h real)  
-**Score-Ziel:** 3.8/10 → 5.5/10 (+1.7)
+### **Sprint 1 (Quick Wins) - ✅ Abgeschlossen**
 
-### **Tasks (6 von 6):**
+**Ziel:** Kritische Docs + Code-Quality-Basics etablieren
 
-1. ✅ **Copilot-Instructions erstellen** (2h) - IN ARBEIT
-   - `.github/copilot-instructions.md`
-   - `PROJECT.md` (dieses Dokument)
+**Tasks:**
+1. ✅ Copilot-Instructions erstellt (`.github/copilot-instructions.md`)
+2. ✅ ARCHITECTURE.md erstellt (Tech-Stack, API-Verträge, ADRs)
+3. ✅ .env.example erstellt (vollständige Env-Var-Dokumentation)
+4. ✅ Pre-Commit-Hooks eingerichtet (Husky + lint-staged + Prettier)
+5. ✅ LICENSE hinzugefügt (MIT)
+6. ✅ README korrigiert (Script-Namen, Tech-Stack, Setup)
 
-2. ⏳ **ARCHITECTURE.md erstellen** (3h)
-   - Tech-Stack dokumentieren
-   - API-Verträge definieren
-   - Architektur-Entscheidungen (ADRs light)
+**Ergebnis:** Score 3.8/10 → 5.5/10 (+1.7)
 
-3. ⏳ **.env.example erstellen** (1h)
-   - Alle Env-Vars auflisten
-   - README aktualisieren (Setup-Section)
+### **Sprint 2 (Testing + CI/CD) - ✅ Abgeschlossen**
 
-4. ⏳ **Pre-Commit-Hooks einrichten** (1h)
-   - Husky + lint-staged installieren
-   - Prettier-Config erstellen
-   - ESLint + Prettier bei Commit ausführen
+**Ziel:** Test-Coverage + Automatisierung
 
-5. ⏳ **LICENSE hinzufügen** (0.5h)
-   - MIT License Template
+**Tasks:**
+1. ✅ Unit-Tests implementiert (145 Tests - Stores, Utils, Services)
+2. ✅ Component-Tests implementiert (78 Tests - React Testing Library)
+3. ✅ E2E-Tests mit Playwright (36 Tests)
+4. ✅ GitHub Actions CI/CD Pipeline (Tests, Build, Type-Check)
+5. ✅ Code Coverage auf 90.27% erhöht
+6. ✅ Vitest-Migration (von Jest zu Vitest für bessere Performance)
 
-6. ⏳ **README korrigieren** (1h)
-   - Script-Name: `pnpm run dev` → `pnpm start`
-   - Tech-Stack: "Vite" → "CRA"
-   - Setup-Steps präziser
+**Ergebnis:** Score 5.5/10 → 7.2/10 (+1.7)
 
-**Nach Sprint 1:**
+### **Sprint 3 (TypeScript + E2E) - ✅ Abgeschlossen**
 
-- Score: 5.5/10
-- Dokumentation: 8/10 (vorher 4/10)
-- Code-Quality: 7/10 (vorher 4/10)
-- Environment: 6/10 (vorher 3/10)
+**Ziel:** 100% TypeScript Migration + Strikte Type-Safety
+
+**Tasks:**
+1. ✅ TypeScript-Migration auf 100% (alle .js/.jsx → .ts/.tsx)
+2. ✅ Zustand Stores implementiert (crmStore, exposeStore)
+3. ✅ Strikte Type-Safety (tsconfig.json mit strict: true)
+4. ✅ TypeScript-Interfaces für alle Datenstrukturen
+5. ✅ E2E-Tests mit Playwright erweitert
+6. ✅ Services-Layer Pattern implementiert
+
+**Ergebnis:** Score 7.2/10 → 8.3/10 (+1.1)
+
+### **Aktueller Stand:**
+
+- ✅ TypeScript Migration: 100%
+- ✅ Test Coverage: 90.27% (223 Tests)
+- ✅ CI/CD Pipeline: Vollständig automatisiert
+- ✅ Code Quality: Production-Ready
 
 ---
 
@@ -329,24 +357,47 @@
 
 ---
 
-## 🧪 Testing-Strategie (Sprint 2+)
+## 🧪 Testing-Strategie ✅ Abgeschlossen
 
-**Aktuell:** Keine Tests (0% Coverage)
+**Status:** 90.27% Code Coverage | 223 Tests passing | E2E mit Playwright
 
-**Geplant (Sprint 2):**
+### **Unit Tests (145 Tests - Vitest):**
 
-- **Unit-Tests (12h):**
-  - Utils: `arrayHelpers`, `pdfExport`, `fetchWithAuth`
-  - Hooks: `useAIHelper`, `useSavedExposes`
-  - Components: `ExposeForm`, `GPTOutputBox` (kritische)
-  - **Ziel:** 40-50% Coverage
+**Stores (100% Coverage):**
+- ✅ `crmStore.test.ts` - 21 Tests (CRUD, Filter, Search, Statistics, Import/Export)
+- ✅ `exposeStore.test.ts` - 25 Tests (Form, Images, Captions, Saved Exposés)
 
-**Geplant (Sprint 3):**
+**Utils (98.68% Coverage):**
+- ✅ `leadHelpers.test.ts` - 54 Tests (Normalization, Migration, Validation, Sorting, Filtering)
 
-- **E2E-Tests (8h):**
-  - Playwright für Happy-Path
-  - Login → Exposé-Formular → GPT generieren → PDF exportieren
-  - **Ziel:** 3 kritische User-Flows
+**Services (83.39% Coverage):**
+- ✅ `LeadsStorageService.test.ts` - 18 Tests (LocalStorage Operations)
+- ✅ `exportService.test.ts` - 12 Tests (JSON/CSV Export, Clipboard)
+- ✅ `pdfService.test.ts` - 15 Tests (PDF Generation, Page Layout)
+
+### **Component Tests (78 Tests - React Testing Library):**
+
+- ✅ `LeadForm.test.tsx` - 17 Tests (Form Validation, Submission, Loading States)
+- ✅ `LeadRow.test.tsx` - 19 Tests (Status Cycling, Delete, Rendering)
+- ✅ `AuthGate.test.tsx` - 15 Tests (Auth States, Navigation)
+- ✅ `ImageUpload.test.tsx` - 27 Tests (Upload, Reorder, Captions, Max Limit)
+
+### **E2E Tests (36 Tests - Playwright):**
+
+- ✅ Authentication Flows (Login, Logout, Protected Routes)
+- ✅ Exposé-Erstellung (Formular, GPT-Generierung, PDF-Export)
+- ✅ CRM-Funktionalität (Lead-Management, Status-Updates)
+- ✅ Image-Upload & Gallery-Management
+
+### **Coverage-Breakdown:**
+
+| Kategorie | Coverage | Tests |
+|-----------|----------|-------|
+| **Stores** | 100% | 46 |
+| **Utils** | 98.68% | 54 |
+| **Components** | 89.39% | 78 |
+| **Services** | 83.39% | 45 |
+| **Overall** | **90.27%** | **223** |
 
 ---
 

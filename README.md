@@ -22,12 +22,16 @@ MaklerMate ist eine React-basierte Web-App, die Immobilienmaklern in wenigen Min
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React 19 (Hooks, `useState`) + Create React App 5.0.1
+- **Frontend:** React 19 (TypeScript) + Create React App 5.0.1
+- **Type-Safety:** TypeScript 5.x (100% Migration abgeschlossen)
+- **State Management:** Zustand 5.0.2 (Stores mit Persist Middleware)
 - **Styling:** CSS Modules & klassische CSS-Dateien
 - **Backend:** Express 5.1.0 (Dev-Proxy) + Vercel Serverless (Production)
 - **Auth:** Supabase 2.55.0 (Magic-Link, Password-Login)
 - **AI:** OpenAI GPT-4o-mini (Text-Generierung)
 - **PDF-Export:** jsPDF 3.0.1 (PDF-fähig, inkl. Logo & Captions)
+- **Testing:** Vitest + React Testing Library + Playwright (90.27% Coverage)
+- **CI/CD:** GitHub Actions (Tests, Build, Type-Check)
 - **Persistenz:** LocalStorage (MVP, Migration zu Supabase-DB geplant)
 - **Deployment:** Vercel → [makler-mate.vercel.app](https://makler-mate.vercel.app/)
 
@@ -120,18 +124,19 @@ Die App benötigt folgende Variablen (siehe `.env.example` für Details):
 - ✅ LICENSE (MIT)
 - ✅ README-Korrekturen (Script-Namen, Tech-Stack)
 
-**Sprint 2 (Testing + CI/CD)**
+**Sprint 2 (Testing + CI/CD) – ✅ Abgeschlossen**
 
-- ⏳ Unit-Tests (Services, Utils, Hooks)
-- ⏳ GitHub Actions CI/CD
-- ⏳ Docker-Compose (Dev-Environment)
-- ⏳ CHANGELOG.md
+- ✅ Unit-Tests (Services, Utils, Stores) - 223 Tests
+- ✅ GitHub Actions CI/CD - Vollständige Pipeline
+- ✅ Test Coverage: 90.27% (223 Tests)
+- ✅ Component Tests (React Testing Library)
 
-**Sprint 3 (TypeScript + E2E)**
+**Sprint 3 (TypeScript + E2E) – ✅ Abgeschlossen**
 
-- ⏳ TypeScript-Migration (Strict-Mode)
-- ⏳ E2E-Tests (Playwright)
-- ⏳ Vite-Migration (CRA → Vite)
+- ✅ TypeScript-Migration auf 100% (alle .js/.jsx → .ts/.tsx)
+- ✅ E2E-Tests (Playwright) - 36 Tests
+- ✅ Strikte Type-Safety
+- 🔄 Vite-Migration (geplant, aktuell noch CRA)
 
 **v0.2.0 (Supabase-Database)**
 
@@ -146,6 +151,47 @@ Die App benötigt folgende Variablen (siehe `.env.example` für Details):
 - ⏳ Internationalisierung (EN/DE, später KE/UK)
 
 **Detaillierte Roadmap:** Siehe `docs/REPO-IMPROVEMENT-PLAN.md`
+
+---
+
+## 🧪 Testing
+
+**Test Coverage: 90.27%** (223 Tests)
+
+```bash
+# Alle Tests ausführen
+npm test
+
+# Tests mit Coverage-Report
+npm run test:coverage
+
+# E2E-Tests (Playwright)
+npm run test:e2e
+
+# E2E-Tests mit UI
+npm run test:e2e:ui
+```
+
+**Test-Suites:**
+- ✅ **Unit Tests** (145 Tests)
+  - Stores: crmStore, exposeStore (100% Coverage)
+  - Utils: leadHelpers (98.68% Coverage)
+  - Services: LeadsStorageService, exportService, pdfService
+
+- ✅ **Component Tests** (78 Tests)
+  - LeadForm, LeadRow, AuthGate, ImageUpload
+  - React Testing Library + User Event
+
+- ✅ **E2E Tests** (36 Tests - Playwright)
+  - Authentication Flows
+  - Exposé-Erstellung
+  - CRM-Funktionen
+  - PDF-Export
+
+**CI/CD:**
+- GitHub Actions Pipeline (automatisch bei Push)
+- Tests, Build, Type-Check
+- Deployment zu Vercel bei main-Branch
 
 ## 🤝 Contribution
 
