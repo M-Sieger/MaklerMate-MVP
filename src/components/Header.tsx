@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom';
 
 import AuthButtons from './AuthButtons'; // ⬅️ NEU: Login/Logout/Profil
+import { PlanBadge } from './PlanBadge'; // ⬅️ SAAS: Plan-Badge (Free/Pro)
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -59,11 +60,9 @@ export default function Header() {
         </NavLink>
       </nav>
 
-      {/* 🔐 Auth-Bereich rechts: zeigt "Login" (ausgeloggt) bzw. Name + Logout (eingeloggt) */}
-      {/* Falls dein CSS keine Klasse .authArea hat, ist das unkritisch.
-          Optional kannst du in Header.module.css
-          .authArea { display:flex; gap:.5rem; align-items:center; } ergänzen. */}
+      {/* 🔐 Auth-Bereich rechts: zeigt Plan-Badge + Login/Logout */}
       <div className={styles.authArea}>
+        <PlanBadge />
         <AuthButtons />
       </div>
     </header>
