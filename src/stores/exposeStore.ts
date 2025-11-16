@@ -13,15 +13,35 @@
  * - Saved Exposés (Save, Load, Delete)
  * - Reset-Funktionen
  *
+ * 🔧 SAAS-INTEGRATION NOTE (v0.2.x):
+ * Dieser Store nutzt aktuell Zustand persist middleware mit localStorage.
+ * Bilder werden als Base64 gespeichert (große Datenmenge, LocalStorage-Limit).
+ *
+ * In v0.2.x wird die Persistierungs-Logik ersetzt durch:
+ *   - IExposeRepository Interface (src/repositories/IExposeRepository.ts)
+ *   - SupabaseExposeRepository Implementation
+ *   - Bilder in Supabase Storage (statt Base64 in JSON)
+ *   - User-spezifische Daten (userId Filter)
+ *   - Real-Time Sync zwischen Devices
+ *
+ * Migration-Plan:
+ *   1. Extrahiere Persistierungs-Logik in LocalStorageExposeRepository
+ *   2. Inject Repository via Dependency Injection
+ *   3. Implementiere SupabaseExposeRepository + Storage Upload
+ *   4. Feature-Flag für schrittweise Migration
+ *
+ * Siehe: docs/architecture/STORAGE-ABSTRACTION.md
+ *       docs/architecture/SUPABASE-SCHEMA.md (expose_images Tabelle)
+ *
  * AUTOR: Liberius (MaklerMate MVP)
- * LETZTE ÄNDERUNG: 2025-11-15
+ * LETZTE ÄNDERUNG: 2025-11-16
  * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import type { ExposeFormData } from '@/api/utils/validation';
+import type { ExposeFormData } from '../api/utils/validation';
 
 // ==================== TYPES ====================
 
@@ -34,7 +54,7 @@ export type ExposeStyle = 'emotional' | 'sachlich' | 'luxus';
  * Gespeichertes Exposé
  */
 export interface SavedExpose {
-  id: number;
+  id: string;
   formData: ExposeFormData;
   output: string;
   selectedStyle: ExposeStyle;
@@ -75,7 +95,7 @@ interface ExposeState {
 
   // ==================== SAVED EXPOSES ACTIONS ====================
   saveExpose: () => void;
-  deleteExpose: (indexOrId: number) => void;
+  deleteExpose: (indexOrId: number | string) => void;
   loadExpose: (expose: SavedExpose) => void;
 
   // ==================== RESET ====================
@@ -236,7 +256,7 @@ const useExposeStore = create<ExposeState>()(
           savedExposes: [
             ...state.savedExposes,
             {
-              id: Date.now(),
+              id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
               formData: state.formData,
               output: state.output,
               selectedStyle: state.selectedStyle,
@@ -252,12 +272,8 @@ const useExposeStore = create<ExposeState>()(
        */
       deleteExpose: (indexOrId) =>
         set((state) => {
-          // Check if it's an index (number < savedExposes.length) or an ID
-          const isIndex =
-            typeof indexOrId === 'number' &&
-            indexOrId < state.savedExposes.length;
-
-          if (isIndex) {
+          // Check if it's an index (number) or an ID (string)
+          if (typeof indexOrId === 'number') {
             // Delete by index
             return {
               savedExposes: state.savedExposes.filter(
@@ -265,7 +281,7 @@ const useExposeStore = create<ExposeState>()(
               ),
             };
           } else {
-            // Delete by ID
+            // Delete by ID (string)
             return {
               savedExposes: state.savedExposes.filter(
                 (e) => e.id !== indexOrId

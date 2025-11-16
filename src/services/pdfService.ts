@@ -25,8 +25,8 @@
 
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import type { Lead } from '@/utils/leadHelpers';
-import type { ExposeFormData } from '@/api/utils/validation';
+import type { Lead } from '../utils/leadHelpers';
+import type { ExposeFormData } from '../api/utils/validation';
 
 // Extend jsPDF with autoTable (TypeScript augmentation)
 declare module 'jspdf' {

@@ -44,6 +44,7 @@
 import '../styles/ExposeTool.css';
 
 import React, { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 // COMPONENTS
 import ExportButtons from '../components/ExportButtons';
@@ -51,6 +52,9 @@ import ExposeForm from '../components/ExposeForm';
 import GPTOutputBox from '../components/GPTOutputBox';
 import ImageUpload from '../components/ImageUpload';
 import SavedExposes from '../components/SavedExposes';
+
+// CONTEXT
+import { useAppContext } from '../context/AppContext';
 
 // STORE (nach DEVELOPMENT-INSTRUCTION.md: Service-Layer Pattern)
 import useExposeStore, { type SavedExpose } from '../stores/exposeStore';
@@ -61,6 +65,10 @@ import { useExpose } from '../hooks/useExpose';
 // ==================== COMPONENT ====================
 
 export default function ExposeTool() {
+  // ==================== CONTEXT ====================
+  // AppContext für Plan-Limits (SaaS Integration Phase 1)
+  const { plan, isLimitReached } = useAppContext();
+
   // ==================== STATE (via Zustand Store) ====================
   // WARUM: Eliminiert Prop-Drilling, Auto-Persistierung via Zustand persist
   // VORHER: useState für formData, output, selectedStyle
@@ -183,18 +191,43 @@ export default function ExposeTool() {
    *
    * FLOW:
    * 1. User klickt "Speichern"
-   * 2. Store-Action saveExpose wird aufgerufen
-   * 3. Store erstellt Expose-Object { formData, output, selectedStyle, images, captions }
-   * 4. Expose wird zu savedExposes-Array hinzugefügt
-   * 5. Auto-Persistierung via Zustand middleware
+   * 2. Check plan limits (soft check, non-blocking)
+   * 3. Store-Action saveExpose wird aufgerufen
+   * 4. Store erstellt Expose-Object { formData, output, selectedStyle, images, captions }
+   * 5. Expose wird zu savedExposes-Array hinzugefügt
+   * 6. Auto-Persistierung via Zustand middleware
    *
    * STORAGE:
    * - localStorage Key: "maklermate-expose-storage"
    * - Auto-Sync über Tabs via Zustand persist
+   *
+   * PLAN LIMITS (SaaS Phase 1):
+   * - Free: 5 Exposés max (soft warning at 4, 5)
+   * - Pro: Unlimited
+   * - Warnings are non-blocking (user can still save)
    */
   const handleSaveExpose = (): void => {
+    // Soft limit check (non-blocking, just warning)
+    const currentCount = savedExposes.length;
+
+    if (plan === 'free' && currentCount >= 4) {
+      if (isLimitReached('maxExposes', currentCount)) {
+        // Already at limit (5)
+        toast.error(
+          `⚠️ Free Plan Limit erreicht (${currentCount}/5 Exposés). Upgrade zu Pro für unbegrenzte Exposés!`,
+          { duration: 5000 }
+        );
+      } else {
+        // Approaching limit (4)
+        toast(
+          `⚠️ Fast am Limit: ${currentCount}/5 Exposés. Noch ${5 - currentCount} verfügbar.`,
+          { icon: '⚠️', duration: 4000 }
+        );
+      }
+    }
+
     saveExpose();
-    // Note: Toast-Notification wird im Store angezeigt
+    // Note: Success Toast-Notification wird im Store angezeigt
   };
 
   /**

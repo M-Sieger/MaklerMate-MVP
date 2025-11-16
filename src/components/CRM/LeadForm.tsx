@@ -2,10 +2,18 @@
 // ✅ Button zeigt Spinner beim Speichern (0.5s künstliche Verzögerung für Feedback)
 // ✅ Entfernt HTML5 required-Bubble, stattdessen Button disabled bis Name gesetzt ist.
 // ✅ Guard + Reset nach Submit.
+// ✅ Soft Limit Checks für Free vs. Pro Plan (SaaS Phase 1)
 
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import styles from './LeadForm.module.css';
+
+// CONTEXT
+import { useAppContext } from '../../context/AppContext';
+
+// STORE
+import useCRMStore from '../../stores/crmStore';
 
 // TYPES
 import type { Lead, LeadStatus } from '../../utils/leadHelpers';
@@ -39,6 +47,11 @@ const initialLead: LeadFormData = {
 // ==================== COMPONENT ====================
 
 function LeadForm({ onAddLead }: LeadFormProps) {
+  // ==================== CONTEXT & STORE ====================
+  const { plan, isLimitReached } = useAppContext();
+  const leads = useCRMStore((state) => state.leads);
+
+  // ==================== LOCAL STATE ====================
   const [lead, setLead] = useState<LeadFormData>(initialLead);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -63,6 +76,26 @@ function LeadForm({ onAddLead }: LeadFormProps) {
     };
 
     if (!cleaned.name) return;
+
+    // ==================== SOFT LIMIT CHECK ====================
+    // SaaS Phase 1: Warn users about plan limits (non-blocking)
+    const currentCount = leads.length;
+
+    if (plan === 'free' && currentCount >= 18) {
+      if (isLimitReached('maxLeads', currentCount)) {
+        // Already at limit (20)
+        toast.error(
+          `⚠️ Free Plan Limit erreicht (${currentCount}/20 Leads). Upgrade zu Pro für unbegrenzte Leads!`,
+          { duration: 5000 }
+        );
+      } else {
+        // Approaching limit (18-19)
+        toast(
+          `⚠️ Fast am Limit: ${currentCount}/20 Leads. Noch ${20 - currentCount} verfügbar.`,
+          { icon: '⚠️', duration: 4000 }
+        );
+      }
+    }
 
     setIsLoading(true);
 

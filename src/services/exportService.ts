@@ -23,7 +23,7 @@
  * STATUS: 🟢 Production-Ready (TypeScript Migration)
  */
 
-import type { Lead } from '@/utils/leadHelpers';
+import type { Lead } from '../utils/leadHelpers';
 
 // ==================== TYPES ====================
 

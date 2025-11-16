@@ -608,3 +608,4 @@ const useExposeStore = create(
 | Datum | Version | Änderung |
 |-------|---------|----------|
 | 15.11.2025 | 1.0 | Initial draft |
+| 15.11.2025 | 1.1 | Implementierung abgeschlossen: Stores in TypeScript (`crmStore.ts`, `exposeStore.ts`) mit vollständiger Typisierung |

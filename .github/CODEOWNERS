@@ -1,0 +1,34 @@
+# CODEOWNERS - Automatic reviewer assignment
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @M-Sieger
+
+# Documentation
+/docs/ @M-Sieger
+*.md @M-Sieger
+
+# CI/CD Configuration
+/.github/ @M-Sieger
+/.husky/ @M-Sieger
+
+# Core Services (require careful review)
+/src/services/ @M-Sieger
+
+# API Layer
+/src/api/ @M-Sieger
+
+# State Management
+/src/stores/ @M-Sieger
+
+# Test Files
+**/*.test.ts @M-Sieger
+**/*.test.tsx @M-Sieger
+/src/test/ @M-Sieger
+
+# Configuration Files
+package.json @M-Sieger
+tsconfig.json @M-Sieger
+vite.config.ts @M-Sieger
+vitest.config.ts @M-Sieger
+.eslintrc.* @M-Sieger

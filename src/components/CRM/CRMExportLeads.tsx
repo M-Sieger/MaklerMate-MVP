@@ -3,11 +3,8 @@
 import React, { useState } from 'react';
 
 import type { Lead } from '../../utils/leadHelpers';
-import {
-  exportLeadsAsCSV,
-  exportLeadsAsTXT,
-} from '../../utils/crmExport';
-import { exportLeadsAsPDF } from '../../utils/pdfExportLeads';
+import exportService from '../../services/exportService';
+import pdfService from '../../services/pdfService';
 import styles from './CRMExportLeads.module.css';
 
 // ==================== TYPES ====================
@@ -30,23 +27,11 @@ export default function CRMExportLeads({ leads = [], onReset }: CRMExportLeadsPr
   if (!leads.length) return null;
 
   const handleExport = (type: ExportType): void => {
-    if (type === 'pdf') exportLeadsAsPDF(leads);
-    if (type === 'csv') exportLeadsAsCSV(leads);
-    if (type === 'txt') exportLeadsAsTXT(leads);
-    if (type === 'json') {
-      const blob = new Blob([JSON.stringify(leads, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'leads-export.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    if (type === 'copy') {
-      navigator.clipboard.writeText(JSON.stringify(leads, null, 2))
-        .then(() => alert('✅ Leads kopiert'))
-        .catch(err => console.error('Fehler:', err));
-    }
+    if (type === 'pdf') pdfService.exportLeadsAsPDF(leads);
+    if (type === 'csv') exportService.exportLeadsAsCSV(leads);
+    if (type === 'txt') exportService.exportLeadsAsTXT(leads);
+    if (type === 'json') exportService.exportLeadsAsJSON(leads);
+    if (type === 'copy') exportService.copyLeadsToClipboard(leads);
     setOpen(false);
   };
 

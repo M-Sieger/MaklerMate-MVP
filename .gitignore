@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -27,11 +26,13 @@ yarn-error.log*
 
 venv/
 
-venv/
-
 # Local ignores
-venv/
 .env
 .env.local
 *.zip
 .vercel
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
