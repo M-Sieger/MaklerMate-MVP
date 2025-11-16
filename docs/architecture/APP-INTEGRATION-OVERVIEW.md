@@ -1,14 +1,27 @@
 # App Integration Overview
 
-**Letzte Aktualisierung:** 16. November 2025
+**Letzte Aktualisierung:** 16. November 2025 (SaaS Phase 1 Complete)
 **Zweck:** Technische Dokumentation zur Integration dieser Engine in die SaaS-Hülle
-**Status:** MVP (Standalone) → Migration zu SaaS-Integration geplant
+**Status:** ✅ SaaS Phase 1 Complete → Ready for Next.js Integration
 
 ---
 
 ## 📋 Übersicht
 
 Dieses Dokument beschreibt die **MaklerMate-Engine** als einbettbare Komponente, die später in eine Next.js-basierte SaaS-Hülle integriert werden kann.
+
+### ✅ SaaS Phase 1 - Completed (November 2025)
+
+**Implementierte Features:**
+- ✅ **AppContext Integration** - User/Plan Management mit Boot Config Pattern
+- ✅ **Repository Pattern** - LocalStorage Repositories für Leads & Exposés
+- ✅ **Soft Limit Checks** - Free vs Pro Plan Warnings (non-blocking)
+- ✅ **One-Time Migration** - Automatic data migration from Zustand persist
+- ✅ **Type-Safe Architecture** - Full TypeScript migration complete
+- ✅ **PlanBadge UI Component** - Visual plan indicator in header
+
+**Ready for Next.js Integration:**
+The engine can now be embedded into a Next.js SaaS shell with user/plan injection via `window.__MAKLER_MATE_BOOT_CONFIG__`.
 
 ### Aktuelle Architektur
 
@@ -115,19 +128,45 @@ In der SaaS-Version wird dieser Einstiegspunkt durch Next.js ersetzt. Die `App`-
 **🔧 Root-Komponente für Einbettung:**
 Die `App`-Komponente ist die **Haupt-Engine**, die in ein fremdes Host-System (Next.js) integriert werden kann.
 
-**SaaS-Integration-Ansatz:**
+**SaaS-Integration-Ansatz (Phase 1 - Aktuell):**
+
+The engine now supports injection of user/plan data via a global boot config:
+
 ```tsx
 // In Next.js: /app/app/page.tsx
-import MaklerMateApp from '@/components/maklermate/App';
+import Script from 'next/script';
 
-export default function AppPage() {
+export default function AppPage({ session }) {
   return (
-    <UserContextProvider userId={session.user.id} plan={session.user.plan}>
-      <MaklerMateApp />
-    </UserContextProvider>
+    <>
+      {/* Inject boot config BEFORE loading the engine */}
+      <Script id="maklermate-boot" strategy="beforeInteractive">
+        {`
+          window.__MAKLER_MATE_BOOT_CONFIG__ = {
+            userId: '${session.user.id}',
+            plan: '${session.user.plan}' // 'free' | 'pro'
+          };
+        `}
+      </Script>
+
+      {/* Load MaklerMate Engine (iframe or direct embed) */}
+      <iframe src="/engine" style={{ width: '100%', height: '100vh', border: 'none' }} />
+    </>
   );
 }
 ```
+
+**How It Works:**
+1. Next.js sets `window.__MAKLER_MATE_BOOT_CONFIG__` with userId and plan
+2. MaklerMate engine reads this on startup in `src/index.tsx`
+3. `AppContext` uses these values for plan limits and features
+4. Repositories use userId for data scoping (future: Supabase filtering)
+
+**Benefits:**
+- ✅ No tight coupling between Next.js and React engine
+- ✅ Works in iframe or direct embed scenarios
+- ✅ Easy to test standalone (boot config is optional)
+- ✅ Type-safe with TypeScript global declarations
 
 ---
 
@@ -226,14 +265,79 @@ In der Next.js-Version wird `AuthContext` durch NextAuth ersetzt. User-Daten kom
 
 ---
 
+#### **AppContext** (`src/context/AppContext.tsx`) - **✅ NEU in Phase 1**
+
+**Zweck:** User/Plan Management für SaaS-Integration
+
+**State:**
+- `userId: string | null` - Current user ID (from boot config or localStorage)
+- `plan: 'free' | 'pro'` - Current subscription plan
+- `limits: PlanLimits` - Plan-specific limits (maxExposes, maxLeads, etc.)
+- `features: PlanFeatures` - Plan-specific feature flags
+
+**Methods:**
+- `isLimitReached(resource, count)` - Check if plan limit is reached
+- `hasFeature(feature)` - Check if plan includes a feature
+
+**Plan Limits:**
+```typescript
+{
+  free: {
+    maxExposes: 5,
+    maxLeads: 20,
+    maxStorage: 10 * 1024 * 1024, // 10 MB
+  },
+  pro: {
+    maxExposes: Infinity,
+    maxLeads: Infinity,
+    maxStorage: Infinity,
+  }
+}
+```
+
+**Boot Config Pattern:**
+```typescript
+// Global type declaration
+declare global {
+  interface Window {
+    __MAKLER_MATE_BOOT_CONFIG__?: {
+      userId?: string;
+      plan?: 'free' | 'pro';
+    };
+  }
+}
+
+// Usage in index.tsx
+const bootConfig = window.__MAKLER_MATE_BOOT_CONFIG__;
+<AppProvider userId={bootConfig?.userId} plan={bootConfig?.plan}>
+  {/* App */}
+</AppProvider>
+```
+
+**Soft Limit Checks:**
+- ExposeTool: Warns when approaching 5 exposés (Free plan)
+- CRMTool: Warns when approaching 20 leads (Free plan)
+- Non-blocking warnings with toast notifications
+- Upgrade prompts at exact limit
+
+**Benefits:**
+- ✅ Standalone mode (reads from localStorage as fallback)
+- ✅ SaaS mode (reads from boot config)
+- ✅ Type-safe plan management
+- ✅ Easy to extend with new features/limits
+
+---
+
 ## 💾 Datenhaltung
 
-### Aktuell: LocalStorage (MVP)
+### Aktuell: LocalStorage (MVP + Phase 1 Repositories)
 
 **Keys:**
-- `maklermate-crm-storage` - CRM-Daten (Zustand persist)
-- `maklermate-expose-storage` - Exposé-Daten (Zustand persist)
-- `maklermate_leads` - Leads (LeadsStorageService - redundant)
+- `maklermate-crm-storage` - CRM-Daten (Zustand persist - legacy)
+- `maklermate-expose-storage` - Exposé-Daten (Zustand persist - legacy)
+- `maklermate_leads` - **✅ NEW:** Leads Repository (user-scoped)
+- `maklermate_exposes` - **✅ NEW:** Exposés Repository (user-scoped)
+- `maklermate_expose_draft` - **✅ NEW:** Draft Exposé storage
 
 **Struktur:**
 ```json
@@ -434,49 +538,96 @@ export const useCRMStore = create<CRMState>()(
 );
 ```
 
-**🔮 Ziel: Repository Pattern**
+**✅ Repository Pattern (Implemented in Phase 1)**
 
-Abstrahiere Storage-Layer für einfachen Austausch:
+Storage-Layer ist jetzt abstrahiert für einfachen Austausch:
 
 ```typescript
 // src/repositories/ILeadRepository.ts
 export interface ILeadRepository {
-  getAll(userId: string): Promise<Lead[]>;
-  getById(id: string, userId: string): Promise<Lead | null>;
-  create(lead: Omit<Lead, 'id'>, userId: string): Promise<Lead>;
-  update(id: string, patch: Partial<Lead>, userId: string): Promise<Lead>;
-  delete(id: string, userId: string): Promise<void>;
+  getAll(userId?: string): Promise<Lead[]>;
+  getById(id: string, userId?: string): Promise<Lead | null>;
+  create(lead: Omit<Lead, 'id' | 'createdAt' | 'updatedAt' | '_v'>, userId?: string): Promise<Lead>;
+  update(id: string, patch: Partial<Lead>, userId?: string): Promise<Lead>;
+  delete(id: string, userId?: string): Promise<void>;
+  deleteMany(ids: string[], userId?: string): Promise<void>;
+  exportAsJSON(userId?: string): Promise<string>;
+  importFromJSON(json: string, userId?: string): Promise<number>;
 }
 
-// Aktuelle Implementierung
+// ✅ Implementiert: LocalStorage
 class LocalStorageLeadRepository implements ILeadRepository {
-  // ... LocalStorage-Logik
+  private readonly storageKey = 'maklermate_leads';
+
+  async getAll(userId?: string): Promise<Lead[]> {
+    const json = localStorage.getItem(this.storageKey);
+    if (!json) return [];
+    const data = JSON.parse(json);
+    return data.map(migrateLead); // Auto-migration v1→v2
+  }
+  // ... CRUD methods with userId scoping (prepared for Supabase)
 }
 
-// Zukünftige Implementierung
+// 🔮 Zukünftig: Supabase
 class SupabaseLeadRepository implements ILeadRepository {
-  // ... Supabase-Logik
+  async getAll(userId?: string): Promise<Lead[]> {
+    const { data } = await supabase
+      .from('leads')
+      .select('*')
+      .eq('user_id', userId);
+    return data || [];
+  }
+  // ... Supabase implementation
 }
 ```
 
-**Migration-Strategie:**
-1. Interface definieren (`ILeadRepository`, `IExposeRepository`)
-2. LocalStorage-Implementierung extrahieren
-3. Supabase-Implementierung parallel entwickeln
-4. Feature-Flag für Umschaltung
-5. LocalStorage-Export/Import für Migration
+**Migration-Status:**
+- ✅ Interfaces defined (`ILeadRepository`, `IExposeRepository`)
+- ✅ LocalStorage implementations complete
+- ✅ Factory pattern for easy switching (`createLeadRepository()`)
+- ✅ One-time data migration from Zustand persist
+- ✅ Unit tests (30 tests for repositories)
+- ⏳ Supabase implementation (Phase 2)
+- ⏳ Feature flag system (Phase 2)
+
+**Files:**
+- `src/repositories/ILeadRepository.ts` - Interface
+- `src/repositories/IExposeRepository.ts` - Interface
+- `src/repositories/localStorage/LocalStorageLeadRepository.ts` - Implementation
+- `src/repositories/localStorage/LocalStorageExposeRepository.ts` - Implementation
+- `src/repositories/factory.ts` - Factory for dependency injection
+- `src/repositories/migrate.ts` - One-time migration from Zustand
+
+**Benefits:**
+- ✅ Clean separation of concerns
+- ✅ Easy to test (mockable repositories)
+- ✅ Future-proof for Supabase migration
+- ✅ userId scoping prepared (optional parameter)
 
 ---
 
 ## 🔌 Integration-Checklist
 
-### Phase 1: Vorbereitung (dieses Repo)
+### Phase 1: Vorbereitung (dieses Repo) - ✅ COMPLETE
 
 - [x] Dokumentation erstellen (dieses Dokument)
-- [ ] Storage-Abstraktionen einführen (Repository Pattern)
-- [ ] User/Plan-Context vorbereiten (AppContext)
-- [ ] Code-Kommentare für Integration-Points
-- [ ] Supabase-Schema entwerfen
+- [x] **Storage-Abstraktionen einführen (Repository Pattern)**
+  - ✅ `ILeadRepository` & `IExposeRepository` interfaces
+  - ✅ LocalStorage implementations with full CRUD
+  - ✅ Factory pattern for dependency injection
+  - ✅ One-time migration from Zustand persist
+  - ✅ 30 unit tests for repositories
+- [x] **User/Plan-Context vorbereiten (AppContext)**
+  - ✅ `AppContext` with userId & plan management
+  - ✅ Boot config pattern for Next.js injection
+  - ✅ Plan limits (Free: 5 exposés, 20 leads)
+  - ✅ Soft limit checks (non-blocking warnings)
+  - ✅ `PlanBadge` UI component
+- [x] **Code-Kommentare für Integration-Points**
+  - ✅ SaaS integration comments in all core modules
+  - ✅ TypeScript migration complete (strict mode)
+- [x] **Supabase-Schema entwerfen**
+  - ✅ See `docs/architecture/SUPABASE-SCHEMA.md`
 
 ### Phase 2: Next.js SaaS-Hülle (anderes Repo)
 
