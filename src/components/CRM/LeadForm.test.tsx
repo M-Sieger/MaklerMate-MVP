@@ -14,12 +14,13 @@
  * DATUM: 2025-11-15
  */
 
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 
-import LeadForm from './LeadForm';
+import { AppProvider } from '../../context/AppContext';
 import type { Lead } from '../../utils/leadHelpers';
+import LeadForm from './LeadForm';
 
 describe('LeadForm', () => {
   let mockOnAddLead: Mock;
@@ -28,9 +29,14 @@ describe('LeadForm', () => {
     mockOnAddLead = vi.fn();
   });
 
+  // Helper to render component with AppProvider
+  const renderWithProvider = (ui: React.ReactElement) => {
+    return render(<AppProvider>{ui}</AppProvider>);
+  };
+
   describe('Rendering', () => {
     it('should render all form fields', () => {
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       expect(screen.getByPlaceholderText('Name')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)')).toBeInTheDocument();
@@ -40,7 +46,7 @@ describe('LeadForm', () => {
     });
 
     it('should render status dropdown with all options', () => {
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       const select = screen.getByRole('combobox');
       expect(select).toBeInTheDocument();
@@ -54,7 +60,7 @@ describe('LeadForm', () => {
     });
 
     it('should have submit button disabled initially', () => {
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       const submitButton = screen.getByRole('button', { name: /lead speichern/i });
       expect(submitButton).toBeDisabled();
@@ -64,7 +70,7 @@ describe('LeadForm', () => {
   describe('Form Input Handling', () => {
     it('should update name field on input', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       const nameInput = screen.getByPlaceholderText('Name');
       await user.type(nameInput, 'Max Mustermann');
@@ -74,7 +80,7 @@ describe('LeadForm', () => {
 
     it('should enable submit button when name is entered', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       const nameInput = screen.getByPlaceholderText('Name');
       const submitButton = screen.getByRole('button', { name: /lead speichern/i });
@@ -87,24 +93,31 @@ describe('LeadForm', () => {
 
     it('should update all fields on input', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       await user.type(screen.getByPlaceholderText('Name'), 'Test Name');
-      await user.type(screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'), 'test@example.com');
+      await user.type(
+        screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'),
+        'test@example.com'
+      );
       await user.type(screen.getByPlaceholderText('Ort'), 'Berlin');
       await user.type(screen.getByPlaceholderText('Lead-Typ (z. B. Verkäufer/Käufer)'), 'Käufer');
       await user.type(screen.getByPlaceholderText('Notiz'), 'Test Note');
 
       expect(screen.getByPlaceholderText('Name')).toHaveValue('Test Name');
-      expect(screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)')).toHaveValue('test@example.com');
+      expect(screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)')).toHaveValue(
+        'test@example.com'
+      );
       expect(screen.getByPlaceholderText('Ort')).toHaveValue('Berlin');
-      expect(screen.getByPlaceholderText('Lead-Typ (z. B. Verkäufer/Käufer)')).toHaveValue('Käufer');
+      expect(screen.getByPlaceholderText('Lead-Typ (z. B. Verkäufer/Käufer)')).toHaveValue(
+        'Käufer'
+      );
       expect(screen.getByPlaceholderText('Notiz')).toHaveValue('Test Note');
     });
 
     it('should update status dropdown', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       const select = screen.getByRole('combobox');
       expect(select).toHaveValue('neu');
@@ -117,13 +130,19 @@ describe('LeadForm', () => {
   describe('Form Submission', () => {
     it('should call onAddLead with correct lead data', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       // Fill out form
       await user.type(screen.getByPlaceholderText('Name'), 'Test Lead');
-      await user.type(screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'), 'test@example.com');
+      await user.type(
+        screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'),
+        'test@example.com'
+      );
       await user.type(screen.getByPlaceholderText('Ort'), 'München');
-      await user.type(screen.getByPlaceholderText('Lead-Typ (z. B. Verkäufer/Käufer)'), 'Verkäufer');
+      await user.type(
+        screen.getByPlaceholderText('Lead-Typ (z. B. Verkäufer/Käufer)'),
+        'Verkäufer'
+      );
       await user.type(screen.getByPlaceholderText('Notiz'), 'Wichtiger Lead');
       await user.selectOptions(screen.getByRole('combobox'), 'vip');
 
@@ -151,10 +170,13 @@ describe('LeadForm', () => {
 
     it('should trim whitespace from inputs', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       await user.type(screen.getByPlaceholderText('Name'), '  Padded Name  ');
-      await user.type(screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'), '  padded@email.com  ');
+      await user.type(
+        screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'),
+        '  padded@email.com  '
+      );
 
       await user.click(screen.getByRole('button', { name: /lead speichern/i }));
 
@@ -169,11 +191,14 @@ describe('LeadForm', () => {
 
     it('should reset form after successful submission', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       // Fill and submit
       await user.type(screen.getByPlaceholderText('Name'), 'Test Lead');
-      await user.type(screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'), 'test@example.com');
+      await user.type(
+        screen.getByPlaceholderText('Kontakt (E-Mail / Telefon)'),
+        'test@example.com'
+      );
       await user.click(screen.getByRole('button', { name: /lead speichern/i }));
 
       // Wait for submission
@@ -189,7 +214,7 @@ describe('LeadForm', () => {
 
     it('should not submit when name is empty', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       const submitButton = screen.getByRole('button', { name: /lead speichern/i });
 
@@ -204,7 +229,7 @@ describe('LeadForm', () => {
 
     it('should not submit when name is only whitespace', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       await user.type(screen.getByPlaceholderText('Name'), '   ');
 
@@ -216,7 +241,7 @@ describe('LeadForm', () => {
   describe('Loading State', () => {
     it('should show spinner during submission', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       await user.type(screen.getByPlaceholderText('Name'), 'Test');
 
@@ -232,7 +257,7 @@ describe('LeadForm', () => {
 
     it('should disable button during submission', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       await user.type(screen.getByPlaceholderText('Name'), 'Test');
 
@@ -247,7 +272,7 @@ describe('LeadForm', () => {
   describe('Data Structure', () => {
     it('should create lead with version 2', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       await user.type(screen.getByPlaceholderText('Name'), 'Test');
       await user.click(screen.getByRole('button', { name: /lead speichern/i }));
@@ -262,7 +287,7 @@ describe('LeadForm', () => {
 
     it('should create unique IDs for different leads', async () => {
       const user = userEvent.setup();
-      const { rerender } = render(<LeadForm onAddLead={mockOnAddLead} />);
+      const { rerender } = renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       // Submit first lead
       await user.type(screen.getByPlaceholderText('Name'), 'Lead 1');
@@ -275,7 +300,11 @@ describe('LeadForm', () => {
       const firstId = (mockOnAddLead.mock.calls[0][0] as Lead).id;
 
       // Re-render and submit second lead
-      rerender(<LeadForm onAddLead={mockOnAddLead} />);
+      rerender(
+        <AppProvider>
+          <LeadForm onAddLead={mockOnAddLead} />
+        </AppProvider>
+      );
 
       await user.type(screen.getByPlaceholderText('Name'), 'Lead 2');
       await user.click(screen.getByRole('button', { name: /lead speichern/i }));
@@ -291,7 +320,7 @@ describe('LeadForm', () => {
 
     it('should set createdAt and updatedAt as ISO strings', async () => {
       const user = userEvent.setup();
-      render(<LeadForm onAddLead={mockOnAddLead} />);
+      renderWithProvider(<LeadForm onAddLead={mockOnAddLead} />);
 
       await user.type(screen.getByPlaceholderText('Name'), 'Test');
       await user.click(screen.getByRole('button', { name: /lead speichern/i }));

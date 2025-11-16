@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { LocalStorageExposeRepository } from './LocalStorageExposeRepository';
-import type { SavedExpose } from '../../stores/exposeStore';
 import type { ExposeFormData } from '../../api/utils/validation';
+import type { SavedExpose } from '../../stores/exposeStore';
+import { LocalStorageExposeRepository } from './LocalStorageExposeRepository';
 
 describe('LocalStorageExposeRepository', () => {
   let repository: LocalStorageExposeRepository;
@@ -83,6 +83,7 @@ describe('LocalStorageExposeRepository', () => {
 
   describe('getById', () => {
     it('should return null when expose not found', async () => {
+      // eslint-disable-next-line testing-library/no-await-sync-query -- repository.getById is async
       const expose = await repository.getById('nonexistent');
       expect(expose).toBeNull();
     });
@@ -100,6 +101,7 @@ describe('LocalStorageExposeRepository', () => {
 
       mockStorage['maklermate_exposes'] = JSON.stringify([testExpose]);
 
+      // eslint-disable-next-line testing-library/no-await-sync-query -- repository.getById is async
       const expose = await repository.getById('test-123');
       expect(expose).toEqual(testExpose);
     });
@@ -238,7 +240,9 @@ describe('LocalStorageExposeRepository', () => {
         }),
       };
 
-      global.FileReader = vi.fn(() => mockFileReader) as any;
+      global.FileReader = vi.fn(function (this: any) {
+        return Object.assign(this, mockFileReader);
+      }) as any;
 
       const imageUrl = await repository.uploadImage(mockFile);
 
@@ -257,7 +261,9 @@ describe('LocalStorageExposeRepository', () => {
         }),
       };
 
-      global.FileReader = vi.fn(() => mockFileReader) as any;
+      global.FileReader = vi.fn(function (this: any) {
+        return Object.assign(this, mockFileReader);
+      }) as any;
 
       await expect(repository.uploadImage(mockFile)).rejects.toThrow('FileReader error');
     });
